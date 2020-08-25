@@ -4,3 +4,4 @@ frontend/build
 
 # ignore backend crap
 backend/node_modules
+backend/config.env

@@ -1,6 +1,5 @@
-exports.hello = async (req, res, next) => {
-    res.status(200).json({
-        status: 'success',
-        message: 'rafal to pajac'
-    });
-};
+const User = require('./../models/userModel');
+const factory = require('./handlerFactory');
+
+
+exports.getAllUsers = factory.getAll(User);
