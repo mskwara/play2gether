@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import axios from "axios";
 
-function App() {
+const App = (props) => {
+    const [state, setState] = useState({
+        message: "",
+    });
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const res = await axios.get("http://localhost:8000/");
+                setState((state) => ({
+                    ...state,
+                    message: res.data.message,
+                }));
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        getData();
+    }, []);
     return (
         <div className="App">
             <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" />
-                <p>Rafał to pajac!</p>
+                <p>Tajna wiadomość: {state.message}</p>
                 <a
                     className="App-link"
                     href="https://reactjs.org"
@@ -19,6 +37,6 @@ function App() {
             </header>
         </div>
     );
-}
+};
 
 export default App;
