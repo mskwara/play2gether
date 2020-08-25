@@ -1,3 +1,6 @@
 # ignore frontend things
 frontend/node_modules
 frontend/build
+
+# ignore backend crap
+backend/node_modules
