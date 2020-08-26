@@ -1,0 +1,38 @@
+@import "../../variables.scss";
+
+#Loader {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+
+    .spinner {
+        border-radius: 50%;
+        border: 3px solid rgba(1, 1, 1, 0);
+        position: fixed;
+    }
+    .type-1 {
+        width: 20px;
+        height: 20px;
+        border-top-color: $primary;
+        animation: spin 0.7s infinite linear;
+    }
+    .type-2 {
+        width: 26px;
+        height: 26px;
+        border-top-color: $primary-hover;
+        animation: spin 0.7s infinite linear reverse;
+        animation-delay: -0.4s;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}
