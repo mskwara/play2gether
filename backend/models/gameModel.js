@@ -13,7 +13,13 @@ const gameSchema = new mongoose.Schema({
         type: String,
         // Temporarily false
         required: [false, 'Provide an icon for this game.']
-    }
+    },
+    players: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User'
+        }
+    ]
 });
 
 const Game = mongoose.model('Game', gameSchema);
