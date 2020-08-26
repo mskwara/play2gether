@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Home from "./views/Home";
+import Home from "./views/Home/Home";
+import Topbar from "./components/Topbar/Topbar";
 import "./App.scss";
 // import axios from "axios";
 
@@ -25,6 +26,7 @@ const App = (props) => {
     return (
         <BrowserRouter>
             <div id="App">
+                <Topbar />
                 <Switch>
                     <Route path="/" exact component={Home} />
                 </Switch>

@@ -3,7 +3,7 @@ import "./GameTile.scss";
 // import axios from "axios";
 
 const GameTile = (props) => {
-    let bgImage = require("../assets/valorant.jpg");
+    let bgImage = require("../../assets/valorant.jpg");
     const tileStyle = {
         backgroundImage: `url(${bgImage})`,
     };

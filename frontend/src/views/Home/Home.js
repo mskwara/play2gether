@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import GameTile from "../components/GameTile";
+import GameTile from "../../components/GameTile/GameTile";
 import "./Home.scss";
 import axios from "axios";
 
