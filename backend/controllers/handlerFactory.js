@@ -1,9 +1,9 @@
 const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 
-exports.getAll = Model =>
+exports.getAll = (Model, exclude) =>
     catchAsync(async (req, res, next) => {
-        const query = Model.find().select('-description');
+        const query = Model.find().select(`${exclude}`);
         const features = new APIFeatures(query, req.query)
             .limitFields();
 
@@ -16,6 +16,10 @@ exports.getAll = Model =>
             }
         });
     });
+
+exports.getOne = Model => catchAsync(async (req, res, next) => {
+
+});
 
 exports.create = Model =>
     catchAsync(async (req, res, next) => {
