@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please confirm your password'],
         validate: {
-            validator: function(el) {
+            validator: function (el) {
                 return el === this.password;
             },
             message: 'Passwords are not the same!'
@@ -36,11 +36,22 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password'))
         return next();
-    
+
     this.password = await bcrypt.hash(this.password, 12);
     this.passwordConfirm = undefined;
 });
 
+userSchema.methods.correctPassword = async function (providedPassword, hashedPassword) {
+    return await bcrypt.compare(providedPassword, hashedPassword);
+};
+
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+    if (this.passwordChangedAt) {
+        const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10)
+        return JWTTimestamp < changedTimestamp;
+    }
+    return false;
+};
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
