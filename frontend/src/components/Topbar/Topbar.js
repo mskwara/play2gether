@@ -1,10 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Topbar.scss";
 
 const Topbar = (props) => {
     return (
         <div id="Topbar">
-            <h1 className="title">Play2gether</h1>
+            <Link className="title" to="/">
+                Play2gether
+            </Link>
             <div className="links">
                 <div className="link">
                     <a href="/">Home</a>

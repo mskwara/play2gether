@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import GameTile from "../../components/GameTile/GameTile";
+import Loader from "../../components/Loader/Loader";
 import "./Home.scss";
 import axios from "axios";
 
@@ -28,11 +29,16 @@ const Home = (props) => {
     let gameTiles = null;
     if (state.games !== null) {
         gameTiles = state.games.map((game) => (
-            <GameTile game={game} key={game._id} />
+            <GameTile history={props.history} game={game} key={game._id} />
         ));
     }
 
-    return <div id="Home">{gameTiles}</div>;
+    return (
+        <div id="Home">
+            {state.loading ? <Loader /> : null}
+            {gameTiles}
+        </div>
+    );
 };
 
 export default Home;

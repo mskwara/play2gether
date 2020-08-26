@@ -1,0 +1,8 @@
+@import "../../variables.scss";
+
+#Person {
+    width: 200px;
+    height: 230px;
+    border: 1px solid $border;
+    border-radius: 3px;
+}

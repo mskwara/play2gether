@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "./views/Home/Home";
+import Game from "./views/Game/Game";
 import Topbar from "./components/Topbar/Topbar";
 import "./App.scss";
 // import axios from "axios";
@@ -29,6 +30,7 @@ const App = (props) => {
                 <Topbar />
                 <Switch>
                     <Route path="/" exact component={Home} />
+                    <Route path="/games/:gameId" exact component={Game} />
                 </Switch>
             </div>
         </BrowserRouter>
