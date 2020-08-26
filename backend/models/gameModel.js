@@ -17,7 +17,7 @@ const gameSchema = new mongoose.Schema({
     players: [
         {
             type: mongoose.Schema.ObjectId,
-            ref: 'User'
+            ref: 'User', 
         }
     ]
 });

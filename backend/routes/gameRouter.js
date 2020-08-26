@@ -1,10 +1,25 @@
 const express = require('express');
 const gameController = require('./../controllers/gameController');
+const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router
-    .get('/', gameController.getAllGames)
-    .post('/', gameController.createGame);
+router.route('/')
+    .get(gameController.getAllGames)
+    .post(gameController.createGame);
+
+router.route('/:id')
+    .get(gameController.getGame);
+
+router.route('/:id/membership')
+    .post(
+        authController.protect,
+        gameController.registerAsPlayer
+    )
+    .patch(
+        authController.protect,
+        gameController.optOut
+    );
+
 
 module.exports = router;
