@@ -1,13 +1,18 @@
+const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 
 exports.getAll = Model =>
     catchAsync(async (req, res, next) => {
-        const doc = await Model.find();
+        const query = Model.find().select('-description');
+        const features = new APIFeatures(query, req.query)
+            .limitFields();
+
+        const docs = await features.query;
         res.status(200).json({
             status: 'success',
-            results: doc.length,
+            results: docs.length,
             data: {
-                data: doc
+                data: docs
             }
         });
     });

@@ -1,7 +1,9 @@
 const express = require('express');
+const cors = require('cors');
 const userRouter = require('./routes/userRouter');
 const gameRouter = require('./routes/gameRouter');
-const cors = require('cors');
+const AppError = require('./utils/appError');
+const globalErrorhandler = require('./controllers/errorController');
 
 const app = express();
 
@@ -21,5 +23,11 @@ app.get('/', (req, res, next) => {
 
 app.use('/users', userRouter);
 app.use('/games', gameRouter);
+
+app.all('*', (req, res, next) => {
+    next(new AppError(`Can't find ${req.originalUrl}`, 404));
+});
+
+app.use(globalErrorhandler);
 
 module.exports = app;
