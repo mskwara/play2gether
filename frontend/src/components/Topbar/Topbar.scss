@@ -8,8 +8,17 @@
     justify-content: center;
     align-items: center;
     z-index: 10;
-    position: relative;
+    position: fixed;
+    top: 0;
     border-bottom: 1px solid rgb(27, 27, 116);
+    transition: 0.5s;
+
+    &.normal {
+        height: 70px;
+    }
+    &.small {
+        height: 40px;
+    }
 
     .title {
         color: white;

@@ -26,6 +26,23 @@ const App = (props) => {
     //     getData();
     // }, []);
 
+    window.onscroll = () => {
+        scrollFunction();
+    };
+
+    const scrollFunction = () => {
+        if (
+            document.body.scrollTop > 50 ||
+            document.documentElement.scrollTop > 50
+        ) {
+            document.getElementById("Topbar").classList.remove("normal");
+            document.getElementById("Topbar").classList.add("small");
+        } else {
+            document.getElementById("Topbar").classList.remove("small");
+            document.getElementById("Topbar").classList.add("normal");
+        }
+    };
+
     const openSignup = () => {
         setState((state) => ({ ...state, signupOpened: true }));
     };
