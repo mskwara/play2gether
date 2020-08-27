@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import MyInput from "../MyInput/MyInput";
-import "./Signup.scss";
+import "./Login.scss";
 import axios from "axios";
 
-const Signup = (props) => {
+const Login = (props) => {
     const [userState, setUserState] = useState({
-        name: "",
         email: "",
         password: "",
-        passwordConfirm: "",
     });
 
     const handleInputChange = (event) => {
@@ -20,44 +18,34 @@ const Signup = (props) => {
         setUserState(state);
     };
 
-    const signup = async () => {
+    const login = async () => {
         try {
-            await axios.post("http://localhost:8000/users/signup", userState);
+            await axios.post("http://localhost:8000/users/login", userState);
         } catch (err) {
             console.log(err);
         }
         setUserState({
-            name: "",
             email: "",
             password: "",
-            passwordConfirm: "",
         });
     };
 
     return (
-        <div id="Signup" className={props.className}>
+        <div id="Login" className={props.className}>
             <div className="form">
-                <h1>Sign up</h1>
+                <h1>Login</h1>
                 <img
                     src={require("../../assets/close.png")}
                     alt="close"
                     className="close-btn"
-                    onClick={props.closeSignup}
-                />
-                <MyInput
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={userState.name}
-                    labelId="signup"
-                    handleInputChange={handleInputChange}
+                    onClick={props.closeLogin}
                 />
                 <MyInput
                     type="text"
                     name="email"
                     placeholder="Email"
                     value={userState.email}
-                    labelId="signup"
+                    labelId="login"
                     handleInputChange={handleInputChange}
                 />
                 <MyInput
@@ -65,21 +53,13 @@ const Signup = (props) => {
                     name="password"
                     placeholder="Password"
                     value={userState.password}
-                    labelId="signup"
+                    labelId="login"
                     handleInputChange={handleInputChange}
                 />
-                <MyInput
-                    type="password"
-                    name="passwordConfirm"
-                    placeholder="Confirm the password"
-                    value={userState.passwordConfirm}
-                    labelId="signup"
-                    handleInputChange={handleInputChange}
-                />
-                <button onClick={signup}>Join the community</button>
+                <button onClick={login}>Log me in</button>
             </div>
         </div>
     );
 };
 
-export default Signup;
+export default Login;
