@@ -9,17 +9,21 @@ const gameSchema = new mongoose.Schema({
         type: String,
         required: [true, 'What is that game about?'],
     },
+    players: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+    }],
     icon: {
         type: String,
         // Temporarily false
         required: [false, 'Provide an icon for this game.']
     },
-    players: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'User', 
-        }
-    ]
+    screenshots: [{ type: String }]
+});
+
+gameSchema.pre('save', function (next) {
+    this.icon = slugify(this.name, { lower: true });
+    next();
 });
 
 gameSchema.pre(/^find/, function (next) {
@@ -27,7 +31,7 @@ gameSchema.pre(/^find/, function (next) {
         path: 'players',
         select: '-__v -passwordChangedAt'
     });
-    
+
     next();
 });
 
