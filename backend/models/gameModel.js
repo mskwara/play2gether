@@ -22,6 +22,15 @@ const gameSchema = new mongoose.Schema({
     ]
 });
 
+gameSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'players',
+        select: '-__v -passwordChangedAt'
+    });
+    
+    next();
+});
+
 const Game = mongoose.model('Game', gameSchema);
 
 module.exports = Game;
