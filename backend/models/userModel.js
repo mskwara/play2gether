@@ -30,7 +30,23 @@ const userSchema = new mongoose.Schema({
             message: 'Passwords are not the same!'
         }
     },
-    passwordChangedAt: Date
+    passwordChangedAt: Date,
+    photo: {
+        type: String,
+        default: 'defaultUser.jpeg'
+    },
+    friends: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    }],
+    receivedFriendRequests: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    }],
+    pendingFriendRequests: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    }]
 });
 
 userSchema.pre('save', async function (next) {
