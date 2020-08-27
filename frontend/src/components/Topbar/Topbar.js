@@ -10,15 +10,19 @@ const Topbar = (props) => {
             </Link>
             <div className="links">
                 <div className="link">
-                    <a href="/">Home</a>
+                    <Link>Home</Link>
                     <div className="underline" />
                 </div>
                 <div className="link">
-                    <a href="/">Friends</a>
+                    <Link>Friends</Link>
                     <div className="underline" />
                 </div>
                 <div className="link">
-                    <a href="/">Favourites</a>
+                    <Link>Favourites</Link>
+                    <div className="underline" />
+                </div>
+                <div className="link">
+                    <Link onClick={props.openSignup}>Sign up</Link>
                     <div className="underline" />
                 </div>
             </div>
