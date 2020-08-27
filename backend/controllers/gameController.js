@@ -8,29 +8,25 @@ exports.getGame = factory.getOne(Game);
 exports.createGame = factory.create(Game);
 
 exports.registerAsPlayer = catchAsync(async (req, res, next) => {
-    let game;
-    await Game.findById(req.params.id, (err, doc) => {
-        if (err) {
-            return next(new AppError('This game does not exist', 404));
-        }
+    const game = await Game.findById(req.params.id);
 
-        if (doc.players.some(el => el.toString() === req.user.id)) {
-            return next(new AppError('You\'re already on the list'), 400);
-        }
-
-        doc.players.push(req.user.id);
-        game = doc;
-        doc.save();
-    });
-
-    if (game) {
-        res.status(200).json({
-            status: 'success',
-            data: {
-                game
-            }
-        });
+    if (!game) {
+        return next(new AppError('This game does not exist', 404));
     }
+    
+    if (game.players.some(el => el.toString() === req.user.id)) {
+        return next(new AppError('You\'re already on the list'), 400);
+    }
+
+    game.players.push(req.user.id);
+    game.save();
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            game
+        }
+    });
 });
 
 exports.optOut = catchAsync(async (req, res, next) => {
@@ -43,7 +39,7 @@ exports.optOut = catchAsync(async (req, res, next) => {
     if (!game) {
         return next(new AppError('This game does not exist', 404));
     }
-    
+
     res.status(200).json({
         status: 'success',
         data: {
