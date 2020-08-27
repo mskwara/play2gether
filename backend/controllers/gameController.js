@@ -6,6 +6,7 @@ const AppError = require('../utils/appError');
 exports.getAllGames = factory.getAll(Game, '');
 exports.getGame = factory.getOne(Game);
 exports.createGame = factory.create(Game);
+exports.updateGame = factory.update(Game);
 
 exports.registerAsPlayer = catchAsync(async (req, res, next) => {
     const game = await Game.findById(req.params.id);

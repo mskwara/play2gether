@@ -71,6 +71,10 @@ exports.protect = catchAsync(async (req, res, next) => {
         token = req.headers.authorization.split(' ')[1];
     }
 
+    if (!token && req.cookies) {
+        token = req.cookies.jwt;
+    }
+
     if (!token) {
         return next(new AppError('You are not logged in. Log in to get access', 401));
     }
@@ -80,7 +84,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     // 3) Check if user still exists
     const currentUser = await User.findById(decoded.id);
-    if(!currentUser) {
+    if (!currentUser) {
         return next(new AppError('The user does not longer exist', 401));
     }
 

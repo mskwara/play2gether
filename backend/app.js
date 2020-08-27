@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const userRouter = require('./routes/userRouter');
@@ -9,6 +10,9 @@ const app = express();
 
 app.use(cors());
 app.options('*', cors());
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'static')));
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
