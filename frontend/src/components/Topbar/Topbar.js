@@ -25,6 +25,10 @@ const Topbar = (props) => {
                     <Link onClick={props.openSignup}>Sign up</Link>
                     <div className="underline" />
                 </div>
+                <div className="link">
+                    <Link onClick={props.openLogin}>Login</Link>
+                    <div className="underline" />
+                </div>
             </div>
         </div>
     );
