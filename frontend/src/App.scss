@@ -20,4 +20,17 @@
             background-color: $primary-hover;
         }
     }
+
+    .signup-invisible {
+        opacity: 0;
+        height: 0;
+        top: -200px;
+        transition: height 0ms 0.5s, opacity 0.5s 0ms, top 0ms 0.5s;
+    }
+    .signup-visible {
+        opacity: 1;
+        height: 100%;
+        top: 0;
+        transition: height 0ms 0ms, opacity 0.5s 0ms, top 0ms 0s;
+    }
 }
