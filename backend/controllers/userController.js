@@ -5,7 +5,6 @@ const User = require('./../models/userModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
-const { findByIdAndUpdate } = require('./../models/userModel');
 
 function filterObj(obj, ...excludedFields) {
     const newObj = {};
@@ -48,7 +47,7 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
     next();
 });
 
-exports.getAllUsers = factory.getAll(User, '');
+exports.getAllUsers = factory.getAll(User, "");
 
 exports.update = catchAsync(async (req, res, next) => {
     const filteredBody = filterObj(req.body,
@@ -85,8 +84,8 @@ exports.deletePhoto = catchAsync(async (req, res, next) => {
     });
     req.user.photo = 'defaultUser.jpeg';
     res.status(200).json({
-        status: 'success',
-        user: req.user
+        status: "success",
+        user: req.user,
     });
 });
 
