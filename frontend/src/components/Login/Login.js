@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import MyInput from "../MyInput/MyInput";
 import "./Login.scss";
 import axios from "axios";
+import AlertContext from "../../utils/AlertContext";
 
 const Login = (props) => {
+    const alertContext = useContext(AlertContext);
+
     const [userState, setUserState] = useState({
         email: "",
         password: "",
@@ -31,6 +34,10 @@ const Login = (props) => {
                 localStorage.setItem("userId", res.data.data.user._id);
                 console.log(localStorage.getItem("userId"));
                 props.closeLogin();
+                alertContext.setAlertActive(
+                    true,
+                    `Welcome back, ${res.data.data.user.name}!`
+                );
             }
         } catch (err) {
             console.log(err);
