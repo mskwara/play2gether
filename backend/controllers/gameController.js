@@ -19,10 +19,12 @@ exports.registerAsPlayer = catchAsync(async (req, res, next) => {
         return next(new AppError('You\'re already on the list'), 400);
     }
 
-    game.players.push(req.user.id);
-    game = await (await game.save()).populate({
-        path: 'players',
-        select: '-__v -passwordChangedAt'
+    game = await Game.findByIdAndUpdate(req.params.id, {
+        $push: {
+            players: req.user.id
+        }
+    }, {
+        new: true
     });
 
     res.status(200).json({
