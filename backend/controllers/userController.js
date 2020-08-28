@@ -5,6 +5,7 @@ const User = require('./../models/userModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
+const convController = require('./conversationController');
 
 function filterObj(obj, ...excludedFields) {
     const newObj = {};
@@ -143,10 +144,9 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
         }
     });
 
-    res.status(200).json({
-        status: 'success',
-        user
-    });
+    // Create conversation
+    req.body.users = [req.params.id]
+    next();
 });
 
 exports.ignoreFriend = catchAsync(async (req, res, next) => {
