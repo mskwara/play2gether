@@ -20,7 +20,18 @@ const Login = (props) => {
 
     const login = async () => {
         try {
-            await axios.post("http://localhost:8000/users/login", userState);
+            const res = await axios.post(
+                "http://localhost:8000/users/login",
+                userState,
+                {
+                    withCredentials: true,
+                }
+            );
+            if (res.data.status === "success") {
+                localStorage.setItem("userId", res.data.data.user._id);
+                console.log(localStorage.getItem("userId"));
+                props.closeLogin();
+            }
         } catch (err) {
             console.log(err);
         }

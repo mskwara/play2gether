@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "./views/Home/Home";
 import Game from "./views/Game/Game";
@@ -14,18 +14,20 @@ const App = (props) => {
         loginOpened: false,
     });
     // useEffect(() => {
-    //     const getData = async () => {
+    //     const checkLogin = async () => {
     //         try {
-    //             const res = await axios.get("http://localhost:8000/");
-    //             setState((state) => ({
-    //                 ...state,
-    //                 message: res.data.message,
-    //             }));
+    //             const res = await axios.get(
+    //                 "http://localhost:8000/users/isloggedin",
+    //                 {
+    //                     withCredentials: true,
+    //                 }
+    //             );
+    //             console.log(res.data);
     //         } catch (err) {
     //             console.log(err);
     //         }
     //     };
-    //     getData();
+    //     checkLogin();
     // }, []);
 
     window.onscroll = () => {

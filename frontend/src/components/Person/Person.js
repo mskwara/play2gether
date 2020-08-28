@@ -8,21 +8,21 @@ const Person = (props) => {
                 <div className="user">
                     <p>Vexorth</p>
                 </div>
-                <img src={require("../../assets/default.png")} alt="photo" />
+                <img src={require("../../assets/default.png")} alt="avatar" />
                 <div className="buttons">
                     <img
                         src={require("../../assets/invite_to_game.png")}
-                        alt="photo"
+                        alt="button"
                         className="btn"
                     />
                     <img
                         src={require("../../assets/message.png")}
-                        alt="photo"
+                        alt="button"
                         className="btn"
                     />
                     <img
                         src={require("../../assets/add_friend.png")}
-                        alt="photo"
+                        alt="button"
                         className="btn"
                     />
                 </div>
