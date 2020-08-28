@@ -8,13 +8,16 @@ const conversationSchema = new mongoose.Schema({
     recentActivity: {
         type: Date
     }
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
-conversationSchema.virtual('messages', {
-    ref: 'Message',
-    foreignField: 'conversation',
-    localField: '_id'
-});
+// conversationSchema.virtual('messages', {
+//     ref: 'Message',
+//     foreignField: 'conversation',
+//     localField: '_id'
+// });
 
 const Conversation = mongoose.model('Conversation', conversationSchema);
 
