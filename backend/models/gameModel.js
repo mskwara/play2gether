@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const gameSchema = new mongoose.Schema({
     title: {
@@ -22,7 +23,7 @@ const gameSchema = new mongoose.Schema({
 });
 
 gameSchema.pre('save', function (next) {
-    this.icon = slugify(this.name, { lower: true });
+    this.icon = slugify(this.title, { lower: true });
     next();
 });
 

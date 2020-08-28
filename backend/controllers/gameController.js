@@ -9,18 +9,21 @@ exports.createGame = factory.create(Game);
 exports.updateGame = factory.update(Game);
 
 exports.registerAsPlayer = catchAsync(async (req, res, next) => {
-    const game = await Game.findById(req.params.id);
+    let game = await Game.findById(req.params.id);
 
     if (!game) {
         return next(new AppError('This game does not exist', 404));
     }
-    
-    if (game.players.some(el => el.toString() === req.user.id)) {
+
+    if (game.players.some(el => el._id.toString() === req.user.id)) {
         return next(new AppError('You\'re already on the list'), 400);
     }
 
     game.players.push(req.user.id);
-    game.save();
+    game = await (await game.save()).populate({
+        path: 'players',
+        select: '-__v -passwordChangedAt'
+    });
 
     res.status(200).json({
         status: 'success',

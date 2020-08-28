@@ -1,6 +1,7 @@
 const express = require('express');
 const userController = require('./../controllers/userController');
 const authController = require('./../controllers/authController');
+const convController = require('./../controllers/conversationController');
 
 const router = express.Router();
 
@@ -19,7 +20,10 @@ router.route('/me')
     );
 
 router.post('/:id/addFriend', userController.addFriend);
-router.post('/:id/acceptFriend', userController.acceptFriend);
+router.post('/:id/acceptFriend',
+    userController.acceptFriend,
+    convController.create
+    );
 router.post('/:id/ignoreFriend', userController.ignoreFriend);
 router.post('/:id/removeFriend', userController.removeFriend);
 
