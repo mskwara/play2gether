@@ -48,7 +48,7 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
     next();
 });
 
-exports.getAllUsers = factory.getAll(User, "");
+exports.getAllUsers = factory.getAll(User, '');
 
 exports.update = catchAsync(async (req, res, next) => {
     const filteredBody = filterObj(req.body,

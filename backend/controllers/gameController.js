@@ -16,7 +16,7 @@ exports.registerAsPlayer = catchAsync(async (req, res, next) => {
     }
 
     if (game.players.some(el => el._id.toString() === req.user.id)) {
-        return next(new AppError('You\'re already on the list'), 400);
+        return next(new AppError('You\'re already on the list', 400));
     }
 
     game = await Game.findByIdAndUpdate(req.params.id, {
