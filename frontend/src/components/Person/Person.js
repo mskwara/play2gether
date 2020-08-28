@@ -1,14 +1,29 @@
 import React from "react";
 import "./Person.scss";
+import axios from "axios";
 
 const Person = (props) => {
+    const addFriend = async () => {
+        const res = await axios.post(
+            `http://localhost:8000/users/${props.user._id}/addFriend`,
+            null,
+            {
+                withCredentials: true,
+            }
+        );
+        console.log(res);
+    };
+
     return (
         <div id="Person" className={props.className}>
             <div className="slider">
                 <div className="user">
-                    <p>Vexorth</p>
+                    <p>{props.user.name}</p>
                 </div>
-                <img src={require("../../assets/default.png")} alt="avatar" />
+                <img
+                    src={require(`../../../../backend/static/users/${props.user.photo}`)}
+                    alt="avatar"
+                />
                 <div className="buttons">
                     <img
                         src={require("../../assets/invite_to_game.png")}
@@ -24,6 +39,7 @@ const Person = (props) => {
                         src={require("../../assets/add_friend.png")}
                         alt="button"
                         className="btn"
+                        onClick={addFriend}
                     />
                 </div>
             </div>
