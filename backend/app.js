@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const userRouter = require("./routes/userRouter");
 const gameRouter = require("./routes/gameRouter");
+const conversationRouter = require('./routes/conversationRouter');
 const AppError = require("./utils/appError");
 const globalErrorhandler = require("./controllers/errorController");
 const cookieParser = require("cookie-parser");
@@ -42,6 +43,7 @@ app.get("/", (req, res, next) => {
 
 app.use("/users", userRouter);
 app.use("/games", gameRouter);
+app.use('/conversations', conversationRouter);
 
 app.all("*", (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl}`, 404));

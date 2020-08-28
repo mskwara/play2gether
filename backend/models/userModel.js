@@ -46,6 +46,10 @@ const userSchema = new mongoose.Schema({
     pendingFriendRequests: [{
         type: mongoose.Schema.ObjectId,
         ref: 'User'
+    }],
+    conversations: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'Conversation'
     }]
 });
 
@@ -68,6 +72,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
     }
     return false;
 };
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
