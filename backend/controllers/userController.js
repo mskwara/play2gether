@@ -144,7 +144,6 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
         }
     });
 
-    // Create conversation
     req.body.users = [req.params.id]
     next();
 });
