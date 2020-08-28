@@ -1,6 +1,9 @@
 const User = require('./../models/userModel');
 const Conv = require('./../models/conversationModel');
+const Message = require('./../models/messageModel');
+const factory = require('./handlerFactory');
 const catchAsync = require('./../utils/catchAsync');
+const Conversation = require('./../models/conversationModel');
 
 exports.create = catchAsync(async (req, res, next) => {
     // Remove duplicates
@@ -39,4 +42,44 @@ exports.create = catchAsync(async (req, res, next) => {
         status: 'success',
         user
     });
+});
+
+exports.leave = catchAsync(async (req, res, next) => {
+    const conv = await Conv.findByIdAndUpdate(req.params.id, {
+        $pull: {
+            participants: req.user.id
+        }
+    }, {
+        new: true
+    });
+
+    if (conv.participants.length === 0)
+        await Conv.findByIdAndDelete(req.params.id);
+
+    const user = await User.findByIdAndUpdate(req.user.id, {
+        $pull: {
+            conversations: req.params.id
+        }
+    }, {
+        new: true
+    });
+
+    res.status(200).json({
+        status: 'success',
+        user
+    });
+});
+
+exports.getAllMessages = factory.getAll(Message, '', '-sentAt');
+
+exports.getConversation = factory.getOne(Conversation, '');
+
+exports.sendMessage = catchAsync(async (req, res, next) => {
+    await Message.create({
+        conversation: req.params.id,
+        from: req.user.id,
+        sentAt: Date.now(),
+        message: req.body.message
+    });
+    next();
 });
