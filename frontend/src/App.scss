@@ -34,4 +34,9 @@
         top: 0;
         transition: height 0ms 0ms, opacity 0.5s 0ms, top 0ms 0s;
     }
+    .friends-invisible {
+        opacity: 0;
+        right: -200px;
+        transition: opacity 0.5s 0ms, right 0.5s 0s;
+    }
 }

@@ -1,0 +1,52 @@
+@import "../../variables.scss";
+
+#FriendList {
+    width: 200px;
+    height: 70%;
+    background-color: rgba(48, 48, 48, 0.95);
+    border-radius: 3px;
+    position: fixed;
+    right: 20px;
+    top: 90px;
+    z-index: 4;
+    padding: 10px;
+    transition: opacity 0.5s 0ms, right 0.5s 0s;
+
+    h1 {
+        color: white;
+        text-transform: uppercase;
+        font-family: SuiGeneris;
+        font-size: 12pt;
+        margin-top: 5px;
+    }
+
+    .person {
+        width: auto;
+        height: 30px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 10px;
+        transition: 0.5s;
+        cursor: pointer;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        p {
+            margin: 0;
+            color: white;
+        }
+    }
+}
