@@ -7,7 +7,8 @@ const conversationSchema = new mongoose.Schema({
     }],
     recentActivity: {
         type: Date
-    }
+    },
+    group: Boolean
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }

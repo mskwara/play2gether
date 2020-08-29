@@ -12,15 +12,15 @@ router.route('/:id')
     .get(gameController.getGame)
     .patch(gameController.updateGame);
 
-router.route('/:id/membership')
-    .post(
-        authController.protect,
-        gameController.registerAsPlayer
-    )
-    .patch(
-        authController.protect,
-        gameController.optOut
-    );
+router.patch('/:id/registerAsPlayer',
+    authController.protect,
+    gameController.registerAsPlayer
+);
+
+router.patch('/:id/optOut',
+    authController.protect,
+    gameController.optOut
+);
 
 
 module.exports = router;
