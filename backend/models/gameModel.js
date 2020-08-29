@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const gameSchema = new mongoose.Schema({
     title: {
@@ -9,17 +10,30 @@ const gameSchema = new mongoose.Schema({
         type: String,
         required: [true, 'What is that game about?'],
     },
+    players: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+    }],
     icon: {
         type: String,
         // Temporarily false
         required: [false, 'Provide an icon for this game.']
     },
-    players: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'User', 
-        }
-    ]
+    screenshots: [{ type: String }]
+});
+
+gameSchema.pre('save', function (next) {
+    this.icon = slugify(this.title, { lower: true });
+    next();
+});
+
+gameSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'players',
+        select: '-__v -passwordChangedAt'
+    });
+
+    next();
 });
 
 const Game = mongoose.model('Game', gameSchema);

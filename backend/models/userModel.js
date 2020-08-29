@@ -30,7 +30,34 @@ const userSchema = new mongoose.Schema({
             message: 'Passwords are not the same!'
         }
     },
-    passwordChangedAt: Date
+    passwordChangedAt: Date,
+    photo: {
+        type: String,
+        default: 'defaultUser.jpeg'
+    },
+    friends: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    }],
+    deletedFriends: {
+        type: [{
+            type: mongoose.Schema.ObjectId,
+            ref: 'User',
+        }],
+        select: false
+    },
+    receivedFriendRequests: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    }],
+    pendingFriendRequests: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    }],
+    conversations: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'Conversation'
+    }]
 });
 
 userSchema.pre('save', async function (next) {
@@ -52,6 +79,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
     }
     return false;
 };
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
