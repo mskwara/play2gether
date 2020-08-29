@@ -4,7 +4,7 @@ import axios from "axios";
 
 const Person = (props) => {
     const addFriend = async () => {
-        const res = await axios.post(
+        const res = await axios.patch(
             `http://localhost:8000/users/${props.user._id}/addFriend`,
             null,
             {
