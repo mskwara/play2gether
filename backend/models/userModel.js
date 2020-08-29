@@ -68,6 +68,21 @@ userSchema.pre('save', async function (next) {
     this.passwordConfirm = undefined;
 });
 
+userSchema.pre(/^find/, async function (next) {
+    this.populate({
+        path: 'friends',
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations'
+    }).populate({
+        path: 'receivedFriendRequests',
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations'
+    }).populate({
+        path: 'pendingFriendRequests',
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations'
+    });
+
+    next();
+})
+
 userSchema.methods.correctPassword = async function (providedPassword, hashedPassword) {
     return await bcrypt.compare(providedPassword, hashedPassword);
 };
