@@ -128,7 +128,7 @@ exports.addFriend = catchAsync(async (req, res, next) => {
 });
 
 exports.acceptFriend = catchAsync(async (req, res, next) => {
-    if (!req.user.receivedFriendRequests.includes(req.params.id))
+    if (!req.user.receivedFriendRequests.some(el => el._id.toString() === req.params.id.toString()))
         return next(new AppError('You have no invitation with that user ID', 400));
 
     req.user = await User.findByIdAndUpdate(req.user.id, {
@@ -163,9 +163,10 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
 });
 
 exports.ignoreFriend = catchAsync(async (req, res, next) => {
-    if (!req.user.receivedFriendRequests.includes(req.params.id))
+    if (!req.user.receivedFriendRequests.some(el => el._id.toString() === req.params.id.toString()))
         return next(new AppError('You have no invitation with that user ID', 400));
 
+    console.log(req.user.receivedFriendRequests[0]._id, req.params.id, req.user.receivedFriendRequests[0]._id === req.params.id);
     const user = await User.findByIdAndUpdate(req.user.id, {
         $pull: {
             receivedFriendRequests: req.params.id
