@@ -1,6 +1,6 @@
 var socket = io.connect('http://localhost:8000');
 // Query DOM
-const jwt = document.getElementById('jwt'),
+const jwtOBJ = document.getElementById('jwt'),
     conversation = document.getElementById('conversation'),
     message = document.getElementById('message'),
     handle = document.getElementById('handle'),
@@ -12,14 +12,21 @@ console.log(message.value, jwt.value, join.value, conversation.value);
 // Emit events
 join.addEventListener('click', function () {
     const room = conversation.value;
-    socket.emit('subscribe', room);
+    const jwt = jwtOBJ.value;
+    console.log(room, jwt);
+    socket.emit('subscribe', {
+        room,
+        jwt
+    });
     join.innerHTML = 'connected';
 });
 
 btn.addEventListener('click', function () {
     const room = conversation.value;
+    const jwt = jwtOBJ.value;
     socket.emit('send', {
         message: message.value,
+        jwt,
         room,
         handle: handle.value
     });
