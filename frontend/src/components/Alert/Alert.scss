@@ -1,0 +1,22 @@
+@import "../../variables.scss";
+
+#Alert {
+    width: 300px;
+    height: 40px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 3px;
+    position: fixed;
+    right: 20px;
+    top: 90px;
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: height 0ms 0ms, opacity 0.5s 0ms, top 0ms 0s;
+
+    p {
+        color: white;
+        margin: 0;
+    }
+}
