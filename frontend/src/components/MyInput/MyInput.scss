@@ -1,0 +1,49 @@
+@import "../../variables.scss";
+
+#MyInput {
+    // border: 1px solid red;
+    width: fit-content;
+    padding: 15px 10px 10px 10px;
+    position: relative;
+
+    &:focus-within > label {
+        top: 0;
+        font-size: 8pt;
+        color: $primary;
+    }
+
+    input {
+        border: none;
+        border-bottom: 1px solid $border;
+        color: $label;
+        width: 300px;
+        font-size: 13pt;
+        transition: 0.5s;
+        // margin: 10px;
+        outline: none;
+        background-color: transparent;
+
+        &,
+        & + label {
+            position: relative;
+        }
+
+        &:focus {
+            border-bottom: 1px solid $primary;
+            // color: $primary;
+        }
+    }
+
+    label {
+        position: absolute;
+        top: 15px;
+        transition: 0.2s;
+        color: $label;
+        user-select: none;
+    }
+
+    .filled {
+        top: 0;
+        font-size: 8pt;
+    }
+}

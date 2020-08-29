@@ -2,11 +2,17 @@ const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-exports.getAll = (Model, exclude) =>
+exports.getAll = (Model, exclude, sortOpt) =>
     catchAsync(async (req, res, next) => {
-        const query = Model.find().select(`${exclude}`);
+        let filter = {};
+        if (req.params.convId)
+            filter = { conversation: req.params.id };
+
+        const query = Model.find(filter).select(`${exclude}`);
         const features = new APIFeatures(query, req.query)
-            .limitFields();
+            .sort(sortOpt)
+            .limitFields()
+            .paginate();
 
         const docs = await features.query;
         res.status(200).json({
@@ -18,8 +24,10 @@ exports.getAll = (Model, exclude) =>
         });
     });
 
-exports.getOne = Model => catchAsync(async (req, res, next) => {
-    let query = Model.findById(req.params.id)
+exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
+    let query = Model.findById(req.params.id);
+    if (popOptions)
+        query = query.populate(popOptions);
 
     const doc = await query;
 
@@ -46,3 +54,21 @@ exports.create = Model =>
             }
         })
     });
+
+exports.update = (Model, excluded) => catchAsync(async (req, res, next) => {
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
+    });
+
+    if (!doc) {
+        return next(new AppError('No document found with that ID', 404));
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            data: doc
+        }
+    });
+});
