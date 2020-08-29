@@ -1,7 +1,7 @@
 @import "../../variables.scss";
 
 #FriendList {
-    width: 200px;
+    width: 250px;
     height: 70%;
     background-color: rgba(48, 48, 48, 0.95);
     border-radius: 3px;
@@ -10,14 +10,28 @@
     top: 90px;
     z-index: 4;
     padding: 10px;
+    overflow-y: scroll;
     transition: opacity 0.5s 0ms, right 0.5s 0s;
 
     h1 {
+        font-size: 12pt;
+        margin-top: 5px;
+    }
+
+    .title {
         color: white;
         text-transform: uppercase;
         font-family: SuiGeneris;
-        font-size: 12pt;
-        margin-top: 5px;
+    }
+
+    .small-title {
+        font-size: 6pt;
+        margin: 5px 0;
+        text-align: left;
+    }
+
+    .empty-title {
+        text-align: center;
     }
 
     .person {
@@ -32,9 +46,27 @@
         padding: 10px;
         transition: 0.5s;
         cursor: pointer;
+        position: relative;
+
+        &.received {
+            background-color: rgba(0, 132, 255, 0.3);
+            cursor: default;
+
+            &:hover {
+                background-color: rgba(0, 132, 255, 0.5);
+            }
+        }
 
         &:hover {
             background-color: rgba(255, 255, 255, 0.3);
+
+            & > .actions {
+                width: 40px;
+                opacity: 0.8;
+            }
+            & > .received-actions {
+                width: 70px;
+            }
         }
 
         img {
@@ -48,5 +80,45 @@
             margin: 0;
             color: white;
         }
+
+        .actions {
+            width: 0;
+            height: 100%;
+            z-index: 3;
+            background: rgb(255, 255, 255);
+            opacity: 0;
+            position: absolute;
+            right: 0;
+            transition: 0.5s;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            padding: 0 10px;
+
+            .btn {
+                border-radius: 0;
+                width: 20px;
+                height: 20px;
+                margin: 0;
+
+                &.received-btn {
+                    width: 15px;
+                    height: 15px;
+                    cursor: pointer;
+                    transition: 0.5s;
+
+                    &:hover {
+                        width: 13px;
+                        height: 13px;
+                    }
+                }
+            }
+        }
+    }
+
+    .received-box {
+        margin-bottom: 15px;
     }
 }
