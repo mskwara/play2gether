@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: 'User',
         }],
-        select: false
+        select: true
     },
     receivedFriendRequests: [{
         type: mongoose.Schema.ObjectId,
