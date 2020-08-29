@@ -2,6 +2,7 @@
 
 #App {
     text-align: center;
+    margin-top: 70px;
 
     button {
         background-color: $primary;
@@ -19,5 +20,23 @@
         &:hover {
             background-color: $primary-hover;
         }
+    }
+
+    .dialog-invisible {
+        opacity: 0;
+        height: 0;
+        top: -200px;
+        transition: height 0ms 0.5s, opacity 0.5s 0ms, top 0ms 0.5s;
+    }
+    .dialog-visible {
+        opacity: 1;
+        height: 100%;
+        top: 0;
+        transition: height 0ms 0ms, opacity 0.5s 0ms, top 0ms 0s;
+    }
+    .friends-invisible {
+        opacity: 0;
+        right: -200px;
+        transition: opacity 0.5s 0ms, right 0.5s 0s;
     }
 }
