@@ -22,7 +22,7 @@ router.route('/me')
 router.patch('/:id/addFriend', userController.addFriend);
 router.patch('/:id/acceptFriend',
     userController.acceptFriend,
-    // convController.create
+    convController.create
     );
 router.patch('/:id/ignoreFriend', userController.ignoreFriend);
 router.patch('/:id/removeFriend', userController.removeFriend);
