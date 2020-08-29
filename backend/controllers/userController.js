@@ -104,6 +104,9 @@ exports.addFriend = catchAsync(async (req, res, next) => {
     if (req.user.pendingFriendRequests.includes(req.params.id))
         return next(new AppError('You\'ve already sent an invitation to this user', 400));
 
+    if (req.user.friends.includes(req.params.id))
+        return next(new AppError('This user is already your friend', 400));
+
     await User.findByIdAndUpdate(req.params.id, {
         $push: {
             receivedFriendRequests: req.user.id
@@ -112,8 +115,10 @@ exports.addFriend = catchAsync(async (req, res, next) => {
 
     const user = await User.findByIdAndUpdate(req.user.id, {
         $push: {
-            pendingFriendRequests: req.user.id
+            pendingFriendRequests: req.params.id
         }
+    }, {
+        new: true
     });
 
     res.status(200).json({
@@ -123,16 +128,21 @@ exports.addFriend = catchAsync(async (req, res, next) => {
 });
 
 exports.acceptFriend = catchAsync(async (req, res, next) => {
-    if (!req.user.requests.includes(req.params.id))
+    if (!req.user.receivedFriendRequests.includes(req.params.id))
         return next(new AppError('You have no invitation with that user ID', 400));
 
-    const user = await User.findByIdAndUpdate(req.params.id, {
+    req.user = await User.findByIdAndUpdate(req.user.id, {
         $pull: {
-            receivedFriendRequests: req.user.id
+            receivedFriendRequests: req.params.id
         },
         $push: {
-            friends: req.user.id
+            friends: req.params.id
+        },
+        $pull: {
+            deletedFriends: req.params.id
         }
+    }, {
+        new: true
     });
 
     await User.findByIdAndUpdate(req.params.id, {
@@ -141,21 +151,27 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
         },
         $push: {
             friends: req.user.id
+        },
+        $pull: {
+            deletedFriends: req.user.id
         }
     });
 
-    req.body.users = [req.params.id]
+    req.body.users = [req.params.id];
+    req.body.group = false;
     next();
 });
 
 exports.ignoreFriend = catchAsync(async (req, res, next) => {
-    if (!req.user.requests.includes(req.params.id))
+    if (!req.user.receivedFriendRequests.includes(req.params.id))
         return next(new AppError('You have no invitation with that user ID', 400));
 
     const user = await User.findByIdAndUpdate(req.user.id, {
         $pull: {
             receivedFriendRequests: req.params.id
         }
+    }, {
+        new: true
     });
 
     await User.findByIdAndUpdate(req.params.id, {
@@ -174,17 +190,25 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user.id, {
         $pull: {
             friends: req.params.id
+        },
+        $push: {
+            deletedFriends: req.params.id
         }
+    }, {
+        new: true
     });
 
     await User.findByIdAndUpdate(req.params.id, {
         $pull: {
             friends: req.user.id
+        },
+        $push: {
+            deletedFriends: req.user.id
         }
     });
 
     res.status(200).json({
         status: 'success',
         user
-    })
+    });
 });

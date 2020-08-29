@@ -39,6 +39,11 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'User'
     }],
+    deletedFriends: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        select: false
+    }],
     receivedFriendRequests: [{
         type: mongoose.Schema.ObjectId,
         ref: 'User'

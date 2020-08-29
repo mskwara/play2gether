@@ -19,13 +19,13 @@ router.route('/me')
         userController.update
     );
 
-router.post('/:id/addFriend', userController.addFriend);
-router.post('/:id/acceptFriend',
+router.patch('/:id/addFriend', userController.addFriend);
+router.patch('/:id/acceptFriend',
     userController.acceptFriend,
     convController.create
     );
-router.post('/:id/ignoreFriend', userController.ignoreFriend);
-router.post('/:id/removeFriend', userController.removeFriend);
+router.patch('/:id/ignoreFriend', userController.ignoreFriend);
+router.patch('/:id/removeFriend', userController.removeFriend);
 
 
 router.patch('/me/deletePhoto',

@@ -6,6 +6,13 @@ const catchAsync = require('./../utils/catchAsync');
 const Conversation = require('./../models/conversationModel');
 
 exports.create = catchAsync(async (req, res, next) => {
+    // Has someone previously been your friend
+    if (!req.body.group && req.user.deletedFriends.includes(req.body.users[0])) {
+        return res.status(200).json({
+            status: 'success',
+            user: req.user
+        });
+    }
     // Remove duplicates
     let unique = req.body.users;
     unique = [...new Set(unique)];
