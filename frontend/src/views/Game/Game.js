@@ -39,8 +39,8 @@ const Game = (props) => {
 
     const participate = async () => {
         setLoading(true);
-        const res = await axios.post(
-            `http://localhost:8000/games/${props.match.params.gameId}/membership`,
+        const res = await axios.patch(
+            `http://localhost:8000/games/${props.match.params.gameId}/registerAsPlayer`,
             null,
             {
                 withCredentials: true,
@@ -60,7 +60,7 @@ const Game = (props) => {
     const optout = async () => {
         setLoading(true);
         const res = await axios.patch(
-            `http://localhost:8000/games/${props.match.params.gameId}/membership`,
+            `http://localhost:8000/games/${props.match.params.gameId}/optOut`,
             null,
             {
                 withCredentials: true,
