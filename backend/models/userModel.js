@@ -17,7 +17,8 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Please specify your password'],
-        minlegth: 8,
+        minlength: 8,
+        maxlength: 32,
         select: false
     },
     passwordConfirm: {
@@ -57,7 +58,13 @@ const userSchema = new mongoose.Schema({
     conversations: [{
         type: mongoose.Schema.ObjectId,
         ref: 'Conversation'
-    }]
+    }],
+    privileges: {
+        type: String,
+        enum: ['admin', 'user'],
+        default: 'user',
+        select: false
+    }
 });
 
 userSchema.pre('save', async function (next) {
@@ -66,6 +73,14 @@ userSchema.pre('save', async function (next) {
 
     this.password = await bcrypt.hash(this.password, 12);
     this.passwordConfirm = undefined;
+    next();
+});
+
+userSchema.pre('save', function (next) {
+    if (!this.isModified('password') || this.idNew)
+        return next();
+    this.passwordChangedAt = Date.now() - 1000;
+    next();
 });
 
 userSchema.pre(/^find/, async function (next) {
