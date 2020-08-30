@@ -96,7 +96,7 @@ userSchema.pre(/^find/, async function (next) {
     });
 
     next();
-})
+});
 
 userSchema.methods.correctPassword = async function (providedPassword, hashedPassword) {
     return await bcrypt.compare(providedPassword, hashedPassword);

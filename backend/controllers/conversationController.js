@@ -29,10 +29,12 @@ exports.create = catchAsync(async (req, res, next) => {
         return next(new AppError('Not enough members for a conversation'));
     }
 
+    group = unique.length > 1 ? true : false;
     unique.push(req.user.id);
     const newConv = await Conv.create({
         participants: [...unique],
-        recentActivity: Date.now()
+        recentActivity: Date.now(),
+        group
     });
 
     await User.updateMany({
@@ -77,8 +79,27 @@ exports.leave = catchAsync(async (req, res, next) => {
     });
 });
 
+
 exports.getAllMessages = factory.getAll(Message, '', '-sentAt');
 
+exports.getAllConversations = catchAsync(async (req, res, next) => {
+    let filter = {
+        _id: {
+            $in: req.user.conversations
+        },
+        group: req.body.group
+    }
+
+    const convs = await Conversation.find(filter);
+
+    res.status(200).json({
+        status: 'success',
+        results: convs.length,
+        data: {
+            data: convs
+        }
+    });
+});
 exports.getConversation = factory.getOne(Conversation, '');
 
 exports.sendMessage = catchAsync(async (req, res, next) => {

@@ -5,8 +5,10 @@ const AppError = require('../utils/appError');
 exports.getAll = (Model, exclude, sortOpt) =>
     catchAsync(async (req, res, next) => {
         let filter = {};
-        if (req.params.convId)
-            filter = { conversation: req.params.id };
+        // if (req.params.id)
+        // filter = { conversation: req.params.id };
+        // if (req.body.group)
+            // filter = { private: req.body.group }
 
         const query = Model.find(filter).select(`${exclude}`);
         const features = new APIFeatures(query, req.query)
