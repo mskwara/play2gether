@@ -3,14 +3,16 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "./views/Home/Home";
 import Game from "./views/Game/Game";
 import Topbar from "./components/Topbar/Topbar";
+import Loader from "./components/Loader/Loader";
 import FriendList from "./components/FriendList/FriendList";
+import Conversations from "./components/Conversations/Conversations";
 import Alert from "./components/Alert/Alert";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import AlertContext from "./utils/AlertContext";
 import UserContext from "./utils/UserContext";
 import "./App.scss";
-import axios from "axios";
+import request from "./utils/request";
 
 const App = (props) => {
     const [state, setState] = useState({
@@ -21,24 +23,25 @@ const App = (props) => {
         alertMessage: "",
     });
 
+    const [loadingState, setLoadingState] = useState({ loading: true });
+
     const [globalUserState, setGlobalUserState] = useState({ user: null });
 
     const [timeoutState, setTimeoutState] = useState();
     useEffect(() => {
         const checkLogin = async () => {
-            try {
-                const res = await axios.get("http://localhost:8000/users/me", {
-                    withCredentials: true,
-                });
-                if (res.data.status === "success") {
-                    setGlobalUserState({ user: res.data.user });
-                    localStorage.setItem("userId", res.data.user._id);
-                    localStorage.setItem("userName", res.data.user.name);
-                    localStorage.setItem("userPhoto", res.data.user.photo);
-                }
-            } catch (err) {
-                console.log(err);
+            const res = await request(
+                "get",
+                "http://localhost:8000/users/me",
+                null,
+                true
+            );
+            if (res.data.status === "success") {
+                setGlobalUserState({ user: res.data.user });
+            } else {
+                setGlobalUserState({ user: null });
             }
+            setLoadingState({ loading: false });
         };
         checkLogin();
     }, []);
@@ -76,10 +79,10 @@ const App = (props) => {
         }));
     };
 
-    const switchOpenFriends = () => {
+    const setFriendsOpened = (val) => {
         setState((state) => ({
             ...state,
-            friendsOpened: !state.friendsOpened,
+            friendsOpened: val,
         }));
     };
 
@@ -129,9 +132,12 @@ const App = (props) => {
         alert = <Alert message={state.alertMessage} />;
     }
 
-    let friendList = <FriendList className="friends-invisible" />;
-    if (state.friendsOpened) {
-        friendList = <FriendList />;
+    let friendList = null;
+    if (globalUserState.user) {
+        friendList = <FriendList className="friends-invisible" />;
+        if (state.friendsOpened) {
+            friendList = <FriendList />;
+        }
     }
 
     return (
@@ -142,27 +148,33 @@ const App = (props) => {
                     setAlertActive,
                     openSignup,
                     openLogin,
-                    switchOpenFriends,
+                    setFriendsOpened,
+                    friendsOpened: state.friendsOpened,
                 }}
             >
                 <UserContext.Provider
                     value={{ globalUserState, setGlobalUserState }}
                 >
-                    <div id="App">
-                        {alert}
-                        <Topbar />
-                        {friendList}
-                        {signup}
-                        {login}
-                        <Switch>
-                            <Route path="/" exact component={Home} />
-                            <Route
-                                path="/games/:gameId"
-                                exact
-                                component={Game}
-                            />
-                        </Switch>
-                    </div>
+                    {loadingState.loading ? (
+                        <Loader className="loader" />
+                    ) : (
+                        <div id="App">
+                            {alert}
+                            <Topbar />
+                            {friendList}
+                            <Conversations />
+                            {signup}
+                            {login}
+                            <Switch>
+                                <Route path="/" exact component={Home} />
+                                <Route
+                                    path="/games/:gameId"
+                                    exact
+                                    component={Game}
+                                />
+                            </Switch>
+                        </div>
+                    )}
                 </UserContext.Provider>
             </AlertContext.Provider>
         </BrowserRouter>
