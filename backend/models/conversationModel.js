@@ -20,6 +20,15 @@ const conversationSchema = new mongoose.Schema({
 //     localField: '_id'
 // });
 
+conversationSchema.pre(/^find/, async function (next) {
+    this.populate({
+        path: 'participants',
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations'
+    });
+
+    next();
+});
+
 const Conversation = mongoose.model('Conversation', conversationSchema);
 
 module.exports = Conversation;
