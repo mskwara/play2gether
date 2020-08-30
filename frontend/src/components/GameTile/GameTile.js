@@ -1,17 +1,29 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./GameTile.scss";
-// import axios from "axios";
+import UserContext from "../../utils/UserContext";
+import AlertContext from "../../utils/AlertContext";
 
 const GameTile = (props) => {
+    const userContext = useContext(UserContext);
+    const alertContext = useContext(AlertContext);
+
     let bgImage = require("../../assets/valorant.jpg");
     const tileStyle = {
         backgroundImage: `url(${bgImage})`,
     };
 
     const tileClickHandler = () => {
-        props.history.push({
-            pathname: `/games/${props.game._id}`,
-        });
+        if (userContext.globalUserState.user) {
+            // there is a logged user
+            props.history.push({
+                pathname: `/games/${props.game._id}`,
+            });
+        } else {
+            alertContext.setAlertActive(
+                true,
+                `You have to be logged in to get in!`
+            );
+        }
     };
 
     return (
