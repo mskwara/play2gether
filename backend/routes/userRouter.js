@@ -11,6 +11,8 @@ router.post('/logout', authController.logout);
 
 router.use(authController.protect);
 
+router.patch('/updatePassword', authController.updatePassword)
+
 router.route('/me')
     .get(userController.getMe)
     .patch(

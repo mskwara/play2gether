@@ -30,7 +30,7 @@ const createAuthToken = (user, statusCode, res) => {
         status: "success",
         token,
         data: {
-            user,
+            user
         },
     });
 };
@@ -115,4 +115,31 @@ exports.protect = catchAsync(async (req, res, next) => {
     // Grant access to protected route
     req.user = currentUser;
     next();
+});
+
+exports.restrictTo = (...privileges) => {
+    return (req, res, next) => {
+        if (!privileges.includes(req.user.privileges)) {
+            return next(new AppError('You don\'t have permission to perform this action', 403));
+        }
+        next();
+    }
+};
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+    // 1) Get user from collection
+    const user = await User.findById(req.user.id).select('+password');
+
+    // 2) Check if POSTed password is correct
+    if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
+        return next(new AppError('Provided password is incorrect', 401));
+    }
+
+    // 3) If so, update password
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    await user.save()
+
+    // 4) Log user in, send JWT
+    createAuthToken(user, 201, res);
 });
