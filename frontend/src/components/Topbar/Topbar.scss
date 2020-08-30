@@ -18,6 +18,16 @@
     }
     &.small {
         height: 40px;
+
+        .logged_user {
+            & img {
+                width: 30px;
+                height: 30px;
+            }
+            & p {
+                font-size: 10pt;
+            }
+        }
     }
 
     .title {
@@ -66,6 +76,28 @@
                 border-bottom: 1px solid white;
                 transition: 0.3s;
             }
+        }
+    }
+    .logged_user {
+        height: 100%;
+        width: auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0 20px;
+
+        img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: 0.5s;
+        }
+        p {
+            display: block;
+            color: white;
+            margin-left: 20px;
+            font-size: 14pt;
+            transition: 0.5s;
         }
     }
 }

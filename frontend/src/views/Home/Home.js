@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import GameTile from "../../components/GameTile/GameTile";
 import Loader from "../../components/Loader/Loader";
 import "./Home.scss";
-import axios from "axios";
+import request from "../../utils/request";
 
 const Home = (props) => {
     const [state, setState] = useState({
@@ -11,16 +11,18 @@ const Home = (props) => {
     });
     useEffect(() => {
         const getData = async () => {
-            try {
-                const res = await axios.get("http://localhost:8000/games");
-                setState((state) => ({
-                    ...state,
-                    games: res.data.data.data,
-                    loading: false,
-                }));
-            } catch (err) {
-                console.log(err);
-            }
+            const res = await request(
+                "get",
+                "http://localhost:8000/games",
+                null,
+                false
+            );
+
+            setState((state) => ({
+                ...state,
+                games: res.data.data.data,
+                loading: false,
+            }));
         };
         getData();
     }, []);

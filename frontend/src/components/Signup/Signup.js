@@ -1,11 +1,13 @@
 import React, { useState, useContext } from "react";
 import MyInput from "../MyInput/MyInput";
 import "./Signup.scss";
-import axios from "axios";
+import request from "../../utils/request";
 import AlertContext from "../../utils/AlertContext";
+import UserContext from "../../utils/UserContext";
 
 const Signup = (props) => {
     const alertContext = useContext(AlertContext);
+    const userContext = useContext(UserContext);
 
     const [userState, setUserState] = useState({
         name: "",
@@ -24,26 +26,24 @@ const Signup = (props) => {
     };
 
     const signup = async () => {
-        try {
-            const res = await axios.post(
-                "http://localhost:8000/users/signup",
-                userState,
-                {
-                    withCredentials: true,
-                }
+        const res = await request(
+            "post",
+            "http://localhost:8000/users/signup",
+            userState,
+            true
+        );
+
+        if (res.data.status === "success") {
+            userContext.setGlobalUserState({ user: res.data.data.user });
+            // localStorage.setItem("userId", res.data.data.user._id);
+            // console.log(localStorage.getItem("userId"));
+            props.closeSignup();
+            alertContext.setAlertActive(
+                true,
+                `Welcome to our community, ${res.data.data.user.name}!`
             );
-            if (res.data.status === "success") {
-                localStorage.setItem("userId", res.data.data.user._id);
-                console.log(localStorage.getItem("userId"));
-                props.closeSignup();
-                alertContext.setAlertActive(
-                    true,
-                    `Welcome to our community, ${res.data.data.user.name}!`
-                );
-            }
-        } catch (err) {
-            console.log(err);
         }
+
         setUserState({
             name: "",
             email: "",
