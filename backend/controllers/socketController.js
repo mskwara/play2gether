@@ -43,7 +43,7 @@ function send(io) {
             const message = await Message.create(messageOBJ);
             messageOBJ.name = user.name;
             messageOBJ.photo = user.photo;
-            messageOBJ.messageId = message._id;
+            messageOBJ._id = message._id;
             io.sockets.in(data.room).emit('chat', messageOBJ);
             if (process.env.NODE_ENV === 'development') {
                 console.log(`User ${user.id} succesfully sent message to chat room no. ${data.room}.`);
