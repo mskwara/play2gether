@@ -9,8 +9,9 @@ import Conversations from "./components/Conversations/Conversations";
 import Alert from "./components/Alert/Alert";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
-import AlertContext from "./utils/AlertContext";
+import PopupContext from "./utils/PopupContext";
 import UserContext from "./utils/UserContext";
+import ConvContext from "./utils/ConvContext";
 import "./App.scss";
 import request from "./utils/request";
 
@@ -25,7 +26,28 @@ const App = (props) => {
 
     const [loadingState, setLoadingState] = useState({ loading: true });
 
-    const [globalUserState, setGlobalUserState] = useState({ user: null });
+    const [globalUserState, setGlobalUserState] = useState({
+        user: null,
+        conversations: null,
+    });
+
+    const [convState, setConvState] = useState({
+        openedConvs: [],
+    });
+
+    const updateGlobalUserState = (updatedFields) => {
+        setGlobalUserState((globalUserState) => ({
+            ...globalUserState,
+            ...updatedFields,
+        }));
+    };
+
+    const updateConvState = (updatedFields) => {
+        setConvState((convState) => ({
+            ...convState,
+            ...updatedFields,
+        }));
+    };
 
     const [timeoutState, setTimeoutState] = useState();
     useEffect(() => {
@@ -37,12 +59,22 @@ const App = (props) => {
                 true
             );
             if (res.data.status === "success") {
-                setGlobalUserState({ user: res.data.user });
+                const convRes = await request(
+                    "get",
+                    "http://localhost:8000/conversations?group=false",
+                    null,
+                    true
+                );
+                updateGlobalUserState({
+                    user: res.data.user,
+                    conversations: convRes.data.data.data,
+                });
             } else {
-                setGlobalUserState({ user: null });
+                updateGlobalUserState({ user: null, conversations: null });
             }
             setLoadingState({ loading: false });
         };
+
         checkLogin();
     }, []);
 
@@ -142,7 +174,7 @@ const App = (props) => {
 
     return (
         <BrowserRouter>
-            <AlertContext.Provider
+            <PopupContext.Provider
                 value={{
                     alertActive: state.alertActive,
                     setAlertActive,
@@ -153,30 +185,34 @@ const App = (props) => {
                 }}
             >
                 <UserContext.Provider
-                    value={{ globalUserState, setGlobalUserState }}
+                    value={{ globalUserState, updateGlobalUserState }}
                 >
-                    {loadingState.loading ? (
-                        <Loader className="loader" />
-                    ) : (
-                        <div id="App">
-                            {alert}
-                            <Topbar />
-                            {friendList}
-                            <Conversations />
-                            {signup}
-                            {login}
-                            <Switch>
-                                <Route path="/" exact component={Home} />
-                                <Route
-                                    path="/games/:gameId"
-                                    exact
-                                    component={Game}
-                                />
-                            </Switch>
-                        </div>
-                    )}
+                    <ConvContext.Provider
+                        value={{ convState, updateConvState }}
+                    >
+                        {loadingState.loading ? (
+                            <Loader className="loader" />
+                        ) : (
+                            <div id="App">
+                                {alert}
+                                <Topbar />
+                                {friendList}
+                                <Conversations />
+                                {signup}
+                                {login}
+                                <Switch>
+                                    <Route path="/" exact component={Home} />
+                                    <Route
+                                        path="/games/:gameId"
+                                        exact
+                                        component={Game}
+                                    />
+                                </Switch>
+                            </div>
+                        )}
+                    </ConvContext.Provider>
                 </UserContext.Provider>
-            </AlertContext.Provider>
+            </PopupContext.Provider>
         </BrowserRouter>
     );
 };

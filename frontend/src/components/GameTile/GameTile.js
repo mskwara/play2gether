@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import "./GameTile.scss";
 import UserContext from "../../utils/UserContext";
-import AlertContext from "../../utils/AlertContext";
+import PopupContext from "../../utils/PopupContext";
 
 const GameTile = (props) => {
     const userContext = useContext(UserContext);
-    const alertContext = useContext(AlertContext);
+    const popupContext = useContext(PopupContext);
 
     let bgImage = require("../../assets/valorant.jpg");
     const tileStyle = {
@@ -19,7 +19,7 @@ const GameTile = (props) => {
                 pathname: `/games/${props.game._id}`,
             });
         } else {
-            alertContext.setAlertActive(
+            popupContext.setAlertActive(
                 true,
                 `You have to be logged in to get in!`
             );

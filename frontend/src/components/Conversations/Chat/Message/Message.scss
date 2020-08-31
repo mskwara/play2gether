@@ -1,0 +1,29 @@
+@import "../../../../variables.scss";
+
+#Message {
+    width: 100%;
+    height: auto;
+    margin: 0 0 10px 0;
+    display: flex;
+    flex-direction: column;
+
+    .content {
+        width: 80%;
+        height: auto;
+        border-radius: 15px;
+        background-color: $message;
+        padding: 5px;
+        align-self: flex-start;
+
+        p {
+            font-size: 10pt;
+            margin: 0;
+            text-align: left;
+            margin-left: 10px;
+        }
+
+        &.my-message {
+            align-self: flex-end;
+        }
+    }
+}

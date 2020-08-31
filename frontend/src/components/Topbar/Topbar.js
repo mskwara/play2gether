@@ -2,11 +2,11 @@ import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import "./Topbar.scss";
 import request from "../../utils/request";
-import AlertContext from "../../utils/AlertContext";
+import PopupContext from "../../utils/PopupContext";
 import UserContext from "../../utils/UserContext";
 
 const Topbar = (props) => {
-    const alertContext = useContext(AlertContext);
+    const popupContext = useContext(PopupContext);
     const userContext = useContext(UserContext);
 
     const [state, setState] = useState({
@@ -22,12 +22,9 @@ const Topbar = (props) => {
         );
 
         if (res.data.status === "success") {
-            userContext.setGlobalUserState({ user: null });
-            // localStorage.setItem("userId", undefined);
-            // localStorage.setItem("userName", undefined);
-            // localStorage.setItem("userPhoto", undefined);
+            userContext.updateGlobalUserState({ user: null });
             setState({ reload: !state.reload });
-            alertContext.setAlertActive(true, "You have been logged out!");
+            popupContext.setAlertActive(true, "You have been logged out!");
         }
     };
 
@@ -43,8 +40,8 @@ const Topbar = (props) => {
             <div className="link" key="2">
                 <Link
                     onClick={() =>
-                        alertContext.setFriendsOpened(
-                            !alertContext.friendsOpened
+                        popupContext.setFriendsOpened(
+                            !popupContext.friendsOpened
                         )
                     }
                 >
@@ -78,11 +75,11 @@ const Topbar = (props) => {
                 <div className="underline" />
             </div>,
             <div className="link" key="3">
-                <Link onClick={alertContext.openLogin}>Login</Link>
+                <Link onClick={popupContext.openLogin}>Login</Link>
                 <div className="underline" />
             </div>,
             <div className="link" key="2">
-                <Link onClick={alertContext.openSignup}>Sign up</Link>
+                <Link onClick={popupContext.openSignup}>Sign up</Link>
                 <div className="underline" />
             </div>,
         ];

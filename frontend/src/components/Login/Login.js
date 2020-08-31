@@ -2,11 +2,11 @@ import React, { useState, useContext } from "react";
 import MyInput from "../MyInput/MyInput";
 import "./Login.scss";
 import request from "../../utils/request";
-import AlertContext from "../../utils/AlertContext";
+import PopupContext from "../../utils/PopupContext";
 import UserContext from "../../utils/UserContext";
 
 const Login = (props) => {
-    const alertContext = useContext(AlertContext);
+    const popupContext = useContext(PopupContext);
     const userContext = useContext(UserContext);
 
     const [userState, setUserState] = useState({
@@ -32,11 +32,9 @@ const Login = (props) => {
         );
 
         if (res.data.status === "success") {
-            userContext.setGlobalUserState({ user: res.data.data.user });
-            // localStorage.setItem("userId", res.data.data.user._id);
-            // console.log(localStorage.getItem("userId"));
+            userContext.updateGlobalUserState({ user: res.data.data.user });
             props.closeLogin();
-            alertContext.setAlertActive(
+            popupContext.setAlertActive(
                 true,
                 `Welcome back, ${res.data.data.user.name}!`
             );
