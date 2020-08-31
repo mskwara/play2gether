@@ -21,7 +21,7 @@ const GameTile = (props) => {
         } else {
             popupContext.setAlertActive(
                 true,
-                `You have to be logged in to get in!`
+                `You have to be logged to get in!`
             );
         }
     };

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import "./FriendList.scss";
 import UserContext from "../../utils/UserContext";
 import PopupContext from "../../utils/PopupContext";
@@ -21,7 +21,16 @@ const FriendList = (props) => {
         );
 
         if (res.data.status === "success") {
-            userContext.updateGlobalUserState({ user: res.data.user });
+            const convRes = await request(
+                "get",
+                "http://localhost:8000/conversations?group=false",
+                null,
+                true
+            );
+            userContext.updateGlobalUserState({
+                user: res.data.user,
+                conversations: convRes.data.data.data,
+            });
             popupContext.setAlertActive(
                 true,
                 `${received_friend.name} has been added to your friends!`
@@ -38,7 +47,16 @@ const FriendList = (props) => {
         );
 
         if (res.data.status === "success") {
-            userContext.updateGlobalUserState({ user: res.data.user });
+            const convRes = await request(
+                "get",
+                "http://localhost:8000/conversations?group=false",
+                null,
+                true
+            );
+            userContext.updateGlobalUserState({
+                user: res.data.user,
+                conversations: convRes.data.data.data,
+            });
             popupContext.setAlertActive(
                 true,
                 `${received_friend.name}'s friend request has been ignored!`

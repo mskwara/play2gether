@@ -32,7 +32,16 @@ const Login = (props) => {
         );
 
         if (res.data.status === "success") {
-            userContext.updateGlobalUserState({ user: res.data.data.user });
+            const convRes = await request(
+                "get",
+                "http://localhost:8000/conversations?group=false",
+                null,
+                true
+            );
+            userContext.updateGlobalUserState({
+                user: res.data.data.user,
+                conversations: convRes.data.data.data,
+            });
             props.closeLogin();
             popupContext.setAlertActive(
                 true,

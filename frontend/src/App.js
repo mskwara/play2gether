@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "./views/Home/Home";
 import Game from "./views/Game/Game";
@@ -12,6 +12,7 @@ import Login from "./components/Login/Login";
 import PopupContext from "./utils/PopupContext";
 import UserContext from "./utils/UserContext";
 import ConvContext from "./utils/ConvContext";
+import PrivateRoute from "./utils/PrivateRoute";
 import "./App.scss";
 import request from "./utils/request";
 
@@ -28,7 +29,7 @@ const App = (props) => {
 
     const [globalUserState, setGlobalUserState] = useState({
         user: null,
-        conversations: null,
+        conversations: [],
     });
 
     const [convState, setConvState] = useState({
@@ -70,7 +71,7 @@ const App = (props) => {
                     conversations: convRes.data.data.data,
                 });
             } else {
-                updateGlobalUserState({ user: null, conversations: null });
+                updateGlobalUserState({ user: null, conversations: [] });
             }
             setLoadingState({ loading: false });
         };
@@ -202,7 +203,7 @@ const App = (props) => {
                                 {login}
                                 <Switch>
                                     <Route path="/" exact component={Home} />
-                                    <Route
+                                    <PrivateRoute
                                         path="/games/:gameId"
                                         exact
                                         component={Game}
