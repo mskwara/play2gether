@@ -26,7 +26,7 @@ const Chat = (props) => {
             if (res.data.status === "success") {
                 setChatState((chatState) => ({
                     ...chatState,
-                    messages: res.data.data.data,
+                    messages: res.data.data.data.reverse(),
                 }));
             }
         };
@@ -70,7 +70,7 @@ const Chat = (props) => {
         if (res.data.status === "success") {
             setChatState((chatState) => ({
                 ...chatState,
-                messages: res.data.data.data,
+                messages: res.data.data.data.reverse(),
                 messageToSend: "",
             }));
         }
