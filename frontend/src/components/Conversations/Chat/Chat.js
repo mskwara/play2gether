@@ -2,17 +2,28 @@ import React, { useContext, useEffect, useState } from "react";
 import "./Chat.scss";
 import UserContext from "../../../utils/UserContext";
 import ConvContext from "../../../utils/ConvContext";
+import SocketContext from "../../../utils/SocketContext";
 import request from "../../../utils/request";
 import Message from "./Message/Message";
 
 const Chat = (props) => {
     const userContext = useContext(UserContext);
     const convContext = useContext(ConvContext);
+    const socketContext = useContext(SocketContext);
     const activeUser = userContext.globalUserState.user;
 
     const [chatState, setChatState] = useState({
         messages: [],
         messageToSend: "",
+    });
+
+    socketContext.socketState.socket.on("chat", (message) => {
+        const oldMessages = [...chatState.messages];
+        oldMessages.push(message);
+        setChatState((chatState) => ({
+            ...chatState,
+            messages: oldMessages,
+        }));
     });
 
     useEffect(() => {
@@ -31,6 +42,7 @@ const Chat = (props) => {
                 }));
             }
         };
+
         getAllMessages();
 
         // document.addEventListener("keydown", (e) => {
@@ -46,6 +58,13 @@ const Chat = (props) => {
     }, [props.conv._id]);
 
     useEffect(() => {
+        socketContext.socketState.socket.emit("join", {
+            room: props.conv._id,
+            jwt: userContext.globalUserState.jwt,
+        });
+    }, []);
+
+    useEffect(() => {
         const scrollable_content = document.getElementById("content");
         scrollable_content.scrollTop = scrollable_content.scrollHeight;
     }, [chatState.messages]);
@@ -55,27 +74,30 @@ const Chat = (props) => {
     )[0]; //get person which do you talk to
 
     const closeConv = () => {
+        socketContext.socketState.socket.emit("leave", {
+            room: props.conv._id,
+            jwt: userContext.globalUserState.jwt,
+        });
         const openedConvs = [...convContext.convState.openedConvs];
         const index = convContext.convState.openedConvs.indexOf(props.conv);
         openedConvs.splice(index, 1);
         convContext.updateConvState({ openedConvs });
     };
 
-    const sendMessage = async () => {
-        const res = await request(
-            "post",
-            `http://localhost:8000/conversations/${props.conv._id}`,
-            { message: chatState.messageToSend },
-            true
-        );
-        if (res.data.status === "success") {
-            const messagesReversed = res.data.data.data.reverse();
-            setChatState((chatState) => ({
-                ...chatState,
-                messages: messagesReversed,
-                messageToSend: "",
-            }));
-        }
+    const sendMessage = () => {
+        socketContext.socketState.socket.emit("send", {
+            message: chatState.messageToSend,
+            jwt: userContext.globalUserState.jwt,
+            room: props.conv._id,
+        });
+        // console.log(chatState.messages);
+
+        // const messagesReversed = res.data.data.data.reverse();
+        setChatState((chatState) => ({
+            ...chatState,
+            messageToSend: "",
+        }));
+        // console.log(chatState.messages);
     };
 
     const handleTextAreaChange = (event) => {
@@ -93,7 +115,7 @@ const Chat = (props) => {
     let messages = null;
     if (chatState.messages.length > 0) {
         messages = chatState.messages.map((m) => (
-            <Message message={m} activeUserId={activeUser._id} />
+            <Message message={m} activeUserId={activeUser._id} key={m._id} />
         ));
     }
 
