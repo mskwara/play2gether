@@ -12,9 +12,11 @@ import Login from "./components/Login/Login";
 import PopupContext from "./utils/PopupContext";
 import UserContext from "./utils/UserContext";
 import ConvContext from "./utils/ConvContext";
+import SocketContext from "./utils/SocketContext";
 import PrivateRoute from "./utils/PrivateRoute";
 import "./App.scss";
 import request from "./utils/request";
+import io from "socket.io-client";
 
 const App = (props) => {
     const [state, setState] = useState({
@@ -30,10 +32,15 @@ const App = (props) => {
     const [globalUserState, setGlobalUserState] = useState({
         user: null,
         conversations: [],
+        jwt: null,
     });
 
     const [convState, setConvState] = useState({
         openedConvs: [],
+    });
+
+    const [socketState, setSocketState] = useState({
+        socket: null,
     });
 
     const updateGlobalUserState = (updatedFields) => {
@@ -69,6 +76,7 @@ const App = (props) => {
                 updateGlobalUserState({
                     user: res.data.user,
                     conversations: convRes.data.data.data,
+                    jwt: res.data.token,
                 });
             } else {
                 updateGlobalUserState({ user: null, conversations: [] });
@@ -76,6 +84,8 @@ const App = (props) => {
             setLoadingState({ loading: false });
         };
 
+        const socket = io.connect("http://localhost:8000");
+        setSocketState((socketState) => ({ ...socketState, socket }));
         checkLogin();
     }, []);
 
@@ -191,26 +201,34 @@ const App = (props) => {
                     <ConvContext.Provider
                         value={{ convState, updateConvState }}
                     >
-                        {loadingState.loading ? (
-                            <Loader className="loader" />
-                        ) : (
-                            <div id="App">
-                                {alert}
-                                <Topbar />
-                                {friendList}
-                                <Conversations />
-                                {signup}
-                                {login}
-                                <Switch>
-                                    <Route path="/" exact component={Home} />
-                                    <PrivateRoute
-                                        path="/games/:gameId"
-                                        exact
-                                        component={Game}
-                                    />
-                                </Switch>
-                            </div>
-                        )}
+                        <SocketContext.Provider
+                            value={{ socketState, setSocketState }}
+                        >
+                            {loadingState.loading ? (
+                                <Loader className="loader" />
+                            ) : (
+                                <div id="App">
+                                    {alert}
+                                    <Topbar />
+                                    {friendList}
+                                    <Conversations />
+                                    {signup}
+                                    {login}
+                                    <Switch>
+                                        <Route
+                                            path="/"
+                                            exact
+                                            component={Home}
+                                        />
+                                        <PrivateRoute
+                                            path="/games/:gameId"
+                                            exact
+                                            component={Game}
+                                        />
+                                    </Switch>
+                                </div>
+                            )}
+                        </SocketContext.Provider>
                     </ConvContext.Provider>
                 </UserContext.Provider>
             </PopupContext.Provider>
