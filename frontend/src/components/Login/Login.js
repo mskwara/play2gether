@@ -1,11 +1,13 @@
 import React, { useState, useContext } from "react";
 import MyInput from "../MyInput/MyInput";
 import "./Login.scss";
-import axios from "axios";
+import request from "../../utils/request";
 import AlertContext from "../../utils/AlertContext";
+import UserContext from "../../utils/UserContext";
 
 const Login = (props) => {
     const alertContext = useContext(AlertContext);
+    const userContext = useContext(UserContext);
 
     const [userState, setUserState] = useState({
         email: "",
@@ -22,26 +24,24 @@ const Login = (props) => {
     };
 
     const login = async () => {
-        try {
-            const res = await axios.post(
-                "http://localhost:8000/users/login",
-                userState,
-                {
-                    withCredentials: true,
-                }
+        const res = await request(
+            "post",
+            "http://localhost:8000/users/login",
+            userState,
+            true
+        );
+
+        if (res.data.status === "success") {
+            userContext.setGlobalUserState({ user: res.data.data.user });
+            // localStorage.setItem("userId", res.data.data.user._id);
+            // console.log(localStorage.getItem("userId"));
+            props.closeLogin();
+            alertContext.setAlertActive(
+                true,
+                `Welcome back, ${res.data.data.user.name}!`
             );
-            if (res.data.status === "success") {
-                localStorage.setItem("userId", res.data.data.user._id);
-                console.log(localStorage.getItem("userId"));
-                props.closeLogin();
-                alertContext.setAlertActive(
-                    true,
-                    `Welcome back, ${res.data.data.user.name}!`
-                );
-            }
-        } catch (err) {
-            console.log(err);
         }
+
         setUserState({
             email: "",
             password: "",

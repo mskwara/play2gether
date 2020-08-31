@@ -1,0 +1,16 @@
+#Conversations {
+    width: auto;
+    height: 350px;
+    min-height: 100px;
+    position: fixed;
+    bottom: 0;
+    // border: 1px solid blue;
+    display: flex;
+    justify-content: flex-end;
+    right: 100px;
+    z-index: 11;
+
+    @media (max-height: 350px) {
+        height: 90%;
+    }
+}
