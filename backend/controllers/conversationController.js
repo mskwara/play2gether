@@ -87,7 +87,7 @@ exports.getAllConversations = catchAsync(async (req, res, next) => {
         _id: {
             $in: req.user.conversations
         },
-        group: req.body.group
+        group: req.query.group
     }
 
     const convs = await Conversation.find(filter);
