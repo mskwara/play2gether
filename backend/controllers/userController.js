@@ -93,7 +93,8 @@ exports.deletePhoto = catchAsync(async (req, res, next) => {
 exports.getMe = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
-        user: req.user
+        user: req.user,
+        token: req.token
     });
 });
 
