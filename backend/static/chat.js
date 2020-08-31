@@ -50,4 +50,5 @@ btn.addEventListener('click', function () {
 // Listen for events
 socket.on('chat', function (data) {
     output.innerHTML += '<p><strong>' + data.name + ': </strong>' + data.message + '</p>';
+    console.log(data);
 });

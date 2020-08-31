@@ -34,14 +34,17 @@ function send(io) {
         const user = await checkToken(data.jwt);
 
         if (user && user.conversations.includes(data.room)) {
-            await Message.create({
+            messageOBJ = {
                 conversation: data.room,
                 from: user.id,
                 sentAt: Date.now(),
                 message: data.message
-            });
-            data.name = user.name;
-            io.sockets.in(data.room).emit('chat', data);
+            };
+            const message = await Message.create(messageOBJ);
+            messageOBJ.name = user.name;
+            messageOBJ.photo = user.photo;
+            messageOBJ.messageId = message._id;
+            io.sockets.in(data.room).emit('chat', messageOBJ);
             if (process.env.NODE_ENV === 'development') {
                 console.log(`User ${user.id} succesfully sent message to chat room no. ${data.room}.`);
                 console.log(data);
