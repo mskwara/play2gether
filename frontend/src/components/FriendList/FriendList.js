@@ -1,13 +1,16 @@
 import React, { useState, useContext } from "react";
 import "./FriendList.scss";
 import UserContext from "../../utils/UserContext";
-import AlertContext from "../../utils/AlertContext";
+import PopupContext from "../../utils/PopupContext";
+import ConvContext from "../../utils/ConvContext";
 import request from "../../utils/request";
 
 const FriendList = (props) => {
     const userContext = useContext(UserContext);
-    const alertContext = useContext(AlertContext);
+    const popupContext = useContext(PopupContext);
+    const convContext = useContext(ConvContext);
     const activeUser = userContext.globalUserState.user;
+    const conversations = userContext.globalUserState.conversations;
 
     const acceptFriend = async (received_friend) => {
         const res = await request(
@@ -18,8 +21,8 @@ const FriendList = (props) => {
         );
 
         if (res.data.status === "success") {
-            userContext.setGlobalUserState({ user: res.data.user });
-            alertContext.setAlertActive(
+            userContext.updateGlobalUserState({ user: res.data.user });
+            popupContext.setAlertActive(
                 true,
                 `${received_friend.name} has been added to your friends!`
             );
@@ -35,25 +38,44 @@ const FriendList = (props) => {
         );
 
         if (res.data.status === "success") {
-            userContext.setGlobalUserState({ user: res.data.user });
-            alertContext.setAlertActive(
+            userContext.updateGlobalUserState({ user: res.data.user });
+            popupContext.setAlertActive(
                 true,
                 `${received_friend.name}'s friend request has been ignored!`
             );
         }
     };
 
+    const openChat = async (conv) => {
+        const openedConvs = [...convContext.convState.openedConvs];
+        if (openedConvs.filter((c) => c._id === conv._id).length > 0) {
+            //this conv has been opened already
+            const index = openedConvs.indexOf(conv);
+            openedConvs.splice(index, 1);
+        } else {
+            openedConvs.push(conv);
+        }
+        convContext.updateConvState({ openedConvs });
+    };
+
     let friends = null;
     let received = null;
     if (activeUser) {
-        friends = activeUser.friends.map((f) => {
+        friends = conversations.map((conv) => {
+            const friend = conv.participants.filter(
+                (person) => person._id !== activeUser._id
+            )[0]; //get person which do you talk to
             return (
-                <div className="person" key={f._id}>
+                <div
+                    className="person"
+                    key={conv._id}
+                    onClick={() => openChat(conv)}
+                >
                     <img
-                        src={require(`../../../../backend/static/users/${f.photo}`)}
+                        src={require(`../../../../backend/static/users/${friend.photo}`)}
                         alt="avatar"
                     />
-                    <p>{f.name}</p>
+                    <p>{friend.name}</p>
                     <div className="actions">
                         <img
                             src={require("../../assets/message.png")}
