@@ -10,7 +10,7 @@ function authToken(id) {
     });
 }
 
-const createAuthToken = (user, statusCode, res) => {
+function createAuthToken(user, statusCode, res) {
     const token = authToken(user.id);
 
     const cookieOptions = {
@@ -34,6 +34,26 @@ const createAuthToken = (user, statusCode, res) => {
         },
     });
 };
+
+exports.checkToken = async (token) => {
+    try {
+        const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+        // 3) Check if user still exists
+        const currentUser = await User.findById(decoded.id);
+        if (!currentUser) {
+            throw new Error();
+        }
+
+        // 4) Check if user changed password after token was issued
+        if (currentUser.changedPasswordAfter(decoded.iat)) {
+            throw new Error();
+        }
+
+        return currentUser;
+    } catch (err) {
+        return false;
+    }
+}
 
 exports.signup = catchAsync(async (req, res, next) => {
     const newUser = await User.create({
