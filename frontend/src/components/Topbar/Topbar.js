@@ -22,7 +22,10 @@ const Topbar = (props) => {
         );
 
         if (res.data.status === "success") {
-            userContext.updateGlobalUserState({ user: null });
+            userContext.updateGlobalUserState({
+                user: null,
+                conversations: [],
+            });
             setState({ reload: !state.reload });
             popupContext.setAlertActive(true, "You have been logged out!");
         }
@@ -38,7 +41,7 @@ const Topbar = (props) => {
                 <div className="underline" />
             </div>,
             <div className="link" key="2">
-                <Link
+                <a
                     onClick={() =>
                         popupContext.setFriendsOpened(
                             !popupContext.friendsOpened
@@ -46,15 +49,15 @@ const Topbar = (props) => {
                     }
                 >
                     Friends
-                </Link>
+                </a>
                 <div className="underline" />
             </div>,
             <div className="link" key="3">
-                <Link>Favourites</Link>
+                <a>Favourites</a>
                 <div className="underline" />
             </div>,
             <div className="link" key="4">
-                <Link onClick={logout}>Logout</Link>
+                <a onClick={logout}>Logout</a>
                 <div className="underline" />
             </div>,
         ];
@@ -75,11 +78,11 @@ const Topbar = (props) => {
                 <div className="underline" />
             </div>,
             <div className="link" key="3">
-                <Link onClick={popupContext.openLogin}>Login</Link>
+                <a onClick={popupContext.openLogin}>Login</a>
                 <div className="underline" />
             </div>,
             <div className="link" key="2">
-                <Link onClick={popupContext.openSignup}>Sign up</Link>
+                <a onClick={popupContext.openSignup}>Sign up</a>
                 <div className="underline" />
             </div>,
         ];

@@ -4,7 +4,6 @@ import UserContext from "../../../utils/UserContext";
 import ConvContext from "../../../utils/ConvContext";
 import request from "../../../utils/request";
 import Message from "./Message/Message";
-import sendRequest from "../../../utils/request";
 
 const Chat = (props) => {
     const userContext = useContext(UserContext);
@@ -43,7 +42,7 @@ const Chat = (props) => {
         // return () => {
         //     window.removeEventListener("keydown");
         // };
-    }, []);
+    }, [props.conv._id]);
 
     useEffect(() => {
         const scrollable_content = document.getElementById("content");
