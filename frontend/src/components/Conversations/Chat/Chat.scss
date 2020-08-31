@@ -70,9 +70,14 @@
         }
     }
 
-    .content {
+    #content {
         flex: 1;
-        // background-color: blueviolet;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        overflow-y: auto;
+        padding: 10px;
+        display: block;
     }
 
     .write-area {
@@ -93,6 +98,7 @@
                 "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
                 "Helvetica Neue", sans-serif;
             font-size: 10pt;
+            outline: none;
         }
 
         img {

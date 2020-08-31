@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import Person from "../../components/Person/Person";
 import Loader from "../../components/Loader/Loader";
-import AlertContext from "../../utils/AlertContext";
+import PopupContext from "../../utils/PopupContext";
 import "./Game.scss";
 import request from "../../utils/request";
 import UserContext from "../../utils/UserContext";
 
 const Game = (props) => {
-    const alertContext = useContext(AlertContext);
+    const popupContext = useContext(PopupContext);
     const userContext = useContext(UserContext);
 
     const [state, setState] = useState({
@@ -53,7 +53,7 @@ const Game = (props) => {
             game: res.data.data.game,
         }));
         setLoading(false);
-        alertContext.setAlertActive(
+        popupContext.setAlertActive(
             true,
             "You have been added to the player's list!"
         );
@@ -73,7 +73,7 @@ const Game = (props) => {
             game: res.data.data.game,
         }));
         setLoading(false);
-        alertContext.setAlertActive(
+        popupContext.setAlertActive(
             true,
             "You have been removed from the player's list!"
         );
