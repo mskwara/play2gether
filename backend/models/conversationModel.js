@@ -23,7 +23,7 @@ const conversationSchema = new mongoose.Schema({
 conversationSchema.pre(/^find/, async function (next) {
     this.populate({
         path: 'participants',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email'
     });
 
     next();

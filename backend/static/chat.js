@@ -5,6 +5,7 @@ const jwtOBJ = document.getElementById('jwt'),
     message = document.getElementById('message'),
     handle = document.getElementById('handle'),
     join = document.getElementById('join'),
+    leave = document.getElementById('leave'),
     btn = document.getElementById('send'),
     output = document.getElementById('output');
 
@@ -14,11 +15,24 @@ join.addEventListener('click', function () {
     const room = conversation.value;
     const jwt = jwtOBJ.value;
     console.log(room, jwt);
-    socket.emit('subscribe', {
+    socket.emit('join', {
         room,
         jwt
     });
-    join.innerHTML = 'connected';
+    join.innerHTML = 'Probably connected';
+    leave.innerHTML = 'Leave conversation';
+});
+
+leave.addEventListener('click', function () {
+    const room = conversation.value;
+    const jwt = jwtOBJ.value;
+    console.log(room, jwt);
+    socket.emit('leave', {
+        room,
+        jwt
+    });
+    leave.innerHTML = 'Probably left';
+    join.innerHTML = 'Join conversation';
 });
 
 btn.addEventListener('click', function () {
@@ -35,5 +49,5 @@ btn.addEventListener('click', function () {
 
 // Listen for events
 socket.on('chat', function (data) {
-    output.innerHTML += '<p><strong>' + data.handle + ': </strong>' + data.message + '</p>';
+    output.innerHTML += '<p><strong>' + data.name + ': </strong>' + data.message + '</p>';
 });
