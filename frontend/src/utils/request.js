@@ -19,7 +19,7 @@ const sendRequest = async (method, url, body, withCredentials) => {
                 });
                 break;
             default:
-                throw "Request cannot be sent - developer fault...";
+                throw Error("Request cannot be sent - developer fault...");
         }
     } catch (err) {
         console.log(err);

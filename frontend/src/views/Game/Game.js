@@ -30,7 +30,7 @@ const Game = (props) => {
             }));
         };
         getData();
-    }, []);
+    }, [props.match.params.gameId]);
 
     const setLoading = (val) => {
         setState((state) => ({
