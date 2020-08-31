@@ -24,9 +24,10 @@ const Chat = (props) => {
                 true
             );
             if (res.data.status === "success") {
+                const messagesReversed = res.data.data.data.reverse();
                 setChatState((chatState) => ({
                     ...chatState,
-                    messages: res.data.data.data.reverse(),
+                    messages: messagesReversed,
                 }));
             }
         };
@@ -68,9 +69,10 @@ const Chat = (props) => {
             true
         );
         if (res.data.status === "success") {
+            const messagesReversed = res.data.data.data.reverse();
             setChatState((chatState) => ({
                 ...chatState,
-                messages: res.data.data.data.reverse(),
+                messages: messagesReversed,
                 messageToSend: "",
             }));
         }
