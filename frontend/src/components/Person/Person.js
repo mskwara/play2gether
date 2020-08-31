@@ -1,8 +1,10 @@
 import React from "react";
 import "./Person.scss";
 import request from "../../utils/request";
+// import UserContext from "../../../utils/UserContext";
 
 const Person = (props) => {
+    // const userContext = useContext(UserContext); TODO
     const addFriend = async () => {
         await request(
             "patch",
