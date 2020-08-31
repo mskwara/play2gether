@@ -108,6 +108,9 @@ exports.addFriend = catchAsync(async (req, res, next) => {
     if (req.user.friends.includes(req.params.id))
         return next(new AppError('This user is already your friend', 400));
 
+    if (req.user.receivedFriendRequests.includes(req.params.id))
+        return next(new AppError('You\'ve already got an invitation from this user.', 400));
+
     await User.findByIdAndUpdate(req.params.id, {
         $push: {
             receivedFriendRequests: req.user.id

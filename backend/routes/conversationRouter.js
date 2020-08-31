@@ -16,7 +16,7 @@ router.route('/:id')
         convController.getAllMessages
     );
 
-router.get('/:id/messages', convController.getAllMessages)
+router.get('/:convId/messages', convController.getAllMessages)
 
 router.patch('/:id/leave', convController.leave);
 
