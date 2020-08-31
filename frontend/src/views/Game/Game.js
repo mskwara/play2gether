@@ -3,10 +3,12 @@ import Person from "../../components/Person/Person";
 import Loader from "../../components/Loader/Loader";
 import AlertContext from "../../utils/AlertContext";
 import "./Game.scss";
-import axios from "axios";
+import request from "../../utils/request";
+import UserContext from "../../utils/UserContext";
 
 const Game = (props) => {
     const alertContext = useContext(AlertContext);
+    const userContext = useContext(UserContext);
 
     const [state, setState] = useState({
         game: null,
@@ -14,18 +16,18 @@ const Game = (props) => {
     });
     useEffect(() => {
         const getData = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:8000/games/${props.match.params.gameId}`
-                );
-                setState((state) => ({
-                    ...state,
-                    game: res.data.data.data,
-                    loading: false,
-                }));
-            } catch (err) {
-                console.log(err);
-            }
+            const res = await request(
+                "get",
+                `http://localhost:8000/games/${props.match.params.gameId}`,
+                null,
+                false
+            );
+
+            setState((state) => ({
+                ...state,
+                game: res.data.data.data,
+                loading: false,
+            }));
         };
         getData();
     }, []);
@@ -39,13 +41,13 @@ const Game = (props) => {
 
     const participate = async () => {
         setLoading(true);
-        const res = await axios.patch(
+        const res = await request(
+            "patch",
             `http://localhost:8000/games/${props.match.params.gameId}/registerAsPlayer`,
             null,
-            {
-                withCredentials: true,
-            }
+            true
         );
+
         setState((state) => ({
             ...state,
             game: res.data.data.game,
@@ -59,13 +61,13 @@ const Game = (props) => {
 
     const optout = async () => {
         setLoading(true);
-        const res = await axios.patch(
+        const res = await request(
+            "patch",
             `http://localhost:8000/games/${props.match.params.gameId}/optOut`,
             null,
-            {
-                withCredentials: true,
-            }
+            true
         );
+
         setState((state) => ({
             ...state,
             game: res.data.data.game,
@@ -87,7 +89,7 @@ const Game = (props) => {
         );
         if (
             state.game.players.filter(
-                (p) => p._id === localStorage.getItem("userId")
+                (p) => p._id === userContext.globalUserState.user._id
             ).length > 0
         ) {
             button = (

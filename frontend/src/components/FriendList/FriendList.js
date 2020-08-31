@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import "./FriendList.scss";
-import axios from "axios";
 import UserContext from "../../utils/UserContext";
 import AlertContext from "../../utils/AlertContext";
+import request from "../../utils/request";
 
 const FriendList = (props) => {
     const userContext = useContext(UserContext);
@@ -10,44 +10,36 @@ const FriendList = (props) => {
     const activeUser = userContext.globalUserState.user;
 
     const acceptFriend = async (received_friend) => {
-        try {
-            const res = await axios.patch(
-                `http://localhost:8000/users/${received_friend._id}/acceptFriend`,
-                null,
-                {
-                    withCredentials: true,
-                }
+        const res = await request(
+            "patch",
+            `http://localhost:8000/users/${received_friend._id}/acceptFriend`,
+            null,
+            true
+        );
+
+        if (res.data.status === "success") {
+            userContext.setGlobalUserState({ user: res.data.user });
+            alertContext.setAlertActive(
+                true,
+                `${received_friend.name} has been added to your friends!`
             );
-            if (res.data.status === "success") {
-                userContext.setGlobalUserState({ user: res.data.user });
-                alertContext.setAlertActive(
-                    true,
-                    `${received_friend.name} has been added to your friends!`
-                );
-            }
-        } catch (err) {
-            console.log(err);
         }
     };
 
     const ignoreFriend = async (received_friend) => {
-        try {
-            const res = await axios.patch(
-                `http://localhost:8000/users/${received_friend._id}/ignoreFriend`,
-                null,
-                {
-                    withCredentials: true,
-                }
+        const res = await request(
+            "patch",
+            `http://localhost:8000/users/${received_friend._id}/ignoreFriend`,
+            null,
+            true
+        );
+
+        if (res.data.status === "success") {
+            userContext.setGlobalUserState({ user: res.data.user });
+            alertContext.setAlertActive(
+                true,
+                `${received_friend.name}'s friend request has been ignored!`
             );
-            if (res.data.status === "success") {
-                userContext.setGlobalUserState({ user: res.data.user });
-                alertContext.setAlertActive(
-                    true,
-                    `${received_friend.name}'s friend request has been ignored!`
-                );
-            }
-        } catch (err) {
-            console.log(err);
         }
     };
 
@@ -56,7 +48,7 @@ const FriendList = (props) => {
     if (activeUser) {
         friends = activeUser.friends.map((f) => {
             return (
-                <div class="person">
+                <div className="person" key={f._id}>
                     <img
                         src={require(`../../../../backend/static/users/${f.photo}`)}
                         alt="avatar"
@@ -75,7 +67,7 @@ const FriendList = (props) => {
 
         received = activeUser.receivedFriendRequests.map((pf) => {
             return (
-                <div class="person received">
+                <div className="person received">
                     <img
                         src={require(`../../../../backend/static/users/${pf.photo}`)}
                         alt="avatar"

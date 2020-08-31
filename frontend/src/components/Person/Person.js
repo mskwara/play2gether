@@ -1,17 +1,15 @@
 import React from "react";
 import "./Person.scss";
-import axios from "axios";
+import request from "../../utils/request";
 
 const Person = (props) => {
     const addFriend = async () => {
-        const res = await axios.patch(
+        await request(
+            "patch",
             `http://localhost:8000/users/${props.user._id}/addFriend`,
             null,
-            {
-                withCredentials: true,
-            }
+            true
         );
-        console.log(res);
     };
 
     return (
