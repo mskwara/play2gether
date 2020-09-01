@@ -5,6 +5,7 @@ import ConvContext from "../../../utils/ConvContext";
 import SocketContext from "../../../utils/SocketContext";
 import request from "../../../utils/request";
 import Message from "./Message/Message";
+import KeyboardEventHandler from "react-keyboard-event-handler";
 
 const Chat = (props) => {
     const userContext = useContext(UserContext);
@@ -18,13 +19,23 @@ const Chat = (props) => {
     });
 
     socketContext.socketState.socket.on("chat", (message) => {
-        const oldMessages = [...chatState.messages];
-        oldMessages.push(message);
-        setChatState((chatState) => ({
-            ...chatState,
-            messages: oldMessages,
-        }));
+        if (message.conversation === props.conv._id) {
+            const oldMessages = [...chatState.messages];
+            oldMessages.push(message);
+            setChatState((chatState) => ({
+                ...chatState,
+                messages: oldMessages,
+            }));
+        }
     });
+
+    // document.addEventListener("keydown", (e) => {
+    //     if (e.which == 13 || e.keyCode === 13) {
+    //         console.log("enter");
+    //         sendMessage();
+    //     }
+    // });
+    // Remove event listeners on cleanup
 
     useEffect(() => {
         const getAllMessages = async () => {
@@ -44,17 +55,6 @@ const Chat = (props) => {
         };
 
         getAllMessages();
-
-        // document.addEventListener("keydown", (e) => {
-        //     if (e.which == 13 || e.keyCode === 13) {
-        //         console.log("enter");
-        //         sendMessage();
-        //     }
-        // });
-        // Remove event listeners on cleanup
-        // return () => {
-        //     window.removeEventListener("keydown");
-        // };
     }, [props.conv._id]);
 
     useEffect(() => {
@@ -62,6 +62,11 @@ const Chat = (props) => {
             room: props.conv._id,
             jwt: userContext.globalUserState.jwt,
         });
+
+        return () => {
+            socketContext.socketState.socket.off("chat");
+            // window.removeEventListener("keydown");
+        };
     }, []);
 
     useEffect(() => {
@@ -155,6 +160,11 @@ const Chat = (props) => {
                     onClick={sendMessage}
                 />
             </div>
+            <KeyboardEventHandler
+                handleKeys={["enter"]}
+                handleFocusableElements={true}
+                onKeyEvent={sendMessage}
+            />
         </div>
     );
 };
