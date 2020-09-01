@@ -183,6 +183,11 @@ const App = (props) => {
         }
     }
 
+    let arrowClass = "open_friends_arrow visible";
+    if (state.friendsOpened) {
+        arrowClass = "open_friends_arrow invisible";
+    }
+
     return (
         <BrowserRouter>
             <PopupContext.Provider
@@ -210,6 +215,12 @@ const App = (props) => {
                                 <div id="App">
                                     {alert}
                                     <Topbar />
+                                    <img
+                                        src={require("./assets/black_left_arrow.png")}
+                                        alt="close"
+                                        className={arrowClass}
+                                        onClick={() => setFriendsOpened(true)}
+                                    />
                                     {friendList}
                                     <Conversations />
                                     {signup}

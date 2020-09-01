@@ -15,21 +15,21 @@
         transition: 0.7s;
         position: relative;
 
-        &:hover {
+        &:hover > .user {
+            height: 30px;
+            background: rgba(255, 255, 255, 0.6);
+
+            p {
+                opacity: 1;
+            }
+        }
+
+        &.slide-down:hover {
             height: 200px;
 
             & > .buttons {
                 height: 50px;
                 & > .btn {
-                    opacity: 1;
-                }
-            }
-
-            & > .user {
-                height: 30px;
-                background: rgba(255, 255, 255, 0.6);
-
-                p {
                     opacity: 1;
                 }
             }
