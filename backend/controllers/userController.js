@@ -102,13 +102,13 @@ exports.addFriend = catchAsync(async (req, res, next) => {
     if (req.params.id === req.user.id)
         return next(new AppError('Sorry, you can\'t invite yourself to your friends', 400));
 
-    if (req.user.pendingFriendRequests.includes(req.params.id))
+    if (req.user.pendingFriendRequests.some(el => el._id.toString() === req.params.id))
         return next(new AppError('You\'ve already sent an invitation to this user', 400));
 
-    if (req.user.friends.includes(req.params.id))
+    if (req.user.friends.some(el => el._id.toString() === req.params.id))
         return next(new AppError('This user is already your friend', 400));
 
-    if (req.user.receivedFriendRequests.includes(req.params.id))
+    if (req.user.receivedFriendRequests.some(el => el._id.toString() === req.params.id))
         return next(new AppError('You\'ve already got an invitation from this user.', 400));
 
     await User.findByIdAndUpdate(req.params.id, {
@@ -166,7 +166,6 @@ exports.ignoreFriend = catchAsync(async (req, res, next) => {
     if (!req.user.receivedFriendRequests.some(el => el._id.toString() === req.params.id.toString()))
         return next(new AppError('You have no invitation with that user ID', 400));
 
-    console.log(req.user.receivedFriendRequests[0]._id, req.params.id, req.user.receivedFriendRequests[0]._id === req.params.id);
     const user = await User.findByIdAndUpdate(req.user.id, {
         $pull: {
             receivedFriendRequests: req.params.id
