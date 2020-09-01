@@ -111,17 +111,20 @@ const Game = (props) => {
                 {button}
             </div>
         );
-
-        players = state.game.players.map((p) => {
-            return <Person className="person" user={p} />;
+        const reversedPlayers = [...state.game.players];
+        reversedPlayers.reverse();
+        players = reversedPlayers.map((p) => {
+            return <Person className="person" user={p} key={p._id} />;
         });
     }
 
     return (
         <div id="Game">
-            {state.loading ? <Loader /> : null}
             <div className="content">
-                {gameBigTile}
+                <div class="left-panel">
+                    {gameBigTile}
+                    {state.loading ? <Loader /> : null}
+                </div>
                 <div className="players">{players}</div>
             </div>
         </div>

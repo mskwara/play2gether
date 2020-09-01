@@ -134,6 +134,14 @@ const FriendList = (props) => {
 
     return (
         <div id="FriendList" className={props.className}>
+            <img
+                src={require("../../assets/white_right_arrow.png")}
+                alt="close"
+                className="close_arrow"
+                onClick={() =>
+                    popupContext.setFriendsOpened(!popupContext.friendsOpened)
+                }
+            />
             <h1 className="title">Friends</h1>
             {activeUser && activeUser.receivedFriendRequests.length > 0 && (
                 <p className="title small-title">Received requests</p>
