@@ -1,25 +1,27 @@
 const mongoose = require('mongoose');
 
-const messageSchema = new mongoose.Schema({
-    conversation: {
+const commentSchema = new mongoose.Schema({
+    user: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Conversation',
-        required: [true, 'Message must have a recipient']
+        ref: 'User',
+        required: [true, 'Comment must be about some user']
     },
     from: {
         type: mongoose.Schema.ObjectId,
-        required: [true, 'Message must have a sender']
+        required: [true, 'Comment must have a sender']
     },
     sentAt: {
         type: Date,
-        required: [true, 'Message must have a timestamp']
+        required: [true, 'Comment must have a timestamp']
     },
-    message: {
+    comment: {
         type: String,
-        required: [true, 'Empty messages are not allowed']
+        required: [true, 'Empty comments are not allowed']
     }
 });
 
-const Message = mongoose.model('Message', messageSchema);
+commentSchema.index({ user: 1, from: 1 }, { unique: true });
 
-module.exports = Message;
+const Comment = mongoose.model('Comment', commentSchema);
+
+module.exports = Comment;
