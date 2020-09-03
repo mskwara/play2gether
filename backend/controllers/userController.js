@@ -6,6 +6,7 @@ const factory = require('./handlerFactory');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
 const convController = require('./conversationController');
+const e = require('express');
 
 function filterObj(obj, ...excludedFields) {
     const newObj = {};
@@ -48,10 +49,24 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
     next();
 });
 
-exports.getUser = factory.getOne(User,
-    '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email',
-    ''
-);
+exports.getUser = catchAsync(async (req, res, next) => {
+    const user = await User.findById(req.params.id)
+        .populate('games')
+        .select('-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email');
+    user.games.forEach(el => {
+        el.players = undefined;
+        el.screenshots = undefined;
+    });
+
+    if (!user) {
+        return next(new AppError('No user found with that ID', 404));
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: user
+    })
+})
 
 exports.getAllUsers = factory.getAll(User, '');
 
@@ -78,9 +93,7 @@ exports.update = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
-        data: {
-            data: updatedUser
-        }
+        data: updatedUser
     });
 });
 
@@ -91,14 +104,14 @@ exports.deletePhoto = catchAsync(async (req, res, next) => {
     req.user.photo = 'defaultUser.jpeg';
     res.status(200).json({
         status: "success",
-        user: req.user,
+        data: req.user,
     });
 });
 
 exports.getMe = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
-        user: req.user,
+        data: req.user,
         token: req.token
     });
 });
@@ -132,7 +145,7 @@ exports.addFriend = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
-        user
+        data: user
     });
 });
 
@@ -187,7 +200,7 @@ exports.ignoreFriend = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
-        user
+        data: user
     });
 });
 
@@ -214,6 +227,6 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
-        user
+        data: user
     });
 });

@@ -8,7 +8,7 @@ exports.getAll = (Model, exclude, sortOpt) =>
         if (req.params.convId)
             filter = { conversation: req.params.convId };
 
-        const query = Model.find(filter).select(`${exclude}`);
+        const query = Model.find(filter).select(exclude);
         const features = new APIFeatures(query, req.query)
             .sort(sortOpt)
             .limitFields()
@@ -18,16 +18,18 @@ exports.getAll = (Model, exclude, sortOpt) =>
         res.status(200).json({
             status: 'success',
             results: docs.length,
-            data: {
-                data: docs
-            }
+            data: docs
         });
     });
 
 exports.getOne = (Model, exclude, popOptions) => catchAsync(async (req, res, next) => {
-    let query = Model.findById(req.params.id).select(exclude);
+    let query = Model.findById(req.params.id)
+
     if (popOptions)
         query = query.populate(popOptions);
+
+    if (exclude)
+        query = query.select(exclude);
 
     const doc = await query;
 
@@ -37,9 +39,7 @@ exports.getOne = (Model, exclude, popOptions) => catchAsync(async (req, res, nex
 
     res.status(200).json({
         status: 'success',
-        data: {
-            data: doc
-        }
+        data: doc
     });
 });
 
@@ -49,10 +49,8 @@ exports.create = Model =>
 
         res.status(201).json({
             status: 'success',
-            data: {
-                data: doc
-            }
-        })
+            data: doc
+        });
     });
 
 exports.update = (Model, excluded) => catchAsync(async (req, res, next) => {
@@ -67,8 +65,6 @@ exports.update = (Model, excluded) => catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
-        data: {
-            data: doc
-        }
+        data: doc
     });
 });

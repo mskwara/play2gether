@@ -10,7 +10,7 @@ exports.create = catchAsync(async (req, res, next) => {
     if (!req.body.group && req.user.deletedFriends.some(el => el._id.toString() === req.body.users[0].toString())) {
         return res.status(200).json({
             status: 'success',
-            user: req.user
+            data: req.user
         });
     }
     // Remove duplicates
@@ -49,7 +49,7 @@ exports.create = catchAsync(async (req, res, next) => {
 
     res.status(201).json({
         status: 'success',
-        user
+        data: user
     });
 });
 
@@ -75,7 +75,7 @@ exports.leave = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
-        user
+        data: user
     });
 });
 
@@ -90,24 +90,27 @@ exports.getAllConversations = catchAsync(async (req, res, next) => {
         group: req.query.group
     }
 
-    const convs = await Conversation.find(filter);
+    const conversations = await Conversation.find(filter);
 
     res.status(200).json({
         status: 'success',
-        results: convs.length,
-        data: {
-            data: convs
-        }
+        results: conversations.length,
+        data: conversations
     });
 });
+
 exports.getConversation = factory.getOne(Conversation, '');
 
 exports.sendMessage = catchAsync(async (req, res, next) => {
-    await Message.create({
+    const message = await Message.create({
         conversation: req.params.id,
         from: req.user.id,
         sentAt: Date.now(),
         message: req.body.message
     });
-    next();
+    
+    res.status(200).json({
+        status: 'success',
+        data: message
+    })
 });
