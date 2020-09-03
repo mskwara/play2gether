@@ -48,6 +48,11 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
     next();
 });
 
+exports.getUser = factory.getOne(User,
+    '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email',
+    ''
+);
+
 exports.getAllUsers = factory.getAll(User, '');
 
 exports.update = catchAsync(async (req, res, next) => {
