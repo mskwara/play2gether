@@ -95,20 +95,20 @@ userSchema.pre('save', function (next) {
     next();
 });
 
-// userSchema.pre(/^find/, async function (next) {
-//     this.populate({
-//         path: 'friends',
-//         select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
-//     }).populate({
-//         path: 'receivedFriendRequests',
-//         select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
-//     }).populate({
-//         path: 'pendingFriendRequests',
-//         select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
-//     });
+userSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'friends',
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
+    }).populate({
+        path: 'receivedFriendRequests',
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
+    }).populate({
+        path: 'pendingFriendRequests',
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
+    });
 
-//     next();
-// });
+    next();
+});
 
 userSchema.methods.correctPassword = async function (providedPassword, hashedPassword) {
     return await bcrypt.compare(providedPassword, hashedPassword);
