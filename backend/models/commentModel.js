@@ -8,6 +8,7 @@ const commentSchema = new mongoose.Schema({
     },
     from: {
         type: mongoose.Schema.ObjectId,
+        ref: 'User',
         required: [true, 'Comment must have a sender']
     },
     sentAt: {
@@ -21,6 +22,15 @@ const commentSchema = new mongoose.Schema({
 });
 
 commentSchema.index({ user: 1, from: 1 }, { unique: true });
+
+commentSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'from',
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email'
+    });
+
+    next();
+});
 
 const Comment = mongoose.model('Comment', commentSchema);
 
