@@ -21,6 +21,9 @@ router.route('/me')
         userController.update
     );
 
+router.route('/:id')
+    .get(userController.getUser);
+
 router.patch('/:id/addFriend', userController.addFriend);
 router.patch('/:id/acceptFriend',
     userController.acceptFriend,
