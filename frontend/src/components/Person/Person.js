@@ -24,7 +24,7 @@ const Person = (props) => {
     const openChat = () => {
         if (
             !userContext.globalUserState.user.friends.some(
-                (f) => f._id === props.user._id
+                (f) => f === props.user._id
             )
         ) {
             console.log("Not implemented!");
@@ -60,16 +60,15 @@ const Person = (props) => {
     };
 
     let addFriendButton = null;
-
     if (
         !userContext.globalUserState.user.friends.some(
-            (f) => f._id === props.user._id
+            (f) => f === props.user._id
         ) &&
         !userContext.globalUserState.user.pendingFriendRequests.some(
-            (f) => f._id === props.user._id
+            (f) => f === props.user._id
         ) &&
         !userContext.globalUserState.user.receivedFriendRequests.some(
-            (f) => f._id === props.user._id
+            (f) => f === props.user._id
         )
     ) {
         //they are not friends and didn't invite each other

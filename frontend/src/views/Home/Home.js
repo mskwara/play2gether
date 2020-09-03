@@ -20,7 +20,7 @@ const Home = (props) => {
 
             setState((state) => ({
                 ...state,
-                games: res.data.data.data,
+                games: res.data.data,
                 loading: false,
             }));
         };

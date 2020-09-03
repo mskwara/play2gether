@@ -1,0 +1,30 @@
+@import "../../../variables.scss";
+
+#Comment {
+    width: 80%;
+    min-height: 50px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: $comment;
+    border-radius: 3px;
+    // color: white;
+    margin: 10px;
+    transition: 0.5s;
+
+    &:hover {
+        background-color: $comment-hover;
+    }
+
+    img {
+        width: 30px;
+        height: 30px;
+        // border: 1px solid $border;
+        margin-left: 10px;
+    }
+
+    p {
+        margin: 10px;
+        text-align: left;
+    }
+}

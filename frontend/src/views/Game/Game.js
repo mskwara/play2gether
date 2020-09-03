@@ -25,7 +25,7 @@ const Game = (props) => {
 
             setState((state) => ({
                 ...state,
-                game: res.data.data.data,
+                game: res.data.data,
                 loading: false,
             }));
         };
