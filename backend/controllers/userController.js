@@ -5,8 +5,6 @@ const User = require('./../models/userModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
-const convController = require('./conversationController');
-const e = require('express');
 
 function filterObj(obj, ...excludedFields) {
     const newObj = {};
@@ -97,14 +95,19 @@ exports.update = catchAsync(async (req, res, next) => {
 });
 
 exports.deletePhoto = catchAsync(async (req, res, next) => {
-    await fs.unlink(`${__dirname}\\..\\static\\users\\${req.user.photo}`, (err) => {
-        if (err) console.log(err);
-    });
-    req.user.photo = 'defaultUser.jpeg';
-    res.status(200).json({
-        status: "success",
-        data: req.user,
-    });
+    if (req.user.photo !== 'defaultUser.jpeg') {
+        await fs.unlink(`${__dirname}\\..\\static\\users\\${req.user.photo}`, (err) => {
+            if (err) console.log(err);
+        });
+
+        const user = await User.findByIdAndUpdate(req.user.id, { photo: 'defaultUser.jpeg' })
+        res.status(200).json({
+            status: "success",
+            data: user,
+        });
+    } else {
+        return next(new AppError('You can\'t remove a default photo'));
+    }
 });
 
 exports.getMe = catchAsync(async (req, res, next) => {
