@@ -4,10 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllGames = factory.getAll(Game, '-players -screenshots');
-exports.getGame = factory.getOne(Game, '', {
-        path: 'players',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email'
-    });
+exports.getGame = factory.getOne(Game, '');
 exports.createGame = factory.create(Game);
 exports.updateGame = factory.update(Game);
 
