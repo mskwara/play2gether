@@ -4,7 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllGames = factory.getAll(Game, '');
-exports.getGame = factory.getOne(Game);
+exports.getGame = factory.getOne(Game, '', '');
 exports.createGame = factory.create(Game);
 exports.updateGame = factory.update(Game);
 

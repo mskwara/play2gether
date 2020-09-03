@@ -24,8 +24,8 @@ exports.getAll = (Model, exclude, sortOpt) =>
         });
     });
 
-exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
-    let query = Model.findById(req.params.id);
+exports.getOne = (Model, exclude, popOptions) => catchAsync(async (req, res, next) => {
+    let query = Model.findById(req.params.id).select(exclude);
     if (popOptions)
         query = query.populate(popOptions);
 
