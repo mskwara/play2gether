@@ -12,9 +12,7 @@ router.route('/')
 
 router.route('/:id')
     .get(convController.getConversation)
-    .post(convController.sendMessage,
-        convController.getAllMessages
-    );
+    .post(convController.sendMessage);
 
 router.get('/:convId/messages', convController.getAllMessages)
 

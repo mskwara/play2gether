@@ -27,14 +27,14 @@ gameSchema.pre('save', function (next) {
     next();
 });
 
-gameSchema.pre(/^find/, function (next) {
-    this.populate({
-        path: 'players',
-        select: '-__v -passwordChangedAt'
-    });
+// gameSchema.pre(/^find/, function (next) {
+//     this.populate({
+//         path: 'players',
+//         select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email'
+//     });
 
-    next();
-});
+//     next();
+// });
 
 const Game = mongoose.model('Game', gameSchema);
 
