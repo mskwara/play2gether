@@ -6,6 +6,14 @@
     margin: 0 0 10px 0;
     display: flex;
     flex-direction: column;
+    position: relative;
+
+    &:hover {
+        & > .time {
+            opacity: 1;
+            transition: 0.5s 0.5s;
+        }
+    }
 
     .content {
         width: 80%;
@@ -17,13 +25,39 @@
 
         p {
             font-size: 10pt;
-            margin: 0;
+            margin: 0 10px;
             text-align: left;
-            margin-left: 10px;
         }
 
         &.my-message {
             align-self: flex-end;
+        }
+    }
+
+    .time {
+        width: fit-content;
+        height: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+        right: -5px;
+        border-radius: 5px;
+        color: white;
+        padding: 5px;
+        padding-bottom: 3px;
+        opacity: 0;
+        transition: 0.5s 0s;
+        cursor: default;
+
+        &.my-message {
+            left: -5px;
+        }
+
+        p {
+            margin: 0;
+            font-size: 10pt;
+            height: 12px;
         }
     }
 }
