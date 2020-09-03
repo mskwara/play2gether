@@ -9,6 +9,7 @@ import Conversations from "./components/Conversations/Conversations";
 import Alert from "./components/Alert/Alert";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
+import Profile from "./components/Profile/Profile";
 import PopupContext from "./utils/PopupContext";
 import UserContext from "./utils/UserContext";
 import ConvContext from "./utils/ConvContext";
@@ -23,6 +24,8 @@ const App = (props) => {
         signupOpened: false,
         loginOpened: false,
         friendsOpened: false,
+        profileOpened: false,
+        profileUserId: null,
         alertActive: false,
         alertMessage: "",
     });
@@ -129,6 +132,14 @@ const App = (props) => {
         }));
     };
 
+    const setProfileOpened = (val, userId) => {
+        setState((state) => ({
+            ...state,
+            profileOpened: val,
+            profileUserId: userId,
+        }));
+    };
+
     const closeSignup = () => {
         setState((state) => ({ ...state, signupOpened: false }));
     };
@@ -175,6 +186,11 @@ const App = (props) => {
         alert = <Alert message={state.alertMessage} />;
     }
 
+    let profile = <Profile className="dialog-invisible" />;
+    if (state.profileOpened) {
+        profile = <Profile className="dialog-visible" />;
+    }
+
     let friendList = null;
     if (globalUserState.user) {
         friendList = <FriendList className="friends-invisible" />;
@@ -198,6 +214,8 @@ const App = (props) => {
                     openLogin,
                     setFriendsOpened,
                     friendsOpened: state.friendsOpened,
+                    setProfileOpened,
+                    profileUserId: state.profileUserId,
                 }}
             >
                 <UserContext.Provider
@@ -225,6 +243,7 @@ const App = (props) => {
                                     <Conversations />
                                     {signup}
                                     {login}
+                                    {profile}
                                     <Switch>
                                         <Route
                                             path="/"
