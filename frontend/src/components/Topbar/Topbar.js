@@ -63,7 +63,15 @@ const Topbar = (props) => {
         ];
 
         logged_user = (
-            <div className="logged_user">
+            <div
+                className="logged_user"
+                onClick={() =>
+                    popupContext.setProfileOpened(
+                        true,
+                        userContext.globalUserState.user._id
+                    )
+                }
+            >
                 <img
                     src={require(`../../../../backend/static/users/${userContext.globalUserState.user.photo}`)}
                     alt="avatar"

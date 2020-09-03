@@ -39,20 +39,25 @@ const Login = (props) => {
                 true
             );
             userContext.updateGlobalUserState({
-                user: res.data.data.user,
-                conversations: convRes.data.data.data,
+                user: res.data.data,
+                conversations: convRes.data.data,
             });
             props.closeLogin();
             popupContext.setAlertActive(
                 true,
-                `Welcome back, ${res.data.data.user.name}!`
+                `Welcome back, ${res.data.data.name}!`
             );
+            setUserState({
+                email: "",
+                password: "",
+            });
+        } else {
+            popupContext.setAlertActive(true, res.data.message);
+            setUserState({
+                ...userState,
+                password: "",
+            });
         }
-
-        setUserState({
-            email: "",
-            password: "",
-        });
     };
 
     return (

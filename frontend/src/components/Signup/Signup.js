@@ -41,22 +41,28 @@ const Signup = (props) => {
                 true
             );
             userContext.updateGlobalUserState({
-                user: res.data.data.user,
-                conversations: convRes.data.data.data,
+                user: res.data.data,
+                conversations: convRes.data.data,
             });
             props.closeSignup();
             popupContext.setAlertActive(
                 true,
-                `Welcome to our community, ${res.data.data.user.name}!`
+                `Welcome to our community, ${res.data.data.name}!`
             );
+            setUserState({
+                name: "",
+                email: "",
+                password: "",
+                passwordConfirm: "",
+            });
+        } else {
+            popupContext.setAlertActive(true, "Something went wrong...");
+            setUserState({
+                ...userState,
+                password: "",
+                passwordConfirm: "",
+            });
         }
-
-        setUserState({
-            name: "",
-            email: "",
-            password: "",
-            passwordConfirm: "",
-        });
     };
 
     return (
