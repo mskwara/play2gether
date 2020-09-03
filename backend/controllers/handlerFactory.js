@@ -7,6 +7,8 @@ exports.getAll = (Model, exclude, sortOpt) =>
         let filter = {};
         if (req.params.convId)
             filter = { conversation: req.params.convId };
+        if (req.params.userId)
+            filter = { user: req.params.userId}
 
         const query = Model.find(filter).select(exclude);
         const features = new APIFeatures(query, req.query)
