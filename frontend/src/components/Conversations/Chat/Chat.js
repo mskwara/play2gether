@@ -46,7 +46,7 @@ const Chat = (props) => {
                 true
             );
             if (res.data.status === "success") {
-                const messagesReversed = res.data.data.data.reverse();
+                const messagesReversed = res.data.data.reverse();
                 setChatState((chatState) => ({
                     ...chatState,
                     messages: messagesReversed,
@@ -97,7 +97,7 @@ const Chat = (props) => {
         });
         // console.log(chatState.messages);
 
-        // const messagesReversed = res.data.data.data.reverse();
+        // const messagesReversed = res.data.data.reverse();
         setChatState((chatState) => ({
             ...chatState,
             messageToSend: "",

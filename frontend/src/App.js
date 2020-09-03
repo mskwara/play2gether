@@ -77,8 +77,8 @@ const App = (props) => {
                     true
                 );
                 updateGlobalUserState({
-                    user: res.data.user,
-                    conversations: convRes.data.data.data,
+                    user: res.data.data,
+                    conversations: convRes.data.data,
                     jwt: res.data.token,
                 });
             } else {
@@ -186,9 +186,9 @@ const App = (props) => {
         alert = <Alert message={state.alertMessage} />;
     }
 
-    let profile = <Profile className="dialog-invisible" />;
+    let profile = <Profile className="dialog-invisible" visible={false} />;
     if (state.profileOpened) {
-        profile = <Profile className="dialog-visible" />;
+        profile = <Profile className="dialog-visible" visible={true} />;
     }
 
     let friendList = null;
