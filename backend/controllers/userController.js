@@ -78,12 +78,11 @@ exports.update = catchAsync(async (req, res, next) => {
 
     if (req.file) {
         filteredBody.photo = req.file.filename;
-    }
-
-    if (req.user.photo !== 'defaultUser.jpeg') {
-        await fs.unlink(`${__dirname}\\..\\static\\users\\${req.user.photo}`, (err) => {
-            if (err) console.log(err);
-        });
+        if (req.user.photo !== 'defaultUser.jpeg') {
+            await fs.unlink(`${__dirname}\\..\\static\\users\\${req.user.photo}`, (err) => {
+                if (err) console.log(err);
+            });
+        }
     }
 
     const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
