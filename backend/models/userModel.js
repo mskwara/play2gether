@@ -64,8 +64,17 @@ const userSchema = new mongoose.Schema({
         enum: ['admin', 'user'],
         default: 'user',
         select: false
+    },
+    aboutMe: {
+        type: String
     }
 });
+
+// userSchema.virtual('games', {
+//     ref: 'Game',
+//     foreignField: 'players',
+//     localField: '_id'
+// });
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password'))
@@ -86,13 +95,13 @@ userSchema.pre('save', function (next) {
 userSchema.pre(/^find/, async function (next) {
     this.populate({
         path: 'friends',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
     }).populate({
         path: 'receivedFriendRequests',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
     }).populate({
         path: 'pendingFriendRequests',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
     });
 
     next();
