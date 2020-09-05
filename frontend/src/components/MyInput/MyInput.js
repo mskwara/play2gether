@@ -12,13 +12,16 @@ const MyInput = (props) => {
         props.handleInputChange(event);
     };
 
-    if (document.getElementById(labelId) && props.value === "") {
-        document.getElementById(labelId).classList.remove("filled");
+    let labelClass = "filled";
+    if (props.value === "") {
+        labelClass = "";
     }
 
     return (
         <div id="MyInput">
-            <label id={labelId}>{props.placeholder}</label>
+            <label id={labelId} className={labelClass}>
+                {props.placeholder}
+            </label>
             <input
                 id="input"
                 type={props.type}
