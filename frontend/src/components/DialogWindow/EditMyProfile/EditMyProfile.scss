@@ -1,0 +1,81 @@
+@import "../../../variables.scss";
+
+#EditMyProfile {
+    background-color: white;
+    width: 600px;
+    height: auto;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    padding: 20px;
+
+    h1 {
+        font-family: SuiGeneris;
+        font-size: 14pt;
+        text-transform: uppercase;
+        margin-top: 0;
+    }
+
+    .close-btn {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        right: 20px;
+        top: 20px;
+        cursor: pointer;
+        opacity: 0.5;
+        transition: 0.5s;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .content {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+
+        span {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+
+            &:hover {
+                & > .fileInput {
+                    opacity: 1;
+                }
+            }
+
+            img {
+                width: 200px;
+                height: 200px;
+                // border: 1px solid red;
+            }
+
+            .fileInput {
+                position: absolute;
+                bottom: 0;
+                opacity: 0;
+                transition: 0.5s;
+
+                & > button {
+                    width: 100%;
+                    margin: 0;
+                }
+            }
+        }
+
+        .inputs {
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            // border: 1px solid green;
+        }
+    }
+}
