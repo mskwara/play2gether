@@ -11,10 +11,11 @@ const Message = (props) => {
     }
 
     const formatDate = (date, type) => {
+        const localDate = new Date(date).toLocaleString();
         let result;
         switch (type) {
             case "short":
-                result = date.substring(11, 16);
+                result = localDate.substring(11, 16);
                 break;
         }
         return result;
