@@ -6,7 +6,7 @@ const Comment = (props) => {
     return (
         <div id="Comment">
             <img
-                src={require(`../../../../../backend/static/users/${photo}`)}
+                src={require(`../../../../../../backend/static/users/${photo}`)}
                 alt="avatar"
             />
             <p>{props.comment.comment}</p>

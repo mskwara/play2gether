@@ -1,0 +1,18 @@
+@import "../../variables.scss";
+
+#MyFileInput {
+    display: flex;
+    width: 100%;
+
+    input {
+        width: 0;
+        visibility: hidden;
+    }
+    label {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+    }
+}
