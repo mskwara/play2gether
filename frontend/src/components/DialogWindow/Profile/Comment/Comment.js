@@ -1,15 +1,22 @@
 import React from "react";
 import "./Comment.scss";
+import { formatDate } from "../../../../utils/methods";
 
 const Comment = (props) => {
-    const photo = "defaultUser.jpeg";
     return (
         <div id="Comment">
             <img
-                src={require(`../../../../../../backend/static/users/${photo}`)}
+                src={require(`../../../../../../backend/static/users/${props.comment.from.photo}`)}
                 alt="avatar"
             />
-            <p>{props.comment.comment}</p>
+            <div className="comment-content">
+                <p className="name">{props.comment.from.name}</p>
+                <p>{props.comment.comment}</p>
+            </div>
+
+            <div className="time">
+                <p>{formatDate(props.comment.sentAt, "short")}</p>
+            </div>
         </div>
     );
 };
