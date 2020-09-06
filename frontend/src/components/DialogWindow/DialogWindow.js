@@ -6,6 +6,7 @@ import EditMyProfile from "./EditMyProfile/EditMyProfile";
 import Profile from "./Profile/Profile";
 
 const DialogWindow = (props) => {
+    console.log("props.history", props.history);
     let component;
     if (props.component === "login") {
         component = <Login />;
