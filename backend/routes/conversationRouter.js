@@ -6,16 +6,29 @@ const router = express.Router();
 
 router.use(authController.protect);
 
-router.route('/')
-    .post(convController.create)
-    .get(convController.getAllConversations);
+router.route('/private/user/:userId')
+    .get(convController.getPrivateConversationByUser)
+    .post(convController.createPrivateConv);
 
-router.route('/:id')
-    .get(convController.getConversation)
-    .post(convController.sendMessage);
+router.route('/private/:id')
+    .get(convController.getPrivateConversation)
+    .post(convController.sendPrivateMessage);
 
-router.get('/:convId/messages', convController.getAllMessages)
+router.route('/private')
+    .get(convController.getAllPrivateConversations);
 
-router.patch('/:id/leave', convController.leave);
+router.get('/private/:convId/messages', convController.getAllPrivateMessages)
+
+router.route('/group/:id')
+    .get(convController.getGroupConversation)
+    .post(convController.sendGroupMessage);
+
+router.route('/group')
+    .get(convController.getAllGroupConversations)
+    .post(convController.createGroupConversation);
+
+router.get('/group/:convId/messages', convController.getAllGroupMessages)
+
+router.patch('/group/:convId/leave', convController.leaveGroupConversation);
 
 module.exports = router;

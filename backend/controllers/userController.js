@@ -158,7 +158,6 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
     req.user = await User.findByIdAndUpdate(req.user.id, {
         $pull: {
             receivedFriendRequests: req.params.id,
-            deletedFriends: req.params.id
         },
         $push: {
             friends: req.params.id
@@ -170,7 +169,6 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
     await User.findByIdAndUpdate(req.params.id, {
         $pull: {
             pendingFriendRequests: req.user.id,
-            deletedFriends: req.user.id
         },
         $push: {
             friends: req.user.id
@@ -210,9 +208,6 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user.id, {
         $pull: {
             friends: req.params.id
-        },
-        $push: {
-            deletedFriends: req.params.id
         }
     }, {
         new: true
@@ -221,9 +216,6 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
     await User.findByIdAndUpdate(req.params.id, {
         $pull: {
             friends: req.user.id
-        },
-        $push: {
-            deletedFriends: req.user.id
         }
     });
 

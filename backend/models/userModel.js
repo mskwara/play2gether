@@ -44,13 +44,6 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'User'
     }],
-    deletedFriends: {
-        type: [{
-            type: mongoose.Schema.ObjectId,
-            ref: 'User',
-        }],
-        select: true
-    },
     receivedFriendRequests: [{
         type: mongoose.Schema.ObjectId,
         ref: 'User'
@@ -59,7 +52,11 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'User'
     }],
-    conversations: [{
+    privateConversations: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'PrivateConversation'
+    }],
+    groupConversations: [{
         type: mongoose.Schema.ObjectId,
         ref: 'Conversation'
     }],
@@ -76,12 +73,6 @@ const userSchema = new mongoose.Schema({
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 });
-
-// userSchema.virtual('games', {
-//     ref: 'Game',
-//     foreignField: 'players',
-//     localField: '_id'
-// });
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password'))
@@ -102,13 +93,13 @@ userSchema.pre('save', function (next) {
 userSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'friends',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -privateConversations -groupConversations'
     }).populate({
         path: 'receivedFriendRequests',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -privateConversations -groupConversations'
     }).populate({
         path: 'pendingFriendRequests',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -privateConversations -groupConversations'
     });
 
     next();

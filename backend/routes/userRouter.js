@@ -1,7 +1,6 @@
 const express = require('express');
 const userController = require('./../controllers/userController');
 const authController = require('./../controllers/authController');
-const convController = require('./../controllers/conversationController');
 const commentController = require('./../controllers/commentController');
 
 const router = express.Router();
@@ -33,10 +32,10 @@ router.route('/:id/comments')
 router.delete('/:id/comments/:commId', commentController.deleteComment);
 
 router.patch('/:id/addFriend', userController.addFriend);
-router.patch('/:id/acceptFriend',
-    userController.acceptFriend,
-    convController.create
-    );
+// router.patch('/:id/acceptFriend',
+//     userController.acceptFriend,
+//     convController.create
+//     );
 router.patch('/:id/ignoreFriend', userController.ignoreFriend);
 router.patch('/:id/removeFriend', userController.removeFriend);
 

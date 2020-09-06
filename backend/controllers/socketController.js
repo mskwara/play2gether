@@ -1,12 +1,22 @@
 const { checkToken } = require('./authController');
-const Message = require('./../models/messageModel');
+const PrivateMessage = require('./../models/privateMessageModel');
+const GroupMessage = require('./../models/groupMessageModel');
 
 function join(socket) {
     return async data => {
         const user = await checkToken(data.jwt);
 
-        if (user && user.conversations.includes(data.room)) {
-            socket.join(data.room);
+        let convs, suffix;
+        if (data.private) {
+            convs = user.privateConversations;
+            suffix = 'p';
+        } else {
+            convs = user.groupConversations;
+            suffix = 'g';
+        }
+
+        if (user && convs.includes(data.room)) {
+            socket.join(data.room + suffix);
             if (process.env.NODE_ENV === 'development')
                 console.log(`User ${user.id} succesfully connected to chat room no. ${data.room}.`);
         } else if (process.env.NODE_ENV === 'development') {
@@ -19,8 +29,17 @@ function leave(socket) {
     return async data => {
         const user = await checkToken(data.jwt);
 
-        if (user && user.conversations.includes(data.room)) {
-            socket.leave(data.room);
+        let convs, suffix;
+        if (data.private) {
+            convs = user.privateConversations;
+            suffix = 'p';
+        } else {
+            convs = user.groupConversations;
+            suffix = 'g';
+        }
+
+        if (user && convs.includes(data.room)) {
+            socket.leave(data.room + suffix);
             if (process.env.NODE_ENV === 'development')
                 console.log(`User ${user.id} succesfully disconnected from chat room no. ${data.room}.`);
         } else if (process.env.NODE_ENV === 'development') {
@@ -33,19 +52,30 @@ function send(io) {
     return async data => {
         const user = await checkToken(data.jwt);
 
-        if (user && user.conversations.includes(data.room)) {
+        let convs, suffix, Model;
+        if (data.private) {
+            convs = user.privateConversations;
+            suffix = 'p';
+            Model = PrivateMessage;
+        } else {
+            convs = user.privateConversations;
+            suffix = 'g';
+            Model = GroupMessage;
+        }
+
+        if (user && convs.includes(data.room)) {
             messageOBJ = {
                 conversation: data.room,
                 from: user.id,
                 sentAt: Date.now(),
                 message: data.message
             };
-            const message = await Message.create(messageOBJ);
+            const message = await Model.create(messageOBJ);
             messageOBJ.name = user.name;
             messageOBJ.photo = user.photo;
             messageOBJ._id = message._id;
             messageOBJ.sentAt = message.sentAt;
-            io.sockets.in(data.room).emit('chat', messageOBJ);
+            io.sockets.in(data.room + suffix).emit('chat', messageOBJ);
             if (process.env.NODE_ENV === 'development') {
                 console.log(`User ${user.id} succesfully sent message to chat room no. ${data.room}.`);
                 console.log(data);
