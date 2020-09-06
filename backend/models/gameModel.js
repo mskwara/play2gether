@@ -10,10 +10,10 @@ const gameSchema = new mongoose.Schema({
         type: String,
         required: [true, 'What is that game about?'],
     },
-    players: [{
-        type: mongoose.Schema.ObjectId,
-        ref: 'User',
-    }],
+    // players: [{
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'User',
+    // }],
     icon: {
         type: String,
         // Temporarily false

@@ -14,7 +14,7 @@ exports.getAll = (Model, exclude, sortOpt) =>
         const features = new APIFeatures(query, req.query)
             .sort(sortOpt)
             .limitFields()
-            .paginate();
+            .paginate(20);
 
         const docs = await features.query;
         res.status(200).json({
