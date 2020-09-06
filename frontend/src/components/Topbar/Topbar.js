@@ -52,7 +52,7 @@ const Topbar = (props) => {
                 <div className="underline" />
             </div>,
             <div className="link" key="2">
-                <a
+                <p
                     onClick={() =>
                         popupContext.setFriendsOpened(
                             !popupContext.friendsOpened
@@ -60,15 +60,15 @@ const Topbar = (props) => {
                     }
                 >
                     Friends
-                </a>
+                </p>
                 <div className="underline" />
             </div>,
             <div className="link" key="3">
-                <Link>Favourites</Link>
+                <Link to="/favourites">Favourites</Link>
                 <div className="underline" />
             </div>,
             <div className="link" key="4">
-                <a onClick={logout}>Logout</a>
+                <p onClick={logout}>Logout</p>
                 <div className="underline" />
             </div>,
         ];
@@ -140,15 +140,15 @@ const Topbar = (props) => {
                 <div className="underline" />
             </div>,
             <div className="link" key="3">
-                <a onClick={() => popupContext.openDialogWindow("login")}>
+                <p onClick={() => popupContext.openDialogWindow("login")}>
                     Login
-                </a>
+                </p>
                 <div className="underline" />
             </div>,
             <div className="link" key="2">
-                <a onClick={() => popupContext.openDialogWindow("signup")}>
+                <p onClick={() => popupContext.openDialogWindow("signup")}>
                     Sign up
-                </a>
+                </p>
                 <div className="underline" />
             </div>,
         ];

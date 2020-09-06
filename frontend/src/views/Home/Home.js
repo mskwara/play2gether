@@ -31,7 +31,7 @@ const Home = (props) => {
     let gameTiles = null;
     if (state.games !== null) {
         gameTiles = state.games.map((game) => (
-            <GameTile history={props.history} game={game} key={game._id} />
+            <GameTile game={game} key={game._id} />
         ));
     }
 
