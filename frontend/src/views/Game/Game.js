@@ -12,25 +12,9 @@ const Game = (props) => {
 
     const [state, setState] = useState({
         game: null,
+        players: null,
         loading: true,
     });
-    useEffect(() => {
-        const getData = async () => {
-            const res = await request(
-                "get",
-                `http://localhost:8000/games/${props.match.params.gameId}`,
-                null,
-                false
-            );
-
-            setState((state) => ({
-                ...state,
-                game: res.data.data,
-                loading: false,
-            }));
-        };
-        getData();
-    }, [props.match.params.gameId]);
 
     const setLoading = (val) => {
         setState((state) => ({
@@ -38,6 +22,41 @@ const Game = (props) => {
             loading: val,
         }));
     };
+
+    const getPlayersPlayingGame = async () => {
+        setLoading(true);
+        const playersRes = await request(
+            "get",
+            `http://localhost:8000/games/${props.match.params.gameId}/players`,
+            null,
+            true
+        );
+
+        setState((state) => ({
+            ...state,
+            players: playersRes.data.data,
+            loading: false,
+        }));
+    };
+
+    useEffect(() => {
+        const getData = async () => {
+            const res = await request(
+                "get",
+                `http://localhost:8000/games/${props.match.params.gameId}`,
+                null,
+                true
+            );
+
+            setState((state) => ({
+                ...state,
+                game: res.data.data,
+            }));
+
+            getPlayersPlayingGame();
+        };
+        getData();
+    }, [props.match.params.gameId]);
 
     const participate = async () => {
         setLoading(true);
@@ -48,11 +67,9 @@ const Game = (props) => {
             true
         );
 
-        setState((state) => ({
-            ...state,
-            game: res.data.data.game,
-        }));
-        setLoading(false);
+        userContext.updateGlobalUserState({ user: res.data.data });
+
+        getPlayersPlayingGame();
         popupContext.setAlertActive(
             true,
             "You have been added to the player's list!"
@@ -68,11 +85,9 @@ const Game = (props) => {
             true
         );
 
-        setState((state) => ({
-            ...state,
-            game: res.data.data.game,
-        }));
-        setLoading(false);
+        userContext.updateGlobalUserState({ user: res.data.data });
+
+        getPlayersPlayingGame();
         popupContext.setAlertActive(
             true,
             "You have been removed from the player's list!"
@@ -81,14 +96,14 @@ const Game = (props) => {
 
     let players = null;
     let gameBigTile = null;
-    if (state.game !== null) {
+    if (state.game !== null && state.players !== null) {
         let button = (
             <button className="participate" onClick={participate}>
                 Participate
             </button>
         );
         if (
-            state.game.players.filter(
+            state.players.filter(
                 (p) => p._id === userContext.globalUserState.user._id
             ).length > 0
         ) {
@@ -111,7 +126,7 @@ const Game = (props) => {
                 {button}
             </div>
         );
-        const reversedPlayers = [...state.game.players];
+        const reversedPlayers = [...state.players];
         reversedPlayers.reverse();
         players = reversedPlayers.map((p) => {
             return (
