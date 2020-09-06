@@ -1,5 +1,6 @@
 import React from "react";
 import "./Message.scss";
+import { formatDate } from "../../../../utils/methods";
 
 const Message = (props) => {
     let messageClass = "content";
@@ -9,17 +10,6 @@ const Message = (props) => {
         messageClass += " my-message";
         timeClass += " my-message";
     }
-
-    const formatDate = (date, type) => {
-        const localDate = new Date(date).toLocaleString();
-        let result;
-        switch (type) {
-            case "short":
-                result = localDate.substring(11, 16);
-                break;
-        }
-        return result;
-    };
 
     return (
         <div id="Message">
