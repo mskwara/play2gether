@@ -5,8 +5,8 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const APIFeatures = require('./../utils/apiFeatures');
 
-exports.getAllGames = factory.getAll(Game, '-players -screenshots');
-exports.getGame = factory.getOne(Game, '');
+exports.getAllGames = factory.getAll(Game, '-screenshots');
+exports.getGame = factory.getOne(Game, '-__v');
 exports.createGame = factory.create(Game);
 exports.updateGame = factory.update(Game);
 
