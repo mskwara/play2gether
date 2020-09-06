@@ -49,12 +49,12 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
 
 exports.getUser = catchAsync(async (req, res, next) => {
     const user = await User.findById(req.params.id)
-        .populate('games')
-        .select('-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email');
-    user.games.forEach(el => {
-        el.players = undefined;
-        el.screenshots = undefined;
-    });
+        .populate({
+            path: 'games',
+            select: '-__v -screenshots'
+        }).select(
+            '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email'
+        );
 
     if (!user) {
         return next(new AppError('No user found with that ID', 404));
