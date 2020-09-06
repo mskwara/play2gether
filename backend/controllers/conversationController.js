@@ -1,20 +1,29 @@
 const User = require('./../models/userModel');
-const Conv = require('./../models/conversationModel');
-const Message = require('./../models/messageModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('./../utils/catchAsync');
-const Conversation = require('./../models/conversationModel');
+const PrivateConv = require('../models/privateConversationModel');
+const GroupConv = require('../models/groupConversationModel');
+const PrivateMessage = require('./../models/privateMessageModel');
+const GroupMessage = require('./../models/groupMessageModel');
+const AppError = require('../utils/appError');
 
-exports.create = catchAsync(async (req, res, next) => {
-    // Has someone previously been your friend
-    if (!req.body.group && req.user.deletedFriends.some(el => el._id.toString() === req.body.users[0].toString())) {
-        return res.status(200).json({
-            status: 'success',
-            data: req.user
-        });
-    }
+const getAllConversations = Model => catchAsync(async (req, res, next) => {
+    const conversations = await Model.find({
+        _id: { $in: req.user.conversations }
+    });
+
+    res.status(200).json({
+        status: 'success',
+        results: conversations.length,
+        data: conversations
+    });
+});
+
+
+exports.createGroupConversation = catchAsync(async (req, res, next) => {
     // Remove duplicates
     let unique = req.body.users;
+    unique.push(req.user.id);
     unique = [...new Set(unique)];
 
     // Filter out non existing users
@@ -25,36 +34,99 @@ exports.create = catchAsync(async (req, res, next) => {
         return true;
     });
 
-    if (unique.length < 1) {
-        return next(new AppError('Not enough members for a conversation'));
+    if (unique.length < 3) {
+        return next(new AppError('Not enough members for a group conversation'));
     }
 
-    group = unique.length > 1 ? true : false;
-    unique.push(req.user.id);
-    const newConv = await Conv.create({
+    const newConv = await GroupConv.create({
         participants: [...unique],
         recentActivity: Date.now(),
-        group
     });
 
     await User.updateMany({
         _id: { $in: unique }
     }, {
         $push: {
-            conversations: newConv._id
+            groupConversations: newConv._id
         }
     });
 
-    const user = await User.findById(req.user.id);
-
     res.status(201).json({
         status: 'success',
-        data: user
+        data: newConv
     });
 });
 
-exports.leave = catchAsync(async (req, res, next) => {
-    const conv = await Conv.findByIdAndUpdate(req.params.id, {
+exports.getPrivateConversationByUser = catchAsync(async (req, res, next) => {
+    const user = req.user.id;
+    const correspondent = req.params.userId;
+
+    const corrUser = User.findById(correspondent);
+    if (!corrUser) {
+        return next(new AppError('This user does not exist', 404));
+    }
+
+    if (user > correspondent)
+        [user, correspondent] = [correspondent, user];
+
+    let privateConv = await PrivateConversation.findOne({
+        user,
+        correspondent
+    });
+
+    if (!privateConv)
+        return next(new AppError('You have no conversation with that user', 404));
+
+    res.status(200).json({
+        status: 'success',
+        data: privateConv
+    });
+});
+
+exports.createPrivateConv = catchAsync(async (req, res, next) => {
+    const user = req.user.id;
+    const correspondent = req.params.userId;
+
+    const corrUser = User.findById(correspondent);
+    if (!corrUser) {
+        return next(new AppError('This user does not exist', 404));
+    }
+
+    if (user > correspondent)
+        [user, correspondent] = [correspondent, user];
+
+    let privateConv = await PrivateConversation.findOne({
+        user,
+        correspondent
+    });
+
+    if (privateConv)
+        return next(new AppError('You already have a private conv with that user', 400));
+
+    privateConv = await PrivateConv.create({
+        user,
+        correspondent,
+        recentActivity: Date.now()
+    });
+    privateConv.__v = undefined;
+
+    await User.updateMany({
+        _id: { $in: [user, correspondent] }
+    }, {
+        $push: {
+            privateConversations: privateConv._id
+        }
+    });
+
+
+    res.status(201).json({
+        status: 'success',
+        data: privateConv
+    });
+});
+
+exports.leaveGroupConversation = catchAsync(async (req, res, next) => {
+    const conv = await GroupConv.findByIdAndUpdate(req.params.convId, {
         $pull: {
             participants: req.user.id
         }
@@ -62,55 +134,65 @@ exports.leave = catchAsync(async (req, res, next) => {
         new: true
     });
 
+    if (!conv)
+        return next(new AppError('There is no conversation with that Id', 404));
+
     if (conv.participants.length === 0)
-        await Conv.findByIdAndDelete(req.params.id);
+        await GroupConv.findByIdAndDelete(req.params.convId);
 
-    const user = await User.findByIdAndUpdate(req.user.id, {
+    await User.findByIdAndUpdate(req.user.id, {
         $pull: {
-            conversations: req.params.id
+            groupConversations: req.params.convId
         }
-    }, {
-        new: true
     });
 
     res.status(200).json({
         status: 'success',
-        data: user
+        data: null
     });
 });
 
 
-exports.getAllMessages = factory.getAll(Message, '', '-sentAt');
 
-exports.getAllConversations = catchAsync(async (req, res, next) => {
-    let filter = {
-        _id: {
-            $in: req.user.conversations
-        },
-        group: req.query.group
-    }
+exports.getAllPrivateConversations = getAllConversations(PrivateConv);
+exports.getAllGroupConversations = getAllConversations(GroupConv);
 
-    const conversations = await Conversation.find(filter);
+exports.getPrivateConversation = factory.getOne(PrivateConv, '');
+exports.getGroupConversation = factory.getOne(GroupConv, '');
 
-    res.status(200).json({
-        status: 'success',
-        results: conversations.length,
-        data: conversations
-    });
-});
+exports.getAllPrivateMessages = factory.getAll(PrivateMessage, '', '-sentAt');
+exports.getAllGroupMessages = factory.getAll(GroupMessage, '-sentAt');
 
-exports.getConversation = factory.getOne(Conversation, '');
+exports.sendPrivateMessage = catchAsync(async (req, res, next) => {
+    if (!req.user.privateConversations.includes(req.params.id))
+        return next(new AppError('You don\'t belong to that conversation', 403));
 
-exports.sendMessage = catchAsync(async (req, res, next) => {
-    const message = await Message.create({
+    const message = await PrivateMessage.create({
         conversation: req.params.id,
         from: req.user.id,
         sentAt: Date.now(),
         message: req.body.message
     });
-    
+
     res.status(200).json({
         status: 'success',
         data: message
-    })
+    });
+});
+
+exports.sendGroupMessage = catchAsync(async (req, res, next) => {
+    if (!req.user.groupConversations.includes(req.params.id))
+        return next(new AppError('You don\'t belong to that conversation', 403));
+
+    const message = await GroupMessage.create({
+        conversation: req.params.id,
+        from: req.user.id,
+        sentAt: Date.now(),
+        message: req.body.message
+    });
+
+    res.status(200).json({
+        status: 'success',
+        data: message
+    });
 });
