@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import MyInput from "../MyInput/MyInput";
+import MyInput from "../../MyInput/MyInput";
 import "./Login.scss";
-import request from "../../utils/request";
-import PopupContext from "../../utils/PopupContext";
-import UserContext from "../../utils/UserContext";
+import request from "../../../utils/request";
+import PopupContext from "../../../utils/PopupContext";
+import UserContext from "../../../utils/UserContext";
 
 const Login = (props) => {
     const popupContext = useContext(PopupContext);
@@ -42,7 +42,7 @@ const Login = (props) => {
                 user: res.data.data,
                 conversations: convRes.data.data,
             });
-            props.closeLogin();
+            popupContext.closeDialogWindow();
             popupContext.setAlertActive(
                 true,
                 `Welcome back, ${res.data.data.name}!`
@@ -62,32 +62,30 @@ const Login = (props) => {
 
     return (
         <div id="Login" className={props.className}>
-            <div className="form">
-                <h1>Login</h1>
-                <img
-                    src={require("../../assets/close.png")}
-                    alt="close"
-                    className="close-btn"
-                    onClick={props.closeLogin}
-                />
-                <MyInput
-                    type="text"
-                    name="email"
-                    placeholder="Email"
-                    value={userState.email}
-                    labelId="login"
-                    handleInputChange={handleInputChange}
-                />
-                <MyInput
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={userState.password}
-                    labelId="login"
-                    handleInputChange={handleInputChange}
-                />
-                <button onClick={login}>Log me in</button>
-            </div>
+            <h1>Login</h1>
+            <img
+                src={require("../../../assets/close.png")}
+                alt="close"
+                className="close-btn"
+                onClick={popupContext.closeDialogWindow}
+            />
+            <MyInput
+                type="text"
+                name="email"
+                placeholder="Email"
+                value={userState.email}
+                labelId="login"
+                handleInputChange={handleInputChange}
+            />
+            <MyInput
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={userState.password}
+                labelId="login"
+                handleInputChange={handleInputChange}
+            />
+            <button onClick={login}>Log me in</button>
         </div>
     );
 };

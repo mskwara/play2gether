@@ -1,0 +1,14 @@
+#DialogWindow {
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 20;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 90px;
+    top: 0;
+    transition: 0.5s;
+    overflow-y: auto;
+}

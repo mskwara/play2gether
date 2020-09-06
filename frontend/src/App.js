@@ -7,9 +7,7 @@ import Loader from "./components/Loader/Loader";
 import FriendList from "./components/FriendList/FriendList";
 import Conversations from "./components/Conversations/Conversations";
 import Alert from "./components/Alert/Alert";
-import Signup from "./components/Signup/Signup";
-import Login from "./components/Login/Login";
-import Profile from "./components/Profile/Profile";
+import DialogWindow from "./components/DialogWindow/DialogWindow";
 import PopupContext from "./utils/PopupContext";
 import UserContext from "./utils/UserContext";
 import ConvContext from "./utils/ConvContext";
@@ -21,8 +19,8 @@ import io from "socket.io-client";
 
 const App = (props) => {
     const [state, setState] = useState({
-        signupOpened: false,
-        loginOpened: false,
+        dialogWindowActive: false,
+        dialogWindowComponent: "",
         friendsOpened: false,
         profileOpened: false,
         profileUserId: null,
@@ -109,19 +107,12 @@ const App = (props) => {
         }
     };
 
-    const openSignup = () => {
+    const openDialogWindow = (component, obj) => {
         setState((state) => ({
             ...state,
-            signupOpened: true,
-            loginOpened: false,
-        }));
-    };
-
-    const openLogin = () => {
-        setState((state) => ({
-            ...state,
-            loginOpened: true,
-            signupOpened: false,
+            dialogWindowActive: true,
+            dialogWindowComponent: component,
+            ...obj,
         }));
     };
 
@@ -132,20 +123,8 @@ const App = (props) => {
         }));
     };
 
-    const setProfileOpened = (val, userId) => {
-        setState((state) => ({
-            ...state,
-            profileOpened: val,
-            profileUserId: userId,
-        }));
-    };
-
-    const closeSignup = () => {
-        setState((state) => ({ ...state, signupOpened: false }));
-    };
-
-    const closeLogin = () => {
-        setState((state) => ({ ...state, loginOpened: false }));
+    const closeDialogWindow = () => {
+        setState((state) => ({ ...state, dialogWindowActive: false }));
     };
 
     const setAlertActive = (val, message) => {
@@ -169,26 +148,24 @@ const App = (props) => {
         }
     };
 
-    let signup = <Signup className="dialog-invisible" />;
-    if (state.signupOpened) {
-        signup = (
-            <Signup className="dialog-visible" closeSignup={closeSignup} />
+    let dialogWindow = (
+        <DialogWindow
+            className="dialog-invisible"
+            component={state.dialogWindowComponent}
+        />
+    );
+    if (state.dialogWindowActive) {
+        dialogWindow = (
+            <DialogWindow
+                className="dialog-visible"
+                component={state.dialogWindowComponent}
+            />
         );
-    }
-
-    let login = <Login className="dialog-invisible" />;
-    if (state.loginOpened) {
-        login = <Login className="dialog-visible" closeLogin={closeLogin} />;
     }
 
     let alert = <Alert className="dialog-invisible" />;
     if (state.alertActive) {
         alert = <Alert message={state.alertMessage} />;
-    }
-
-    let profile = <Profile className="dialog-invisible" visible={false} />;
-    if (state.profileOpened) {
-        profile = <Profile className="dialog-visible" visible={true} />;
     }
 
     let friendList = null;
@@ -210,12 +187,11 @@ const App = (props) => {
                 value={{
                     alertActive: state.alertActive,
                     setAlertActive,
-                    openSignup,
-                    openLogin,
+                    openDialogWindow,
+                    closeDialogWindow,
+                    profileUserId: state.profileUserId,
                     setFriendsOpened,
                     friendsOpened: state.friendsOpened,
-                    setProfileOpened,
-                    profileUserId: state.profileUserId,
                 }}
             >
                 <UserContext.Provider
@@ -233,17 +209,19 @@ const App = (props) => {
                                 <div id="App">
                                     {alert}
                                     <Topbar />
-                                    <img
-                                        src={require("./assets/black_left_arrow.png")}
-                                        alt="close"
-                                        className={arrowClass}
-                                        onClick={() => setFriendsOpened(true)}
-                                    />
+                                    {globalUserState.user ? (
+                                        <img
+                                            src={require("./assets/black_left_arrow.png")}
+                                            alt="close"
+                                            className={arrowClass}
+                                            onClick={() =>
+                                                setFriendsOpened(true)
+                                            }
+                                        />
+                                    ) : null}
                                     {friendList}
                                     <Conversations />
-                                    {signup}
-                                    {login}
-                                    {profile}
+                                    {dialogWindow}
                                     <Switch>
                                         <Route
                                             path="/"
