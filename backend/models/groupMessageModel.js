@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const messageSchema = new mongoose.Schema({
+const groupMessageSchema = new mongoose.Schema({
     conversation: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Conversation',
+        ref: 'GroupConversation',
         required: [true, 'Message must have a recipient']
     },
     from: {
@@ -20,6 +20,6 @@ const messageSchema = new mongoose.Schema({
     }
 });
 
-const Message = mongoose.model('Message', messageSchema);
+const GroupMessage = mongoose.model('GroupMessage', groupMessageSchema);
 
-module.exports = Message;
+module.exports = GroupMessage;
