@@ -8,17 +8,19 @@ router.route('/')
     .get(gameController.getAllGames)
     .post(gameController.createGame);
 
+router.use(authController.protect);
+
 router.route('/:id')
     .get(gameController.getGame)
     .patch(gameController.updateGame);
 
+router.get('/:id/players', gameController.getPlayers);
+
 router.patch('/:id/registerAsPlayer',
-    authController.protect,
     gameController.registerAsPlayer
 );
 
 router.patch('/:id/optOut',
-    authController.protect,
     gameController.optOut
 );
 

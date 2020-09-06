@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'defaultUser.jpeg'
     },
+    games: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'Game'
+    }],
     friends: [{
         type: mongoose.Schema.ObjectId,
         ref: 'User'
@@ -73,11 +77,11 @@ const userSchema = new mongoose.Schema({
     toObject: { virtuals: true }
 });
 
-userSchema.virtual('games', {
-    ref: 'Game',
-    foreignField: 'players',
-    localField: '_id'
-});
+// userSchema.virtual('games', {
+//     ref: 'Game',
+//     foreignField: 'players',
+//     localField: '_id'
+// });
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password'))
