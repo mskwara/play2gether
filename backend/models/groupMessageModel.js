@@ -20,6 +20,12 @@ const groupMessageSchema = new mongoose.Schema({
     }
 });
 
+groupMessageSchema.pre(/^find/, function (next) {
+    this.select('-__v');
+
+    next();
+});
+
 const GroupMessage = mongoose.model('GroupMessage', groupMessageSchema);
 
 module.exports = GroupMessage;

@@ -16,6 +16,11 @@ const privateConversationSchema = new mongoose.Schema({
     }
 });
 
+privateConversationSchema.post('save', function (err, doc, next) {
+    this.__v = undefined;
+    next();
+});
+
 privateConversationSchema.pre(/^find/,  function (next) {
     this.populate({
         path: 'user',
@@ -23,7 +28,7 @@ privateConversationSchema.pre(/^find/,  function (next) {
     }).populate({
         path: 'correspondent',
         select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -privateConversations -groupConversations'
-    });
+    }).select('-__v');
 
     next();
 });

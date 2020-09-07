@@ -1,7 +1,6 @@
 const express = require('express');
 const userController = require('./../controllers/userController');
 const authController = require('./../controllers/authController');
-const commentController = require('./../controllers/commentController');
 
 const router = express.Router();
 
@@ -23,13 +22,6 @@ router.route('/me')
 
 router.route('/:id')
     .get(userController.getUser);
-
-router.route('/:id/comments')
-    .get(commentController.getAllComments)
-    .post(commentController.postComment,
-        commentController.getAllComments);
-
-router.delete('/:id/comments/:commId', commentController.deleteComment);
 
 router.patch('/:id/addFriend', userController.addFriend);
 // router.patch('/:id/acceptFriend',
