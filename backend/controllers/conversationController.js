@@ -69,7 +69,7 @@ exports.getPrivateConversationByUser = catchAsync(async (req, res, next) => {
     if (user > correspondent)
         [user, correspondent] = [correspondent, user];
 
-    let privateConv = await PrivateConversation.findOne({
+    let privateConv = await PrivateConv.findOne({
         user,
         correspondent
     });
@@ -84,8 +84,8 @@ exports.getPrivateConversationByUser = catchAsync(async (req, res, next) => {
 });
 
 exports.createPrivateConv = catchAsync(async (req, res, next) => {
-    const user = req.user.id;
-    const correspondent = req.params.userId;
+    let user = req.user.id;
+    let correspondent = req.params.userId;
 
     const corrUser = User.findById(correspondent);
     if (!corrUser) {
@@ -95,7 +95,7 @@ exports.createPrivateConv = catchAsync(async (req, res, next) => {
     if (user > correspondent)
         [user, correspondent] = [correspondent, user];
 
-    let privateConv = await PrivateConversation.findOne({
+    let privateConv = await PrivateConv.findOne({
         user,
         correspondent
     });
@@ -108,7 +108,6 @@ exports.createPrivateConv = catchAsync(async (req, res, next) => {
         correspondent,
         recentActivity: Date.now()
     });
-    privateConv.__v = undefined;
 
     await User.updateMany({
         _id: { $in: [user, correspondent] }
@@ -157,11 +156,11 @@ exports.leaveGroupConversation = catchAsync(async (req, res, next) => {
 exports.getAllPrivateConversations = getAllConversations(PrivateConv);
 exports.getAllGroupConversations = getAllConversations(GroupConv);
 
-exports.getPrivateConversation = factory.getOne(PrivateConv, '');
-exports.getGroupConversation = factory.getOne(GroupConv, '');
+exports.getPrivateConversation = factory.getOne(PrivateConv);
+exports.getGroupConversation = factory.getOne(GroupConv);
 
 exports.getAllPrivateMessages = factory.getAll(PrivateMessage, '', '-sentAt');
-exports.getAllGroupMessages = factory.getAll(GroupMessage, '-sentAt');
+exports.getAllGroupMessages = factory.getAll(GroupMessage, '', '-sentAt');
 
 exports.sendPrivateMessage = catchAsync(async (req, res, next) => {
     if (!req.user.privateConversations.includes(req.params.id))

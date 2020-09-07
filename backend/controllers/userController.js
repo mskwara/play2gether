@@ -4,7 +4,8 @@ const sharp = require('sharp');
 const User = require('./../models/userModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('./../utils/catchAsync');
-const AppError = require('../utils/appError');
+const AppError = require('./../utils/appError');
+const userSlimDown = require('./../utils/userSlimDown');
 
 function filterObj(obj, ...excludedFields) {
     const newObj = {};
@@ -53,7 +54,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
             path: 'games',
             select: '-__v -screenshots'
         }).select(
-            '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email'
+            '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email -privateConversations -groupConversations'
         );
 
     if (!user) {
@@ -84,6 +85,7 @@ exports.update = catchAsync(async (req, res, next) => {
     }
 
     const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+        select: '-passwordChangedAt -privateConversations -groupConversations',
         new: true,
         runValidators: true
     });
@@ -100,7 +102,9 @@ exports.deletePhoto = catchAsync(async (req, res, next) => {
             if (err) console.log(err);
         });
 
-        const user = await User.findByIdAndUpdate(req.user.id, { photo: 'defaultUser.jpeg' })
+        const user = await User.findByIdAndUpdate(req.user.id, { photo: 'defaultUser.jpeg' }, {
+            select: '-passwordChangedAt -privateConversations -groupConversations',
+        });
         res.status(200).json({
             status: "success",
             data: user,
@@ -111,6 +115,7 @@ exports.deletePhoto = catchAsync(async (req, res, next) => {
 });
 
 exports.getMe = catchAsync(async (req, res, next) => {
+    req.user = userSlimDown(req.user);
     res.status(200).json({
         status: 'success',
         data: req.user,
@@ -142,6 +147,7 @@ exports.addFriend = catchAsync(async (req, res, next) => {
             pendingFriendRequests: req.params.id
         }
     }, {
+        select: '-passwordChangedAt -privateConversations -groupConversations',
         new: true
     });
 
@@ -163,6 +169,7 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
             friends: req.params.id
         }
     }, {
+        select: '-passwordChangedAt -privateConversations -groupConversations',
         new: true
     });
 
@@ -175,8 +182,7 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
         }
     });
 
-    req.body.users = [req.params.id];
-    req.body.group = false;
+    req.params.userId = req.params.id;
     next();
 });
 
@@ -189,6 +195,7 @@ exports.ignoreFriend = catchAsync(async (req, res, next) => {
             receivedFriendRequests: req.params.id
         }
     }, {
+        select: '-passwordChangedAt -privateConversations -groupConversations',
         new: true
     });
 
@@ -210,6 +217,7 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
             friends: req.params.id
         }
     }, {
+        select: '-passwordChangedAt -privateConversations -groupConversations',
         new: true
     });
 

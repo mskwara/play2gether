@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
-const AppError = require("../utils/appError");
+const AppError = require("./../utils/appError");
+const slimDownUser = require('./../utils/userSlimDown');
 
 function authToken(id) {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -23,6 +24,7 @@ function createAuthToken(user, statusCode, res) {
     if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
     user.password = undefined;
+    user = slimDownUser(user);
 
     res.cookie("jwt", token, cookieOptions);
 

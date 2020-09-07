@@ -20,6 +20,12 @@ const privateMessageSchema = new mongoose.Schema({
     }
 });
 
+privateMessageSchema.pre(/^find/, function (next) {
+    this.select('-__v');
+
+    next();
+});
+
 const PrivateMessage = mongoose.model('PrivateMessage', privateMessageSchema);
 
 module.exports = PrivateMessage;
