@@ -27,7 +27,7 @@ commentSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'from',
         select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email'
-    });
+    }).select('-__v');
 
     next();
 });

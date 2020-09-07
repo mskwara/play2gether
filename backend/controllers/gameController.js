@@ -6,14 +6,14 @@ const AppError = require('./../utils/appError');
 const APIFeatures = require('./../utils/apiFeatures');
 
 exports.getAllGames = factory.getAll(Game, '-screenshots');
-exports.getGame = factory.getOne(Game, '-__v');
+exports.getGame = factory.getOne(Game);
 exports.createGame = factory.create(Game);
 exports.updateGame = factory.update(Game);
 
 exports.getPlayers = catchAsync(async (req, res, next) => {
     filter = { games: req.params.id }
     const query = User.find(filter)
-        .select('-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email -games');
+        .select('-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -games -privateConversations -groupConversations');
     const features = new APIFeatures(query, req.query)
         .paginate(50);
 
@@ -41,6 +41,7 @@ exports.registerAsPlayer = catchAsync(async (req, res, next) => {
             games: req.params.id
         }
     }, {
+        select: '-passwordChangedAt -privateConversations -groupConversations',
         new: true
     });
 
@@ -54,6 +55,7 @@ exports.optOut = catchAsync(async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user.id, {
         $pull: { games: req.params.id }
     }, {
+        select: '-passwordChangedAt -privateConversations -groupConversations',
         new: true
     });
 

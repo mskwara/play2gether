@@ -10,11 +10,16 @@ const groupConversationSchema = new mongoose.Schema({
     },
 });
 
+groupConversationSchema.post('save', function (err, doc, next) {
+    this.__v = undefined;
+    next();
+});
+
 groupConversationSchema.pre(/^find/, async function (next) {
     this.populate({
         path: 'participants',
         select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email'
-    });
+    }).select('-__v');
 
     next();
 });

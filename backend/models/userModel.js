@@ -90,6 +90,11 @@ userSchema.pre('save', function (next) {
     next();
 });
 
+userSchema.post('save', function (err, doc, next) {
+    this.__v = undefined;
+    next();
+});
+
 userSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'friends',
@@ -100,7 +105,7 @@ userSchema.pre(/^find/, function (next) {
     }).populate({
         path: 'pendingFriendRequests',
         select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -privateConversations -groupConversations'
-    });
+    }).select('-__v');
 
     next();
 });
