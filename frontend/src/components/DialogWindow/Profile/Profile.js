@@ -125,11 +125,11 @@ const Profile = (props) => {
                             opis. Jestem pajacem i mam pajacerski opis. Jestem
                             pajacem i mam pajacerski opis. Jestem pajacem i mam
                             pajacerski opis. Jestem pajacem i mam pajacerski
-                            opis.{" "}
+                            opis.
                         </p>
                     </div>
                 </div>
-                <h1>Ready to play</h1>
+                {playerGames.length > 0 ? <h1>Ready to play</h1> : null}
                 <div className="player-games">{playerGames}</div>
                 <div className="comments">
                     <h1>Comments</h1>
