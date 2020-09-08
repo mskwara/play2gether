@@ -32,7 +32,7 @@ const App = (props) => {
 
     const [globalUserState, setGlobalUserState] = useState({
         user: null,
-        conversations: [],
+        privateConversations: [],
         jwt: null,
     });
 
@@ -70,17 +70,17 @@ const App = (props) => {
             if (res.data.status === "success") {
                 const convRes = await request(
                     "get",
-                    "http://localhost:8000/conversations?group=false",
+                    "http://localhost:8000/conversations/private",
                     null,
                     true
                 );
                 updateGlobalUserState({
                     user: res.data.data,
-                    conversations: convRes.data.data,
+                    privateConversations: convRes.data.data,
                     jwt: res.data.token,
                 });
             } else {
-                updateGlobalUserState({ user: null, conversations: [] });
+                updateGlobalUserState({ user: null, privateConversations: [] });
             }
             setLoadingState({ loading: false });
         };

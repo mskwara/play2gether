@@ -10,7 +10,8 @@ const FriendList = (props) => {
     const popupContext = useContext(PopupContext);
     const convContext = useContext(ConvContext);
     const activeUser = userContext.globalUserState.user;
-    const conversations = userContext.globalUserState.conversations;
+    const privateConversations =
+        userContext.globalUserState.privateConversations;
 
     const acceptFriend = async (received_friend) => {
         const res = await request(
@@ -23,13 +24,13 @@ const FriendList = (props) => {
         if (res.data.status === "success") {
             const convRes = await request(
                 "get",
-                "http://localhost:8000/conversations?group=false",
+                "http://localhost:8000/conversations/private",
                 null,
                 true
             );
             userContext.updateGlobalUserState({
                 user: res.data.user,
-                conversations: convRes.data.data,
+                privateConversations: convRes.data.data,
             });
             popupContext.setAlertActive(
                 true,
@@ -49,13 +50,13 @@ const FriendList = (props) => {
         if (res.data.status === "success") {
             const convRes = await request(
                 "get",
-                "http://localhost:8000/conversations?group=false",
+                "http://localhost:8000/conversations/private",
                 null,
                 true
             );
             userContext.updateGlobalUserState({
                 user: res.data.user,
-                conversations: convRes.data.data,
+                privateConversations: convRes.data.data,
             });
             popupContext.setAlertActive(
                 true,
@@ -79,7 +80,7 @@ const FriendList = (props) => {
     let friends = null;
     let received = null;
     if (activeUser) {
-        friends = conversations.map((conv) => {
+        friends = privateConversations.map((conv) => {
             const friend = conv.participants.filter(
                 (person) => person._id !== activeUser._id
             )[0]; //get person which do you talk to
@@ -154,7 +155,7 @@ const FriendList = (props) => {
                 )}
             {friends}
             {activeUser &&
-                activeUser.friends.length === 0 &&
+                privateConversations.length === 0 &&
                 activeUser.receivedFriendRequests.length === 0 && (
                     <p className="title small-title empty-title">
                         Nothing to show...
