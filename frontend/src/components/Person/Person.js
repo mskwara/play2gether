@@ -11,7 +11,7 @@ const Person = (props) => {
     const convContext = useContext(ConvContext);
     const socketContext = useContext(SocketContext);
     const popupContext = useContext(PopupContext);
-    const conversations = userContext.globalUserState.conversations;
+    const conversations = userContext.globalUserState.privateConversations;
     const addFriend = async () => {
         await request(
             "patch",

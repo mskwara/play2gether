@@ -25,7 +25,7 @@ const Topbar = (props) => {
         if (res.data.status === "success") {
             userContext.updateGlobalUserState({
                 user: null,
-                conversations: [],
+                privateConversations: [],
             });
             setState({ reload: !state.reload });
             popupContext.setAlertActive(true, "You have been logged out!");
