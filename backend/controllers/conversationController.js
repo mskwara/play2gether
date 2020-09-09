@@ -7,19 +7,6 @@ const PrivateMessage = require("./../models/privateMessageModel");
 const GroupMessage = require("./../models/groupMessageModel");
 const AppError = require("../utils/appError");
 
-const getAllConversations = (Model) =>
-    catchAsync(async (req, res, next) => {
-        const conversations = await Model.find({
-            _id: { $in: req.user.conversations },
-        });
-
-        res.status(200).json({
-            status: "success",
-            results: conversations.length,
-            data: conversations,
-        });
-    });
-
 exports.createGroupConversation = catchAsync(async (req, res, next) => {
     // Remove duplicates
     let unique = req.body.users;
@@ -62,8 +49,8 @@ exports.createGroupConversation = catchAsync(async (req, res, next) => {
 });
 
 exports.getPrivateConversationByUser = catchAsync(async (req, res, next) => {
-    const user = req.user.id;
-    const correspondent = req.params.userId;
+    let user = req.user.id;
+    let correspondent = req.params.userId;
 
     const corrUser = User.findById(correspondent);
     if (!corrUser) {
@@ -105,9 +92,10 @@ exports.createPrivateConv = catchAsync(async (req, res, next) => {
     });
 
     if (privateConv)
-        return next(
-            new AppError("You already have a private conv with that user", 400)
-        );
+        return res.status(200).json({
+            status: "success",
+            data: req.user,
+        });
 
     privateConv = await PrivateConv.create({
         user,
@@ -125,10 +113,11 @@ exports.createPrivateConv = catchAsync(async (req, res, next) => {
             },
         }
     );
+    req.user.privateConversations.push(privateConv._id);
 
     res.status(201).json({
         status: "success",
-        data: user,
+        data: req.user,
     });
 });
 
@@ -163,8 +152,29 @@ exports.leaveGroupConversation = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.getAllPrivateConversations = getAllConversations(PrivateConv);
-exports.getAllGroupConversations = getAllConversations(GroupConv);
+exports.getAllPrivateConversations = catchAsync(async (req, res, next) => {
+    const conversations = await PrivateConv.find({
+        _id: { $in: req.user.privateConversations },
+    });
+
+    res.status(200).json({
+        status: "success",
+        results: conversations.length,
+        data: conversations,
+    });
+});;
+
+exports.getAllGroupConversations = catchAsync(async (req, res, next) => {
+    const conversations = await GroupConv.find({
+        _id: { $in: req.user.groupConversations },
+    });
+
+    res.status(200).json({
+        status: "success",
+        results: conversations.length,
+        data: conversations,
+    });
+});;;
 
 exports.getPrivateConversation = factory.getOne(PrivateConv);
 exports.getGroupConversation = factory.getOne(GroupConv);
