@@ -103,21 +103,23 @@ exports.createPrivateConv = catchAsync(async (req, res, next) => {
         recentActivity: Date.now(),
     });
 
-    await User.updateMany(
-        {
-            _id: { $in: [user, correspondent] },
-        },
-        {
-            $push: {
-                privateConversations: privateConv._id,
-            },
+    const userOBJ = await User.findByIdAndUpdate(user, {
+        $push: {
+            privateConversations: privateConv._id
         }
-    );
-    req.user.privateConversations.push(privateConv._id);
+    }, {
+        new: true
+    });
+
+    await User.findByIdAndUpdate(correspondent, {
+        $push: {
+            privateConversations: privateConv._id,
+        }
+    });
 
     res.status(201).json({
         status: "success",
-        data: req.user,
+        data: userOBJ
     });
 });
 
