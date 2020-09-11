@@ -1,10 +1,13 @@
 const { checkToken } = require('./authController');
+const PrivateConversation = require('./../models/privateConversationModel');
+const GroupConversation = require('./../models/groupConversationModel');
 const PrivateMessage = require('./../models/privateMessageModel');
 const GroupMessage = require('./../models/groupMessageModel');
 
 function join(socket) {
     return async data => {
         const user = await checkToken(data.jwt);
+        console.log(user);
 
         let convs, suffix;
         if (data.private) {
@@ -14,7 +17,7 @@ function join(socket) {
             convs = user.groupConversations;
             suffix = 'g';
         }
-
+        console.log(data.room, convs[0]);
         if (user && convs.includes(data.room)) {
             socket.join(data.room + suffix);
             if (process.env.NODE_ENV === 'development')
@@ -58,7 +61,7 @@ function send(io) {
             suffix = 'p';
             Model = PrivateMessage;
         } else {
-            convs = user.privateConversations;
+            convs = user.groupConversations;
             suffix = 'g';
             Model = GroupMessage;
         }

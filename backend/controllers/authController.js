@@ -61,6 +61,7 @@ exports.signup = catchAsync(async (req, res, next) => {
         email: req.body.email,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
+        recentActivity: Date.now()
     });
 
     createAuthToken(newUser, 201, res);
@@ -75,7 +76,9 @@ exports.login = catchAsync(async (req, res, next) => {
     }
 
     // 2) Check if user exists and password is correct
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOneAndUpdate({ email }, {
+        recentActivity: Date.now()
+    }).select("+password");
 
     if (!user || !(await user.correctPassword(password, user.password))) {
         return next(new AppError("Incorrect email or password", 401));
@@ -117,7 +120,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
     // 3) Check if user still exists
-    const currentUser = await User.findById(decoded.id);
+    const currentUser = await User.findByIdAndUpdate(decoded.id, {
+        recentActivity: Date.now()
+    });
     if (!currentUser) {
         return next(new AppError("The user does not longer exist", 401));
     }

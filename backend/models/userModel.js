@@ -73,6 +73,18 @@ const userSchema = new mongoose.Schema(
                 ref: "Conversation",
             },
         ],
+        updatedPrivateConversations: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: "Conversation",
+            },
+        ],
+        updatedGroupConversations: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: "Conversation",
+            },
+        ],
         privileges: {
             type: String,
             enum: ["admin", "user"],
@@ -82,6 +94,9 @@ const userSchema = new mongoose.Schema(
         aboutMe: {
             type: String,
         },
+        recentActivity: {
+            type: Date
+        }
     },
     {
         toJSON: { virtuals: true },

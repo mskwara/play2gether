@@ -17,7 +17,8 @@ join.addEventListener('click', function () {
     console.log(room, jwt);
     socket.emit('join', {
         room,
-        jwt
+        jwt,
+        private: true
     });
     join.innerHTML = 'Probably connected';
     leave.innerHTML = 'Leave conversation';
@@ -29,7 +30,8 @@ leave.addEventListener('click', function () {
     console.log(room, jwt);
     socket.emit('leave', {
         room,
-        jwt
+        jwt,
+        private: true
     });
     leave.innerHTML = 'Probably left';
     join.innerHTML = 'Join conversation';
@@ -42,7 +44,8 @@ btn.addEventListener('click', function () {
         message: message.value,
         jwt,
         room,
-        handle: handle.value
+        handle: handle.value,
+        private: true
     });
     message.value = "";
 });

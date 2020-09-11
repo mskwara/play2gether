@@ -15,7 +15,8 @@ exports.getPlayers = catchAsync(async (req, res, next) => {
     const query = User.find(filter)
         .select('-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -games -privateConversations -groupConversations');
     const features = new APIFeatures(query, req.query)
-        .paginate(50);
+        .paginate(50)
+        .sort('-recentActivity');
 
     const players = await features.query;
     res.status(200).json({
