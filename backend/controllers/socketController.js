@@ -66,7 +66,7 @@ function send(io) {
             Model = GroupMessage;
         }
 
-        if (user && convs.includes(data.room)) {
+        if (user && convs.includes(data.room) && data.message !== '') {
             messageOBJ = {
                 conversation: data.room,
                 from: user.id,
