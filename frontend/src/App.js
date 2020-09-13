@@ -22,6 +22,7 @@ const App = (props) => {
         dialogWindowActive: false,
         dialogWindowComponent: "",
         friendsOpened: false,
+        group: false,
         profileOpened: false,
         profileUserId: null,
         alertActive: false,
@@ -33,6 +34,7 @@ const App = (props) => {
     const [globalUserState, setGlobalUserState] = useState({
         user: null,
         privateConversations: [],
+        groupConversations: [],
         jwt: null,
     });
 
@@ -68,19 +70,30 @@ const App = (props) => {
                 true
             );
             if (res.data.status === "success") {
-                const convRes = await request(
+                const privateConvRes = await request(
                     "get",
                     "http://localhost:8000/conversations/private",
                     null,
                     true
                 );
+                const groupConvRes = await request(
+                    "get",
+                    "http://localhost:8000/conversations/group",
+                    null,
+                    true
+                );
                 updateGlobalUserState({
                     user: res.data.data,
-                    privateConversations: convRes.data.data,
+                    privateConversations: privateConvRes.data.data,
+                    groupConversations: groupConvRes.data.data,
                     jwt: res.data.token,
                 });
             } else {
-                updateGlobalUserState({ user: null, privateConversations: [] });
+                updateGlobalUserState({
+                    user: null,
+                    privateConversations: [],
+                    groupConversations: [],
+                });
             }
             setLoadingState({ loading: false });
         };
@@ -116,10 +129,11 @@ const App = (props) => {
         }));
     };
 
-    const setFriendsOpened = (val) => {
+    const setFriendsOpened = (val, group = false) => {
         setState((state) => ({
             ...state,
             friendsOpened: val,
+            group,
         }));
     };
 
@@ -192,6 +206,7 @@ const App = (props) => {
                     profileUserId: state.profileUserId,
                     setFriendsOpened,
                     friendsOpened: state.friendsOpened,
+                    group: state.group,
                 }}
             >
                 <UserContext.Provider

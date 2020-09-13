@@ -11,13 +11,18 @@ const Person = (props) => {
     const convContext = useContext(ConvContext);
     const socketContext = useContext(SocketContext);
     const popupContext = useContext(PopupContext);
-    const conversations = userContext.globalUserState.privateConversations;
+    const privateConversations =
+        userContext.globalUserState.privateConversations;
     const addFriend = async () => {
         await request(
             "patch",
             `http://localhost:8000/users/${props.user._id}/addFriend`,
             null,
             true
+        );
+        popupContext.setAlertActive(
+            true,
+            `${props.user.name} has been invited to be your friend!`
         );
     };
 
@@ -30,10 +35,10 @@ const Person = (props) => {
             console.log("Not implemented!");
             return null;
         }
-        const conv = conversations.filter(
-            (el) =>
-                el.group === false &&
-                el.participants.some((p) => p._id === props.user._id)
+        const conv = privateConversations.filter(
+            (conv) =>
+                conv.user._id === props.user._id ||
+                conv.correspondent._id === props.user._id
         )[0];
         const openedConvs = [...convContext.convState.openedConvs];
         if (openedConvs.filter((c) => c._id === conv._id).length > 0) {
@@ -56,6 +61,7 @@ const Person = (props) => {
             message: `Hi! Would you like to play ${props.gameTitle} with me?`,
             jwt: userContext.globalUserState.jwt,
             room: conv._id,
+            private: true,
         });
     };
 
