@@ -26,9 +26,30 @@ const Topbar = (props) => {
             userContext.updateGlobalUserState({
                 user: null,
                 privateConversations: [],
+                groupConversations: [],
             });
             setState({ reload: !state.reload });
             popupContext.setAlertActive(true, "You have been logged out!");
+        }
+    };
+
+    const switchFriendsGroups = (group) => {
+        if (popupContext.friendsOpened) {
+            if (!group && !popupContext.group) {
+                //clicked friends, now opened friends
+                popupContext.setFriendsOpened(false, false);
+            } else if (!group && popupContext.group) {
+                //clicked friends, now opened groups
+                popupContext.setFriendsOpened(true, false);
+            } else if (group && !popupContext.group) {
+                //clicked groups, now opened friends
+                popupContext.setFriendsOpened(true, true);
+            } else if (group && popupContext.group) {
+                //clicked groups, now opened groups
+                popupContext.setFriendsOpened(false, true);
+            }
+        } else {
+            popupContext.setFriendsOpened(true, group);
         }
     };
 
@@ -52,19 +73,11 @@ const Topbar = (props) => {
                 <div className="underline" />
             </div>,
             <div className="link" key="2">
-                <p
-                    onClick={() =>
-                        popupContext.setFriendsOpened(
-                            !popupContext.friendsOpened
-                        )
-                    }
-                >
-                    Friends
-                </p>
+                <p onClick={() => switchFriendsGroups(false)}>Friends</p>
                 <div className="underline" />
             </div>,
             <div className="link" key="3">
-                <Link to="/favourites">Favourites</Link>
+                <p onClick={() => switchFriendsGroups(true)}>Groups</p>
                 <div className="underline" />
             </div>,
             <div className="link" key="4">
