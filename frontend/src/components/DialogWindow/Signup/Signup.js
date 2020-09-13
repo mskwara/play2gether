@@ -34,15 +34,22 @@ const Signup = (props) => {
         );
 
         if (res.data.status === "success") {
-            const convRes = await request(
+            const privateConvRes = await request(
                 "get",
                 "http://localhost:8000/conversations/private",
                 null,
                 true
             );
+            const groupConvRes = await request(
+                "get",
+                "http://localhost:8000/conversations/group",
+                null,
+                true
+            );
             userContext.updateGlobalUserState({
                 user: res.data.data,
-                privateConversations: convRes.data.data,
+                privateConversations: privateConvRes.data.data,
+                groupConversations: groupConvRes.data.data,
             });
             popupContext.closeDialogWindow();
             popupContext.setAlertActive(
