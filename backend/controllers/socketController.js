@@ -1,5 +1,4 @@
 const { checkToken } = require('./authController');
-const PrivateConversation = require('./../models/privateConversationModel');
 const GroupConversation = require('./../models/groupConversationModel');
 const PrivateMessage = require('./../models/privateMessageModel');
 const GroupMessage = require('./../models/groupMessageModel');
@@ -73,12 +72,21 @@ function send(io) {
                 sentAt: Date.now(),
                 message: data.message
             };
+
             const message = await Model.create(messageOBJ);
             messageOBJ.name = user.name;
             messageOBJ.photo = user.photo;
             messageOBJ._id = message._id;
             messageOBJ.sentAt = message.sentAt;
             io.sockets.in(data.room + suffix).emit('chat', messageOBJ);
+
+            if (!data.private) {
+                GroupConversation.findByIdAndUpdate(data.room, {
+                    lastMessage: data.message,
+                    recentActivity: message.sentAt
+                });
+            }
+            
             if (process.env.NODE_ENV === 'development') {
                 console.log(`User ${user.id} succesfully sent message to chat room no. ${data.room}.`);
                 console.log(data);
