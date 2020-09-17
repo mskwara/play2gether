@@ -1,13 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Radium from "radium";
 import "./Topbar.scss";
 import request from "../../utils/request";
 import PopupContext from "../../utils/PopupContext";
 import UserContext from "../../utils/UserContext";
+import ThemeContext from "../../utils/ThemeContext";
 
 const Topbar = (props) => {
     const popupContext = useContext(PopupContext);
     const userContext = useContext(UserContext);
+    const theme = useContext(ThemeContext);
 
     const [state, setState] = useState({
         reload: false,
@@ -62,6 +65,12 @@ const Topbar = (props) => {
         settingsClass += " settings-visible";
     }
 
+    const hoveringButtonsStyle = {
+        ":hover": {
+            backgroundColor: theme.colors.commentHover,
+        },
+    };
+
     let links = null;
     let logged_user = null;
     let settings = null;
@@ -108,6 +117,7 @@ const Topbar = (props) => {
             <div className={settingsClass}>
                 <div
                     className="logged_user"
+                    style={hoveringButtonsStyle}
                     onClick={() => {
                         popupContext.openDialogWindow("profile", {
                             profileUserId: userContext.globalUserState.user._id,
@@ -127,9 +137,13 @@ const Topbar = (props) => {
                         <p className="hint">View your profile</p>
                     </span>
                 </div>
-                <div className="divider" />
+                <div
+                    className="divider"
+                    style={{ borderBottom: `1px solid ${theme.colors.border}` }}
+                />
                 <button
                     className="settings-button"
+                    style={hoveringButtonsStyle}
                     onClick={() => {
                         popupContext.openDialogWindow("editMyProfile");
                         setState((state) => ({
@@ -137,11 +151,28 @@ const Topbar = (props) => {
                             settingsOpened: false,
                         }));
                     }}
+                    key="editprofile"
                 >
                     Edit my profile
                 </button>
-                <button className="settings-button">Dark mode</button>
-                <button className="settings-button" onClick={logout}>
+                <button
+                    className="settings-button"
+                    style={hoveringButtonsStyle}
+                    key="darkmode"
+                    onClick={() =>
+                        theme.selectedTheme === "light"
+                            ? theme.setTheme("dark")
+                            : theme.setTheme("light")
+                    }
+                >
+                    Dark mode
+                </button>
+                <button
+                    className="settings-button"
+                    style={hoveringButtonsStyle}
+                    onClick={logout}
+                    key="logout"
+                >
                     Logout
                 </button>
             </div>
@@ -168,7 +199,11 @@ const Topbar = (props) => {
     }
 
     return (
-        <div id="Topbar" className="normal">
+        <div
+            id="Topbar"
+            className="normal"
+            style={{ backgroundColor: theme.colors.primary }}
+        >
             <Link className="title" to="/">
                 Play2gether
             </Link>
@@ -179,4 +214,4 @@ const Topbar = (props) => {
     );
 };
 
-export default Topbar;
+export default Radium(Topbar);

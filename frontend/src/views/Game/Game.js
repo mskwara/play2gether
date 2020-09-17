@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Person from "../../components/Person/Person";
 import Loader from "../../components/Loader/Loader";
 import PopupContext from "../../utils/PopupContext";
+import MyButton from "../../components/MyButton/MyButton";
 import "./Game.scss";
 import request from "../../utils/request";
 import UserContext from "../../utils/UserContext";
@@ -98,9 +99,9 @@ const Game = (props) => {
     let gameBigTile = null;
     if (state.game !== null && state.players !== null) {
         let button = (
-            <button className="participate" onClick={participate}>
+            <MyButton className="participate" onClick={participate}>
                 Participate
-            </button>
+            </MyButton>
         );
         if (
             state.players.filter(
@@ -108,9 +109,9 @@ const Game = (props) => {
             ).length > 0
         ) {
             button = (
-                <button className="participate" onClick={optout}>
+                <MyButton className="participate" onClick={optout}>
                     Opt out
-                </button>
+                </MyButton>
             );
         }
 

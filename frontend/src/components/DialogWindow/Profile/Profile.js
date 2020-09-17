@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
-// import MyInput from "../MyInput/MyInput";
+import MyButton from "../../MyButton/MyButton";
 import "./Profile.scss";
 import request from "../../../utils/request";
 import PopupContext from "../../../utils/PopupContext";
 import UserContext from "../../../utils/UserContext";
+import ThemeContext from "../../../utils/ThemeContext";
 import Loader from "../../Loader/Loader";
 import Comment from "./Comment/Comment";
 import GameTile from "../../GameTile/GameTile";
@@ -11,6 +12,7 @@ import GameTile from "../../GameTile/GameTile";
 const Profile = (props) => {
     const userContext = useContext(UserContext);
     const popupContext = useContext(PopupContext);
+    const theme = useContext(ThemeContext);
 
     const [state, setState] = useState({
         user: null,
@@ -142,8 +144,11 @@ const Profile = (props) => {
                                 name="textarea"
                                 value={state.newComment}
                                 onChange={handleTextAreaChange}
+                                style={{
+                                    border: `1px solid ${theme.colors.border}`,
+                                }}
                             />
-                            <button onClick={sendComment}>Post</button>
+                            <MyButton onClick={sendComment}>Post</MyButton>
                         </span>
                     ) : null}
                     {state.loadingComment ? <Loader /> : null}

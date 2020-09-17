@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Comment.scss";
 import { formatDate } from "../../../../utils/methods";
+import ThemeContext from "../../../../utils/ThemeContext";
+import Radium from "radium";
 
 const Comment = (props) => {
+    const theme = useContext(ThemeContext);
+
     return (
-        <div id="Comment">
+        <div
+            id="Comment"
+            style={{
+                backgroundColor: theme.colors.comment,
+                ":hover": {
+                    backgroundColor: theme.colors.commentHover,
+                },
+            }}
+        >
             <img
                 src={require(`../../../../../../backend/static/users/${props.comment.from.photo}`)}
                 alt="avatar"
@@ -21,4 +33,4 @@ const Comment = (props) => {
     );
 };
 
-export default Comment;
+export default Radium(Comment);

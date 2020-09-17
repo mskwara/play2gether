@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import MyInput from "../../MyInput/MyInput";
+import MyButton from "../../MyButton/MyButton";
 import "./Signup.scss";
 import request from "../../../utils/request";
 import PopupContext from "../../../utils/PopupContext";
@@ -113,9 +114,9 @@ const Signup = (props) => {
                 labelId="signup"
                 handleInputChange={handleInputChange}
             />
-            <button onClick={signup} className="button">
+            <MyButton onClick={signup} className="button">
                 Join the community
-            </button>
+            </MyButton>
         </div>
     );
 };

@@ -1,15 +1,10 @@
-import React, {
-    useContext,
-    useEffect,
-    useState,
-    useImperativeHandle,
-    useRef,
-} from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import "./Chat.scss";
 import UserContext from "../../../utils/UserContext";
 import ConvContext from "../../../utils/ConvContext";
 import SocketContext from "../../../utils/SocketContext";
 import PopupContext from "../../../utils/PopupContext";
+import ThemeContext from "../../../utils/ThemeContext";
 import request from "../../../utils/request";
 import Message from "./Message/Message";
 import KeyboardEventHandler from "react-keyboard-event-handler";
@@ -20,6 +15,7 @@ const Chat = (props) => {
     const convContext = useContext(ConvContext);
     const popupContext = useContext(PopupContext);
     const socketContext = useContext(SocketContext);
+    const theme = useContext(ThemeContext);
     const activeUser = userContext.globalUserState.user;
 
     const [chatState, setChatState] = useState({
@@ -215,8 +211,11 @@ const Chat = (props) => {
     }
 
     return (
-        <div id="Chat">
-            <div className="topbar">
+        <div id="Chat" style={{ border: `1px solid ${theme.colors.border}` }}>
+            <div
+                className="topbar"
+                style={{ borderBottom: `1px solid ${theme.colors.border}` }}
+            >
                 {userBar}
                 <img
                     src={require(`../../../assets/close.png`)}
@@ -243,7 +242,10 @@ const Chat = (props) => {
                     {messages}
                 </InfiniteScroll>
             </div>
-            <div className="write-area">
+            <div
+                className="write-area"
+                style={{ borderTop: `1px solid ${theme.colors.border}` }}
+            >
                 <textarea
                     placeholder="Write a message..."
                     rows="3"
