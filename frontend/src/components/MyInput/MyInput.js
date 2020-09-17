@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import "./MyInput.scss";
+import Radium from "radium";
+import ThemeContext from "../../utils/ThemeContext";
 
 const MyInput = (props) => {
+    const theme = useContext(ThemeContext);
+
     const labelId = `${props.labelId}_label_${props.name}`;
+
     const handleInputChange = (event) => {
         if (event.target.value !== "") {
             document.getElementById(labelId).classList.add("filled");
@@ -19,7 +24,11 @@ const MyInput = (props) => {
 
     return (
         <div id="MyInput">
-            <label id={labelId} className={labelClass}>
+            <label
+                id={labelId}
+                className={labelClass}
+                style={{ color: theme.colors.label }}
+            >
                 {props.placeholder}
             </label>
             <input
@@ -28,9 +37,16 @@ const MyInput = (props) => {
                 name={props.name}
                 value={props.value}
                 onChange={handleInputChange}
+                style={{
+                    borderBottom: `1px solid ${theme.colors.border}`,
+                    color: theme.colors.label,
+                    ":focus": {
+                        borderBottom: `1px solid ${theme.colors.primary}`,
+                    },
+                }}
             />
         </div>
     );
 };
 
-export default MyInput;
+export default Radium(MyInput);

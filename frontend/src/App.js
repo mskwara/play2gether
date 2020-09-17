@@ -12,12 +12,37 @@ import PopupContext from "./utils/PopupContext";
 import UserContext from "./utils/UserContext";
 import ConvContext from "./utils/ConvContext";
 import SocketContext from "./utils/SocketContext";
+import ThemeContext from "./utils/ThemeContext";
 import PrivateRoute from "./utils/PrivateRoute";
 import "./App.scss";
 import request from "./utils/request";
 import io from "socket.io-client";
+import Radium from "radium";
 
 const App = (props) => {
+    const themes = {
+        light: {
+            primary: "rgb(0, 119, 255)",
+            primaryLight: "rgb(197, 224, 255)",
+            primaryHover: "rgb(53, 147, 255)",
+            border: "rgb(155, 155, 155)",
+            label: "rgb(66, 66, 66)",
+            message: "rgb(226, 226, 226)",
+            comment: "rgb(213, 219, 224)",
+            commentHover: "rgb(232, 236, 240)",
+        },
+        dark: {
+            primary: "#000000",
+            primaryLight: "rgb(255, 0, 102)",
+            primaryHover: "rgb(255, 51, 0)",
+            border: "rgb(0, 153, 0)",
+            label: "rgb(153, 102, 0)",
+            message: "rgb(204, 51, 153)",
+            comment: "rgb(0, 0, 102)",
+            commentHover: "rgb(0, 51, 0)",
+        },
+    };
+
     const [state, setState] = useState({
         dialogWindowActive: false,
         dialogWindowComponent: "",
@@ -28,6 +53,8 @@ const App = (props) => {
         alertActive: false,
         alertMessage: "",
     });
+
+    const [themeState, setThemeState] = useState("light");
 
     const [loadingState, setLoadingState] = useState({ loading: true });
 
@@ -197,66 +224,82 @@ const App = (props) => {
 
     return (
         <BrowserRouter>
-            <PopupContext.Provider
+            <ThemeContext.Provider
                 value={{
-                    alertActive: state.alertActive,
-                    setAlertActive,
-                    openDialogWindow,
-                    closeDialogWindow,
-                    profileUserId: state.profileUserId,
-                    setFriendsOpened,
-                    friendsOpened: state.friendsOpened,
-                    group: state.group,
+                    colors: themeState === "light" ? themes.light : themes.dark,
+                    selectedTheme: themeState,
+                    setTheme: setThemeState,
                 }}
             >
-                <UserContext.Provider
-                    value={{ globalUserState, updateGlobalUserState }}
+                <PopupContext.Provider
+                    value={{
+                        alertActive: state.alertActive,
+                        setAlertActive,
+                        openDialogWindow,
+                        closeDialogWindow,
+                        profileUserId: state.profileUserId,
+                        setFriendsOpened,
+                        friendsOpened: state.friendsOpened,
+                        group: state.group,
+                    }}
                 >
-                    <ConvContext.Provider
-                        value={{ convState, updateConvState }}
+                    <UserContext.Provider
+                        value={{ globalUserState, updateGlobalUserState }}
                     >
-                        <SocketContext.Provider
-                            value={{ socketState, setSocketState }}
+                        <ConvContext.Provider
+                            value={{ convState, updateConvState }}
                         >
-                            {loadingState.loading ? (
-                                <Loader className="loader" />
-                            ) : (
-                                <div id="App">
-                                    {alert}
-                                    <Topbar />
-                                    {globalUserState.user ? (
-                                        <img
-                                            src={require("./assets/black_left_arrow.png")}
-                                            alt="close"
-                                            className={arrowClass}
-                                            onClick={() =>
-                                                setFriendsOpened(true)
-                                            }
-                                        />
-                                    ) : null}
-                                    {friendList}
-                                    <Conversations />
-                                    {dialogWindow}
-                                    <Switch>
-                                        <Route
-                                            path="/"
-                                            exact
-                                            component={Home}
-                                        />
-                                        <PrivateRoute
-                                            path="/games/:gameId"
-                                            exact
-                                            component={Game}
-                                        />
-                                    </Switch>
-                                </div>
-                            )}
-                        </SocketContext.Provider>
-                    </ConvContext.Provider>
-                </UserContext.Provider>
-            </PopupContext.Provider>
+                            <SocketContext.Provider
+                                value={{ socketState, setSocketState }}
+                            >
+                                {loadingState.loading ? (
+                                    <Loader className="loader" />
+                                ) : (
+                                    <div id="App">
+                                        {alert}
+                                        <Topbar />
+                                        {globalUserState.user ? (
+                                            <img
+                                                src={require("./assets/black_left_arrow.png")}
+                                                alt="close"
+                                                className={arrowClass}
+                                                style={{
+                                                    backgroundColor:
+                                                        themeState === "light"
+                                                            ? themes.light
+                                                                  .primaryLight
+                                                            : themes.dark
+                                                                  .primaryLight,
+                                                }}
+                                                onClick={() =>
+                                                    setFriendsOpened(true)
+                                                }
+                                            />
+                                        ) : null}
+                                        {friendList}
+                                        <Conversations />
+                                        {dialogWindow}
+                                        <Switch>
+                                            <Route
+                                                path="/"
+                                                exact
+                                                component={Home}
+                                            />
+                                            <PrivateRoute
+                                                path="/games/:gameId"
+                                                exact
+                                                component={Game}
+                                            />
+                                        </Switch>
+                                    </div>
+                                )}
+                            </SocketContext.Provider>
+                        </ConvContext.Provider>
+                    </UserContext.Provider>
+                </PopupContext.Provider>
+            </ThemeContext.Provider>
         </BrowserRouter>
     );
 };
 
-export default App;
+export default Radium(App);

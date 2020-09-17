@@ -6,7 +6,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    background-color: $comment;
+    // background-color: $comment;
     border-radius: 3px;
     // color: white;
     margin: 10px;
@@ -14,7 +14,7 @@
     position: relative;
 
     &:hover {
-        background-color: $comment-hover;
+        // background-color: $comment-hover;
 
         & > .time {
             opacity: 1;

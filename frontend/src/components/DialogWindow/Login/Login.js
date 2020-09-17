@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import MyInput from "../../MyInput/MyInput";
+import MyButton from "../../MyButton/MyButton";
 import "./Login.scss";
 import request from "../../../utils/request";
 import PopupContext from "../../../utils/PopupContext";
@@ -92,7 +93,7 @@ const Login = (props) => {
                 labelId="login"
                 handleInputChange={handleInputChange}
             />
-            <button onClick={login}>Log me in</button>
+            <MyButton onClick={login}>Log me in</MyButton>
         </div>
     );
 };

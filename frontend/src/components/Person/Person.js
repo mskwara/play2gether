@@ -5,12 +5,14 @@ import UserContext from "../../utils/UserContext";
 import ConvContext from "../../utils/ConvContext";
 import SocketContext from "../../utils/SocketContext";
 import PopupContext from "../../utils/PopupContext";
+import ThemeContext from "../../utils/ThemeContext";
 
 const Person = (props) => {
     const userContext = useContext(UserContext);
     const convContext = useContext(ConvContext);
     const socketContext = useContext(SocketContext);
     const popupContext = useContext(PopupContext);
+    const theme = useContext(ThemeContext);
     const privateConversations =
         userContext.globalUserState.privateConversations;
     const addFriend = async () => {
@@ -114,7 +116,10 @@ const Person = (props) => {
 
     return (
         <div id="Person" className={props.className}>
-            <div className={sliderClass}>
+            <div
+                className={sliderClass}
+                style={{ border: `1px solid ${theme.colors.border}` }}
+            >
                 <div className="user">
                     <p>{props.user.name}</p>
                 </div>
