@@ -3,15 +3,21 @@ import { useHistory } from "react-router-dom";
 import "./GameTile.scss";
 import UserContext from "../../utils/UserContext";
 import PopupContext from "../../utils/PopupContext";
+import ThemeContext from "../../utils/ThemeContext";
+import Radium from "radium";
 
 const GameTile = (props) => {
     const userContext = useContext(UserContext);
     const popupContext = useContext(PopupContext);
+    const theme = useContext(ThemeContext);
     const history = useHistory();
 
     let bgImage = require("../../assets/valorant.jpg");
     const tileStyle = {
         backgroundImage: `url(${bgImage})`,
+        ":hover": {
+            border: `3px solid ${theme.colors.primaryHover}`,
+        },
     };
     if (props.size === "small") {
         tileStyle.width = "200px";
@@ -50,4 +56,4 @@ const GameTile = (props) => {
     );
 };
 
-export default GameTile;
+export default Radium(GameTile);

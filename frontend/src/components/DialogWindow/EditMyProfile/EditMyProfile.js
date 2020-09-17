@@ -3,6 +3,7 @@ import "./EditMyProfile.scss";
 import UserContext from "../../../utils/UserContext";
 import PopupContext from "../../../utils/PopupContext";
 import MyInput from "../../MyInput/MyInput";
+import MyButton from "../../MyButton/MyButton";
 import MyFileInput from "../../MyFileInput/MyFileInput";
 import request from "../../../utils/request";
 
@@ -106,7 +107,7 @@ const EditMyProfile = (props) => {
                         labelId="name"
                         handleInputChange={handleInputChange}
                     />
-                    <button onClick={updateUser}>Save</button>
+                    <MyButton onClick={updateUser}>Save</MyButton>
                 </div>
             </div>
         </div>

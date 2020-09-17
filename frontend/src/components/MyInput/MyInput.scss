@@ -9,13 +9,13 @@
     &:focus-within > label {
         top: 0;
         font-size: 8pt;
-        color: $primary;
+        color: $primary !important;
     }
 
     input {
         border: none;
-        border-bottom: 1px solid $border;
-        color: $label;
+        // border-bottom: 1px solid $border;
+        // color: $label;
         width: 300px;
         font-size: 13pt;
         transition: 0.5s;
@@ -28,17 +28,17 @@
             position: relative;
         }
 
-        &:focus {
-            border-bottom: 1px solid $primary;
-            // color: $primary;
-        }
+        // &:focus {
+        //     border-bottom: 1px solid $primary;
+        //     // color: $primary;
+        // }
     }
 
     label {
         position: absolute;
         top: 15px;
         transition: 0.2s;
-        color: $label;
+        // color: $label;
         user-select: none;
     }
 
