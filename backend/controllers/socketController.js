@@ -1,7 +1,25 @@
 const { checkToken } = require('./authController');
+const PrivateConversation = require('./../models/privateConversationModel');
 const GroupConversation = require('./../models/groupConversationModel');
 const PrivateMessage = require('./../models/privateMessageModel');
 const GroupMessage = require('./../models/groupMessageModel');
+const User = require('./../models/userModel');
+
+async function removeNotification(user, private, room) {
+    if (private) {
+        await User.findByIdAndUpdate(user._id, {
+            $pull: {
+                updatedPrivateConversations: room
+            }
+        });
+    } else {
+        await User.findByIdAndUpdate(user._id, {
+            $pull: {
+                updatedGroupConversations: room
+            }
+        });
+    }
+}
 
 function join(socket) {
     return async data => {
@@ -19,6 +37,7 @@ function join(socket) {
         console.log(data.room, convs[0]);
         if (user && convs.includes(data.room)) {
             socket.join(data.room + suffix);
+            await removeNotification(user, data.private, data.room);
             if (process.env.NODE_ENV === 'development')
                 console.log(`User ${user.id} succesfully connected to chat room no. ${data.room}.`);
         } else if (process.env.NODE_ENV === 'development') {
@@ -42,6 +61,7 @@ function leave(socket) {
 
         if (user && convs.includes(data.room)) {
             socket.leave(data.room + suffix);
+            await removeNotification(user, data.private, data.room);
             if (process.env.NODE_ENV === 'development')
                 console.log(`User ${user.id} succesfully disconnected from chat room no. ${data.room}.`);
         } else if (process.env.NODE_ENV === 'development') {
@@ -80,13 +100,25 @@ function send(io) {
             messageOBJ.sentAt = message.sentAt;
             io.sockets.in(data.room + suffix).emit('chat', messageOBJ);
 
-            if (!data.private) {
-                GroupConversation.findByIdAndUpdate(data.room, {
+            if (data.private) {
+                conv = await PrivateConversation.findById(data.room);
+                await User.updateMany({
+                    _id: { $in: [conv.user, conv.correspondent] }
+                }, {
+                    $addToSet: { updatedPrivateConversations: data.room }
+                });
+            } else {
+                const conv = await GroupConversation.findByIdAndUpdate(data.room, {
                     lastMessage: data.message,
                     recentActivity: message.sentAt
                 });
+                await User.updateMany({
+                    _id: { $in: conv.participants }
+                }, {
+                    $addToSet: { updatedPrivateConversations: data.room }
+                });
             }
-            
+
             if (process.env.NODE_ENV === 'development') {
                 console.log(`User ${user.id} succesfully sent message to chat room no. ${data.room}.`);
                 console.log(data);
