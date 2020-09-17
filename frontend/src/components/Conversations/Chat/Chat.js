@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+    useContext,
+    useEffect,
+    useState,
+    useImperativeHandle,
+    useRef,
+} from "react";
 import "./Chat.scss";
 import UserContext from "../../../utils/UserContext";
 import ConvContext from "../../../utils/ConvContext";
@@ -24,33 +30,38 @@ const Chat = (props) => {
     const [infiniteScrollState, setInfiniteScrollState] = useState({
         hasMoreMessages: true,
         initialLoad: true,
+        skip: 0,
     });
+
+    const chatStateRef = useRef(chatState);
+    const setChatStateAndRef = (data) => {
+        chatStateRef.current = { ...chatStateRef.current, ...data };
+        setChatState((chatState) => ({ ...chatState, ...data }));
+    };
+
+    const updateMessagesInState = (message) => {
+        console.log("log3", chatStateRef.current.messages);
+        setInfiniteScrollState((infiniteScrollState) => ({
+            ...infiniteScrollState,
+            hasMoreMessages: false,
+            initialLoad: false,
+        }));
+        const oldMessages = [...chatStateRef.current.messages, message];
+        setChatStateAndRef({
+            messages: oldMessages,
+        });
+        setInfiniteScrollState((infiniteScrollState) => ({
+            ...infiniteScrollState,
+            hasMoreMessages: true,
+            // initialLoad: false,
+        }));
+        scrollToBottom();
+    };
 
     const scrollToBottom = () => {
         const scrollable_content = document.getElementById("content");
         scrollable_content.scrollTop = scrollable_content.scrollHeight;
     };
-
-    socketContext.socketState.socket.on("chat", (message) => {
-        if (message.conversation === props.conv._id) {
-            setInfiniteScrollState((infiniteScrollState) => ({
-                ...infiniteScrollState,
-                hasMoreMessages: false,
-            }));
-            const oldMessages = [...chatState.messages];
-            oldMessages.push(message);
-            setChatState((chatState) => ({
-                ...chatState,
-                messages: oldMessages,
-            }));
-            scrollToBottom();
-            setInfiniteScrollState((infiniteScrollState) => ({
-                ...infiniteScrollState,
-                hasMoreMessages: false,
-                initialLoad: false,
-            }));
-        }
-    });
 
     useEffect(() => {
         socketContext.socketState.socket.emit("join", {
@@ -58,11 +69,17 @@ const Chat = (props) => {
             private: !props.group,
             jwt: userContext.globalUserState.jwt,
         });
+        socketContext.socketState.socket.on("chat", (message) => {
+            console.log("on chat");
+            if (message.conversation === props.conv._id) {
+                updateMessagesInState(message);
+            }
+        });
 
         return () => {
             socketContext.socketState.socket.off("chat");
-            setChatState((chatState) => ({
-                ...chatState,
+            setInfiniteScrollState((infiniteScrollState) => ({
+                ...infiniteScrollState,
                 hasMoreMessages: true,
             }));
         };
@@ -76,7 +93,7 @@ const Chat = (props) => {
     const closeConv = () => {
         socketContext.socketState.socket.emit("leave", {
             room: props.conv._id,
-            private: true,
+            private: !props.group,
             jwt: userContext.globalUserState.jwt,
         });
         const openedConvs = [...convContext.convState.openedConvs];
@@ -96,10 +113,13 @@ const Chat = (props) => {
         // console.log(chatState.messages);
 
         // const messagesReversed = res.data.data.reverse();
-        setChatState((chatState) => ({
-            ...chatState,
-            messageToSend: "",
+        setInfiniteScrollState((infiniteScrollState) => ({
+            ...infiniteScrollState,
+            skip: infiniteScrollState.skip + 1,
         }));
+        setChatStateAndRef({
+            messageToSend: "",
+        });
         // console.log(chatState.messages);
     };
 
@@ -109,10 +129,9 @@ const Chat = (props) => {
             // prevent default behavior
             return;
         }
-        setChatState((chatState) => ({
-            ...chatState,
+        setChatStateAndRef({
             messageToSend,
-        }));
+        });
     };
 
     const loadMoreMessages = async (page) => {
@@ -121,7 +140,9 @@ const Chat = (props) => {
             "get",
             `http://localhost:8000/conversations/${
                 props.group ? "group" : "private"
-            }/${props.conv._id}/messages?page=${page}`,
+            }/${props.conv._id}/messages?page=${page}&skip=${
+                infiniteScrollState.skip
+            }`,
             null,
             true
         );
@@ -133,13 +154,13 @@ const Chat = (props) => {
                 }));
             }
             const messagesReversed = res.data.data.reverse();
+            console.log("messagesDownloadedReversed", messagesReversed);
             messagesReversed.push(...chatState.messages);
-            console.log(messagesReversed);
-            setChatState((chatState) => ({
-                ...chatState,
+            // console.log(messagesReversed);
+            setChatStateAndRef({
                 messages: messagesReversed,
-            }));
-            scrollToBottom();
+            });
+            // scrollToBottom();
         }
     };
 

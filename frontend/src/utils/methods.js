@@ -3,7 +3,7 @@ exports.formatDate = (date, type) => {
     let result;
     switch (type) {
         case "short":
-            result = localDate.substring(11, 16);
+            result = localDate.substr(12, 5);
             break;
     }
     return result;
