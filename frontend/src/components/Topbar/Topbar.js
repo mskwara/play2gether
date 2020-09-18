@@ -89,10 +89,10 @@ const Topbar = (props) => {
                 <p onClick={() => switchFriendsGroups(true)}>Groups</p>
                 <div className="underline" />
             </div>,
-            <div className="link" key="4">
-                <p onClick={logout}>Logout</p>
-                <div className="underline" />
-            </div>,
+            // <div className="link" key="4">
+            //     <p onClick={logout}>Logout</p>
+            //     <div className="underline" />
+            // </div>,
         ];
 
         logged_user = (
@@ -202,7 +202,10 @@ const Topbar = (props) => {
         <div
             id="Topbar"
             className="normal"
-            style={{ backgroundColor: theme.colors.primary }}
+            style={{
+                backgroundColor: theme.colors.primary,
+                borderBottom: `1px solid ${theme.colors.topbarBorder}`,
+            }}
         >
             <Link className="title" to="/">
                 Play2gether
