@@ -227,6 +227,7 @@ const App = (props) => {
         <DialogWindow
             className="dialog-invisible"
             component={state.dialogWindowComponent}
+            active={state.dialogWindowActive}
         />
     );
     if (state.dialogWindowActive) {
@@ -234,6 +235,7 @@ const App = (props) => {
             <DialogWindow
                 className="dialog-visible"
                 component={state.dialogWindowComponent}
+                active={state.dialogWindowActive}
             />
         );
     }
