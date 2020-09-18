@@ -31,17 +31,19 @@ const App = (props) => {
             comment: "rgb(213, 219, 224)",
             commentHover: "rgb(232, 236, 240)",
             body: "white",
+            topbarBorder: "rgb(27, 27, 116)",
         },
         dark: {
-            primary: "#000000",
+            primary: "#0f0f0f",
             primaryLight: "rgb(255, 0, 102)",
-            primaryHover: "rgb(255, 51, 0)",
-            border: "rgb(0, 153, 0)",
+            primaryHover: "#362738",
+            border: "black",
             label: "rgb(153, 102, 0)",
             message: "rgb(204, 51, 153)",
             comment: "rgb(0, 0, 102)",
             commentHover: "rgb(0, 51, 0)",
-            body: "purple",
+            body: "#212121",
+            topbarBorder: "black",
         },
     };
 
