@@ -9,6 +9,7 @@ import request from "../../../utils/request";
 import Message from "./Message/Message";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import InfiniteScroll from "react-infinite-scroller";
+import Loader from "../../Loader/Loader";
 
 const Chat = (props) => {
     const userContext = useContext(UserContext);
@@ -36,7 +37,7 @@ const Chat = (props) => {
     };
 
     const updateMessagesInState = (message) => {
-        console.log("log3", chatStateRef.current.messages);
+        // console.log("log3", chatStateRef.current.messages);
         setInfiniteScrollState((infiniteScrollState) => ({
             ...infiniteScrollState,
             hasMoreMessages: false,
@@ -211,10 +212,19 @@ const Chat = (props) => {
     }
 
     return (
-        <div id="Chat" style={{ border: `1px solid ${theme.colors.border}` }}>
+        <div
+            id="Chat"
+            style={{
+                border: `1px solid ${theme.colors.border}`,
+                backgroundColor: theme.colors.chat,
+            }}
+        >
             <div
                 className="topbar"
-                style={{ borderBottom: `1px solid ${theme.colors.border}` }}
+                style={{
+                    borderBottom: `1px solid ${theme.colors.border}`,
+                    color: theme.colors.primaryText,
+                }}
             >
                 {userBar}
                 <img
@@ -222,6 +232,7 @@ const Chat = (props) => {
                     alt="avatar"
                     className="close"
                     onClick={closeConv}
+                    style={{ filter: theme.pngInvert() }}
                 />
             </div>
             <div id="content">
@@ -230,8 +241,8 @@ const Chat = (props) => {
                     loadMore={loadMoreMessages}
                     hasMore={infiniteScrollState.hasMoreMessages}
                     loader={
-                        <div className="loader" key={0}>
-                            Loading ...
+                        <div className="loader">
+                            <Loader />
                         </div>
                     }
                     useWindow={false}
@@ -253,6 +264,10 @@ const Chat = (props) => {
                     name="textarea"
                     value={chatState.messageToSend}
                     onChange={handleTextAreaChange}
+                    style={{
+                        backgroundColor: theme.colors.comment,
+                        color: theme.colors.primaryText,
+                    }}
                 />
                 <img
                     src={require(`../../../assets/send.png`)}

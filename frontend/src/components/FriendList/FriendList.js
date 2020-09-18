@@ -3,12 +3,14 @@ import "./FriendList.scss";
 import UserContext from "../../utils/UserContext";
 import PopupContext from "../../utils/PopupContext";
 import ConvContext from "../../utils/ConvContext";
+import ThemeContext from "../../utils/ThemeContext";
 import request from "../../utils/request";
 
 const FriendList = (props) => {
     const userContext = useContext(UserContext);
     const popupContext = useContext(PopupContext);
     const convContext = useContext(ConvContext);
+    const theme = useContext(ThemeContext);
     const activeUser = userContext.globalUserState.user;
     const privateConversations =
         userContext.globalUserState.privateConversations;
@@ -209,7 +211,14 @@ const FriendList = (props) => {
     }
 
     return (
-        <div id="FriendList" className={props.className}>
+        <div
+            id="FriendList"
+            className={props.className}
+            style={{
+                backgroundColor: theme.colors.friends,
+                border: `1px solid ${theme.colors.border}`,
+            }}
+        >
             <img
                 src={require("../../assets/white_right_arrow.png")}
                 alt="close"

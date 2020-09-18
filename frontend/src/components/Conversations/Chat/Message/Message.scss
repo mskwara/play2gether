@@ -9,19 +9,23 @@
     position: relative;
 
     &:hover {
-        & > .time {
+        & > .content > .time {
             opacity: 1;
             transition: 0.5s 0.5s;
         }
     }
 
     .content {
-        width: 80%;
+        width: fit-content;
+        min-width: 30%;
+        max-width: 80%;
         height: auto;
         border-radius: 15px;
         background-color: $message;
         padding: 5px;
         align-self: flex-start;
+        word-break: break-all;
+        position: relative;
 
         p {
             font-size: 10pt;
@@ -32,32 +36,32 @@
         &.my-message {
             align-self: flex-end;
         }
-    }
 
-    .time {
-        width: fit-content;
-        height: 20px;
-        background-color: rgba(0, 0, 0, 0.7);
-        position: absolute;
-        top: 50%;
-        transform: translate(0, -50%);
-        right: -5px;
-        border-radius: 5px;
-        color: white;
-        padding: 5px;
-        padding-bottom: 3px;
-        opacity: 0;
-        transition: 0.5s 0s;
-        cursor: default;
+        .time {
+            width: 34px;
+            height: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            position: absolute;
+            top: 50%;
+            transform: translate(0, -50%);
+            right: -48px;
+            border-radius: 5px;
+            color: white;
+            padding: 5px;
+            padding-bottom: 3px;
+            opacity: 0;
+            transition: 0.5s 0s;
+            cursor: default;
 
-        &.my-message {
-            left: -5px;
-        }
+            &.my-message {
+                left: -48px;
+            }
 
-        p {
-            margin: 0;
-            font-size: 10pt;
-            height: 12px;
+            p {
+                margin: 0;
+                font-size: 10pt;
+                height: 12px;
+            }
         }
     }
 }

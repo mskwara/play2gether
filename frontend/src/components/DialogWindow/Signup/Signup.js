@@ -1,14 +1,18 @@
 import React, { useState, useContext } from "react";
 import MyInput from "../../MyInput/MyInput";
 import MyButton from "../../MyButton/MyButton";
+import Loader from "../../Loader/Loader";
 import "./Signup.scss";
 import request from "../../../utils/request";
 import PopupContext from "../../../utils/PopupContext";
 import UserContext from "../../../utils/UserContext";
+import ThemeContext from "../../../utils/ThemeContext";
+import KeyboardEventHandler from "react-keyboard-event-handler";
 
 const Signup = (props) => {
     const popupContext = useContext(PopupContext);
     const userContext = useContext(UserContext);
+    const theme = useContext(ThemeContext);
 
     const [userState, setUserState] = useState({
         name: "",
@@ -16,6 +20,8 @@ const Signup = (props) => {
         password: "",
         passwordConfirm: "",
     });
+
+    const [loading, setLoading] = useState(false);
 
     const handleInputChange = (event) => {
         const field = event.target.name;
@@ -27,6 +33,7 @@ const Signup = (props) => {
     };
 
     const signup = async () => {
+        setLoading(true);
         const res = await request(
             "post",
             "http://localhost:8000/users/signup",
@@ -71,16 +78,35 @@ const Signup = (props) => {
                 passwordConfirm: "",
             });
         }
+        setLoading(false);
+    };
+
+    const close = () => {
+        setUserState({
+            name: "",
+            email: "",
+            password: "",
+            passwordConfirm: "",
+        });
+        popupContext.closeDialogWindow();
     };
 
     return (
-        <div id="Signup" className={props.className}>
+        <div
+            id="Signup"
+            className={props.className}
+            style={{
+                backgroundColor: theme.colors.profile,
+                color: theme.colors.primaryText,
+            }}
+        >
             <h1>Sign up</h1>
             <img
                 src={require("../../../assets/close.png")}
                 alt="close"
                 className="close-btn"
-                onClick={popupContext.closeDialogWindow}
+                onClick={close}
+                style={{ filter: theme.pngInvert() }}
             />
             <MyInput
                 type="text"
@@ -117,6 +143,12 @@ const Signup = (props) => {
             <MyButton onClick={signup} className="button">
                 Join the community
             </MyButton>
+            {loading ? <Loader /> : null}
+            <KeyboardEventHandler
+                handleKeys={["enter"]}
+                handleFocusableElements={true}
+                onKeyEvent={signup}
+            />
         </div>
     );
 };

@@ -5,6 +5,7 @@ import UserContext from "../../utils/UserContext";
 import PopupContext from "../../utils/PopupContext";
 import ThemeContext from "../../utils/ThemeContext";
 import Radium from "radium";
+import styled from "styled-components";
 
 const GameTile = (props) => {
     const userContext = useContext(UserContext);
@@ -41,18 +42,32 @@ const GameTile = (props) => {
         }
     };
 
+    const StyledDescription = styled.div`
+        &:hover {
+            & > #description {
+                background: ${theme.selectedTheme === "light"
+                    ? "rgb(255,255,255,0.6)"
+                    : "rgb(0,0,0,0.6)"};
+            }
+        }
+    `;
+
     return (
-        <div
+        <StyledDescription
             id="GameTile"
             style={tileStyle}
             onClick={tileClickHandler}
             className={props.className}
         >
             <h1>{props.game.title}</h1>
-            <div className="description">
+            <div
+                id="description"
+                className="description"
+                style={{ color: theme.colors.primaryText }}
+            >
                 <p>{props.game.description}</p>
             </div>
-        </div>
+        </StyledDescription>
     );
 };
 
