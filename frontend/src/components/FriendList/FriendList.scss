@@ -3,15 +3,15 @@
 #FriendList {
     width: 250px;
     height: 70%;
-    background-color: rgba(48, 48, 48, 0.95);
+    // background-color: rgba(48, 48, 48, 0.95);
     border-radius: 3px;
     position: fixed;
     right: 20px;
-    top: 90px;
+    top: 70px;
     z-index: 4;
     padding: 10px;
     overflow-y: auto;
-    transition: opacity 0.5s 0ms, right 0.5s 0s;
+    transition: opacity 0.5s 0ms, right 0.5s 0s, background-color 0.5s 0ms;
 
     .dialog-button {
         position: absolute;

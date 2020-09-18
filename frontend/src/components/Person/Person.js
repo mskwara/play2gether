@@ -6,6 +6,7 @@ import ConvContext from "../../utils/ConvContext";
 import SocketContext from "../../utils/SocketContext";
 import PopupContext from "../../utils/PopupContext";
 import ThemeContext from "../../utils/ThemeContext";
+import styled from "styled-components";
 
 const Person = (props) => {
     const userContext = useContext(UserContext);
@@ -86,27 +87,52 @@ const Person = (props) => {
                 alt="button"
                 className="btn"
                 onClick={addFriend}
+                style={{ filter: theme.pngInvert() }}
             />
         );
     }
 
+    const StyledSlider = styled.div`
+        &:hover > #user {
+            background: ${
+                theme.selectedTheme === "light"
+                    ? "rgb(255,255,255,0.9)"
+                    : "rgb(0,0,0,0.9)"
+            };
+        }
+
+        &.slide-down:hover {
+            // height: 200px;
+
+            & > #buttons {
+                background: ${
+                    theme.selectedTheme === "light"
+                        ? "rgb(255,255,255,0.9)"
+                        : "rgb(0,0,0,0.9)"
+                };
+            }
+    `;
+
     let buttons = null;
     let sliderClass = "slider";
+
     if (props.user._id !== userContext.globalUserState.user._id) {
         // jeśli nie najeżdżam na siebie samego
         buttons = (
-            <div className="buttons">
+            <div id="buttons" className="buttons">
                 <img
                     src={require("../../assets/invite_to_game.png")}
                     alt="button"
                     className="btn"
                     onClick={inviteToGame}
+                    style={{ filter: theme.pngInvert() }}
                 />
                 <img
                     src={require("../../assets/message.png")}
                     alt="button"
                     className="btn"
                     onClick={openChat}
+                    style={{ filter: theme.pngInvert() }}
                 />
                 {addFriendButton}
             </div>
@@ -116,11 +142,15 @@ const Person = (props) => {
 
     return (
         <div id="Person" className={props.className}>
-            <div
+            <StyledSlider
                 className={sliderClass}
                 style={{ border: `1px solid ${theme.colors.border}` }}
             >
-                <div className="user">
+                <div
+                    id="user"
+                    className="user"
+                    style={{ color: theme.colors.primaryText }}
+                >
                     <p>{props.user.name}</p>
                 </div>
                 <img
@@ -133,7 +163,7 @@ const Person = (props) => {
                     }
                 />
                 {buttons}
-            </div>
+            </StyledSlider>
         </div>
     );
 };

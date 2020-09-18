@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useHistory } from "react-router-dom";
 import Radium from "radium";
 import "./Topbar.scss";
 import request from "../../utils/request";
@@ -11,6 +11,7 @@ const Topbar = (props) => {
     const popupContext = useContext(PopupContext);
     const userContext = useContext(UserContext);
     const theme = useContext(ThemeContext);
+    const history = useHistory();
 
     const [state, setState] = useState({
         reload: false,
@@ -56,9 +57,11 @@ const Topbar = (props) => {
         }
     };
 
-    // const settingOpenDialog = (component) => {
-    //     popupContext.openDialogWindow(component)
-    // }
+    const goToPage = (link) => {
+        history.push({
+            pathname: link,
+        });
+    };
 
     let settingsClass = "settings";
     if (state.settingsOpened) {
@@ -66,6 +69,7 @@ const Topbar = (props) => {
     }
 
     const hoveringButtonsStyle = {
+        color: theme.colors.primaryText,
         ":hover": {
             backgroundColor: theme.colors.commentHover,
         },
@@ -78,7 +82,7 @@ const Topbar = (props) => {
         // user is loggedIn
         links = [
             <div className="link" key="1">
-                <Link to="/">Home</Link>
+                <p onClick={() => goToPage("/")}>Home</p>
                 <div className="underline" />
             </div>,
             <div className="link" key="2">
@@ -114,7 +118,14 @@ const Topbar = (props) => {
         );
 
         settings = (
-            <div className={settingsClass}>
+            <div
+                className={settingsClass}
+                style={{
+                    backgroundColor: theme.colors.settings,
+                    color: theme.colors.primaryText,
+                    border: `1px solid ${theme.colors.border}`,
+                }}
+            >
                 <div
                     className="logged_user"
                     style={hoveringButtonsStyle}
@@ -180,7 +191,7 @@ const Topbar = (props) => {
     } else {
         links = [
             <div className="link" key="1">
-                <Link to="/">Home</Link>
+                <p onClick={() => goToPage("/")}>Home</p>
                 <div className="underline" />
             </div>,
             <div className="link" key="3">
@@ -203,13 +214,14 @@ const Topbar = (props) => {
             id="Topbar"
             className="normal"
             style={{
-                backgroundColor: theme.colors.primary,
+                backgroundColor: theme.colors.topbar,
                 borderBottom: `1px solid ${theme.colors.topbarBorder}`,
+                // color: theme.colors.primaryText,
             }}
         >
-            <Link className="title" to="/">
+            <p className="title" onClick={() => goToPage("/")}>
                 Play2gether
-            </Link>
+            </p>
             <div className="links">{links}</div>
             {logged_user}
             {settings}

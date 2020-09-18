@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Person from "../../components/Person/Person";
 import Loader from "../../components/Loader/Loader";
 import PopupContext from "../../utils/PopupContext";
+import ThemeContext from "../../utils/ThemeContext";
 import MyButton from "../../components/MyButton/MyButton";
 import "./Game.scss";
 import request from "../../utils/request";
@@ -10,6 +11,7 @@ import UserContext from "../../utils/UserContext";
 const Game = (props) => {
     const popupContext = useContext(PopupContext);
     const userContext = useContext(UserContext);
+    const theme = useContext(ThemeContext);
 
     const [state, setState] = useState({
         game: null,
@@ -116,13 +118,21 @@ const Game = (props) => {
         }
 
         gameBigTile = (
-            <div className="gameBigTile">
+            <div
+                className="gameBigTile"
+                style={{
+                    border: `1px solid ${theme.colors.border}`,
+                    backgroundColor: theme.colors.description,
+                    color: theme.colors.primaryText,
+                }}
+            >
                 <img
                     src={require("../../assets/valorant_banner.jpg")}
                     alt="banner"
                     className="banner"
                 />
                 <p className="title">{state.game.title}</p>
+                <h1>DESCRIPTION:</h1>
                 <p className="description">{state.game.description}</p>
                 {button}
             </div>
@@ -148,7 +158,12 @@ const Game = (props) => {
                     {gameBigTile}
                     {state.loading ? <Loader /> : null}
                 </div>
-                <div className="players">{players}</div>
+                <div
+                    className="players"
+                    style={{ backgroundColor: theme.colors.description }}
+                >
+                    {players}
+                </div>
             </div>
         </div>
     );

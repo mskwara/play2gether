@@ -22,28 +22,44 @@ import Radium from "radium";
 const App = (props) => {
     const themes = {
         light: {
-            primary: "rgb(0, 119, 255)",
-            primaryLight: "rgb(197, 224, 255)",
-            primaryHover: "rgb(53, 147, 255)",
-            border: "rgb(155, 155, 155)",
+            primary: "rgb(66, 44, 92)",
+            primaryLight: "#8a71a8",
+            primaryHover: "rgb(97, 66, 138)",
+            border: "#666666",
             label: "rgb(66, 66, 66)",
-            message: "rgb(226, 226, 226)",
+            message: "#75529e",
+            othersMessage: "rgb(226, 226, 226)",
             comment: "rgb(213, 219, 224)",
             commentHover: "rgb(232, 236, 240)",
             body: "white",
-            topbarBorder: "rgb(27, 27, 116)",
+            topbarBorder: "#5a1a70",
+            topbar: "rgb(97, 66, 138)",
+            primaryText: "black",
+            description: "white",
+            profile: "white",
+            friends: "rgba(48, 48, 48, 0.95)",
+            settings: "white",
+            chat: "white",
         },
         dark: {
-            primary: "#0f0f0f",
-            primaryLight: "rgb(255, 0, 102)",
-            primaryHover: "#362738",
-            border: "black",
-            label: "rgb(153, 102, 0)",
-            message: "rgb(204, 51, 153)",
-            comment: "rgb(0, 0, 102)",
-            commentHover: "rgb(0, 51, 0)",
+            primary: "rgb(66, 44, 92)",
+            primaryLight: "#8a71a8",
+            primaryHover: "rgb(97, 66, 138)",
+            border: "rgb(48, 48, 48)",
+            label: "#d9d9d9",
+            message: "rgb(66, 44, 92)",
+            othersMessage: "#212121",
+            comment: "#383838",
+            commentHover: "#424242",
             body: "#212121",
             topbarBorder: "black",
+            topbar: "#0f0f0f",
+            primaryText: "white",
+            description: "#121212",
+            profile: "#1a1a1a",
+            friends: "rgba(15, 15, 15, 0.95)",
+            settings: "#0f0f0f",
+            chat: "#0f0f0f",
         },
     };
 
@@ -54,6 +70,14 @@ const App = (props) => {
     } else {
         document.body.style = `background: ${themes.light.body}`;
     }
+
+    const pngInvert = () => {
+        if (themeState === "dark") {
+            return "invert(1) hue-rotate(180deg)";
+        } else {
+            return "none";
+        }
+    };
 
     const [state, setState] = useState({
         dialogWindowActive: false,
@@ -239,6 +263,7 @@ const App = (props) => {
                     colors: themeState === "light" ? themes.light : themes.dark,
                     selectedTheme: themeState,
                     setTheme: setThemeState,
+                    pngInvert,
                 }}
             >
                 <PopupContext.Provider
@@ -280,6 +305,7 @@ const App = (props) => {
                                                                   .primaryLight
                                                             : themes.dark
                                                                   .primaryLight,
+                                                    filter: pngInvert(),
                                                 }}
                                                 onClick={() =>
                                                     setFriendsOpened(true)

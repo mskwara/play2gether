@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import "./EditMyProfile.scss";
 import UserContext from "../../../utils/UserContext";
 import PopupContext from "../../../utils/PopupContext";
+import ThemeContext from "../../../utils/ThemeContext";
 import MyInput from "../../MyInput/MyInput";
 import MyButton from "../../MyButton/MyButton";
 import MyFileInput from "../../MyFileInput/MyFileInput";
@@ -10,6 +11,7 @@ import request from "../../../utils/request";
 const EditMyProfile = (props) => {
     const userContext = useContext(UserContext);
     const popupContext = useContext(PopupContext);
+    const theme = useContext(ThemeContext);
     const activeUser = userContext.globalUserState.user;
 
     const [state, setState] = useState({
@@ -82,13 +84,20 @@ const EditMyProfile = (props) => {
     }
 
     return (
-        <div id="EditMyProfile">
+        <div
+            id="EditMyProfile"
+            style={{
+                backgroundColor: theme.colors.profile,
+                color: theme.colors.primaryText,
+            }}
+        >
             <h1>Your profile</h1>
             <img
                 src={require("../../../assets/close.png")}
                 alt="close"
                 className="close-btn"
                 onClick={popupContext.closeDialogWindow}
+                style={{ filter: theme.pngInvert() }}
             />
             <div className="content">
                 <span>
