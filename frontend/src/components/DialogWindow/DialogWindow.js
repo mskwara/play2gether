@@ -6,15 +6,17 @@ import EditMyProfile from "./EditMyProfile/EditMyProfile";
 import Profile from "./Profile/Profile";
 
 const DialogWindow = (props) => {
-    let component;
-    if (props.component === "login") {
-        component = <Login />;
-    } else if (props.component === "signup") {
-        component = <Signup />;
-    } else if (props.component === "editMyProfile") {
-        component = <EditMyProfile />;
-    } else if (props.component === "profile") {
-        component = <Profile />;
+    let component = null;
+    if (props.active) {
+        if (props.component === "login") {
+            component = <Login />;
+        } else if (props.component === "signup") {
+            component = <Signup />;
+        } else if (props.component === "editMyProfile") {
+            component = <EditMyProfile />;
+        } else if (props.component === "profile") {
+            component = <Profile />;
+        }
     }
 
     return (
