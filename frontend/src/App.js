@@ -30,6 +30,7 @@ const App = (props) => {
             message: "rgb(226, 226, 226)",
             comment: "rgb(213, 219, 224)",
             commentHover: "rgb(232, 236, 240)",
+            body: "white",
         },
         dark: {
             primary: "#000000",
@@ -40,8 +41,17 @@ const App = (props) => {
             message: "rgb(204, 51, 153)",
             comment: "rgb(0, 0, 102)",
             commentHover: "rgb(0, 51, 0)",
+            body: "purple",
         },
     };
+
+    const [themeState, setThemeState] = useState("dark");
+
+    if (themeState === "dark") {
+        document.body.style = `background: ${themes.dark.body}`;
+    } else {
+        document.body.style = `background: ${themes.light.body}`;
+    }
 
     const [state, setState] = useState({
         dialogWindowActive: false,
@@ -53,8 +63,6 @@ const App = (props) => {
         alertActive: false,
         alertMessage: "",
     });
-
-    const [themeState, setThemeState] = useState("light");
 
     const [loadingState, setLoadingState] = useState({ loading: true });
 
