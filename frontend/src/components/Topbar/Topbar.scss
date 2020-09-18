@@ -12,6 +12,7 @@
     top: 0;
     // border-bottom: 1px solid rgb(27, 27, 116);
     transition: 0.5s;
+    color: white;
 
     &.normal {
         height: 50px;
@@ -34,10 +35,11 @@
         width: 80%;
         // border-bottom: 1px solid $border;
         margin: 0 auto;
+        margin-bottom: 10px;
     }
 
     .title {
-        color: white;
+        // color: white;
         font-family: SuiGeneris;
         margin: 0;
         font-size: 18pt;
@@ -71,7 +73,7 @@
             }
 
             a {
-                color: white;
+                // color: white;
                 text-decoration: none;
                 text-transform: uppercase;
                 font-weight: bold;
@@ -81,7 +83,7 @@
             }
 
             p {
-                color: white;
+                // color: white;
                 text-decoration: none;
                 text-transform: uppercase;
                 font-weight: bold;
@@ -115,7 +117,7 @@
         }
         p {
             display: block;
-            color: white;
+            // color: white;
             margin-left: 20px;
             font-size: 14pt;
             transition: 0.5s;
@@ -129,7 +131,7 @@
         width: 300px;
         height: auto;
         padding-bottom: 20px;
-        background-color: white;
+        // background-color: white;
         border-radius: 3px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
         display: flex;
@@ -139,7 +141,7 @@
         transition: 1s;
 
         &.settings-visible {
-            top: 50px;
+            top: 40px;
             right: 20px;
             opacity: 1;
         }
@@ -167,7 +169,7 @@
                 margin-right: 20px;
             }
             p {
-                color: black;
+                // color: black;
                 margin: 0;
                 // border: 1px solid red;
 
@@ -190,12 +192,13 @@
         .settings-button {
             width: 90%;
             background: none;
-            color: black;
+            // color: black;
             margin: 0;
             font-family: Segoe UI;
             text-transform: unset;
             font-size: 11pt;
-            margin: 10px auto 0 auto;
+            // margin: 10px auto 0 auto;
+            margin: auto;
             outline: none;
             border-radius: 5px;
 

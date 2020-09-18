@@ -104,13 +104,21 @@ const Profile = (props) => {
         ));
 
         content = (
-            <div className="content">
+            <div
+                className="content"
+                style={{
+                    backgroundColor: theme.colors.profile,
+                    color: theme.colors.primaryText,
+                    border: `1px solid ${theme.colors.border}`,
+                }}
+            >
                 <h1>Profile</h1>
                 <img
                     src={require("../../../assets/close.png")}
                     alt="close"
                     className="close-btn"
                     onClick={popupContext.closeDialogWindow}
+                    style={{ filter: theme.pngInvert() }}
                 />
                 <div className="information">
                     <img
@@ -136,20 +144,37 @@ const Profile = (props) => {
                 <div className="comments">
                     <h1>Comments</h1>
                     {state.user._id !== userContext.globalUserState.user._id ? (
-                        <span>
-                            <textarea
-                                placeholder="Write a new comment..."
-                                rows="2"
-                                id="textarea"
-                                name="textarea"
-                                value={state.newComment}
-                                onChange={handleTextAreaChange}
+                        <div
+                            style={{
+                                width: "100%",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                            }}
+                        >
+                            <span>
+                                <textarea
+                                    placeholder="Write a new comment..."
+                                    rows="2"
+                                    id="textarea"
+                                    name="textarea"
+                                    value={state.newComment}
+                                    onChange={handleTextAreaChange}
+                                    style={{
+                                        border: `1px solid ${theme.colors.border}`,
+                                        backgroundColor: theme.colors.comment,
+                                        color: theme.colors.primaryText,
+                                    }}
+                                />
+                                <MyButton onClick={sendComment}>Post</MyButton>
+                            </span>
+                            <div
+                                className="divider"
                                 style={{
-                                    border: `1px solid ${theme.colors.border}`,
+                                    borderBottom: `1px solid ${theme.colors.border}`,
                                 }}
                             />
-                            <MyButton onClick={sendComment}>Post</MyButton>
-                        </span>
+                        </div>
                     ) : null}
                     {state.loadingComment ? <Loader /> : null}
                     {comments.length === 0 ? (

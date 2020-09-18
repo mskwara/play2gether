@@ -4,7 +4,7 @@
     width: 300px;
     height: 100%;
     min-height: 100px;
-    background-color: white;
+    // background-color: white;
     // border: 1px solid $border;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -12,6 +12,12 @@
     flex-direction: column;
     // z-index: 11;
     margin-left: 20px;
+    color: white;
+
+    .loader {
+        display: flex;
+        justify-content: center;
+    }
 
     .topbar {
         width: 100%;
@@ -84,13 +90,18 @@
 
     .write-area {
         width: 100%;
+        min-height: 50px;
         height: 50px;
         // border-top: 1px solid $border;
         display: flex;
         align-items: center;
+        // border-radius: 20px;
+        // padding: 10px;
 
         textarea {
-            height: 100%;
+            min-height: 50%;
+            height: 50%;
+            // height: fit-content;
             margin: 5px;
             flex: 1;
             resize: none;
@@ -101,6 +112,10 @@
                 "Helvetica Neue", sans-serif;
             font-size: 10pt;
             outline: none;
+            border-radius: 20px;
+            margin: 5px;
+            padding: 5px;
+            padding-left: 10px;
         }
 
         img {

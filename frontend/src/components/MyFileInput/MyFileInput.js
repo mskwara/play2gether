@@ -1,5 +1,6 @@
-import React, { useRef } from "react";
+import React from "react";
 import "./MyFileInput.scss";
+import MyButton from "../MyButton/MyButton";
 
 const MyFileInput = (props) => {
     const hiddenFileInput = React.useRef(null);
@@ -15,7 +16,7 @@ const MyFileInput = (props) => {
     };
     return (
         <div id="MyFileInput" className={props.className}>
-            <button onClick={browse}>Upload file</button>
+            <MyButton onClick={browse}>Upload file</MyButton>
             <input
                 onChange={props.uploadFile}
                 id="file"

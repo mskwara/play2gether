@@ -3,12 +3,13 @@
 #Login {
     background-color: white;
     width: 400px;
-    height: 250px;
+    height: 240px;
     border-radius: 3px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: 20px;
     position: relative;
 
     .close-btn {
