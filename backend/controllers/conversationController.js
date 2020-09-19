@@ -29,6 +29,7 @@ exports.createGroupConversation = catchAsync(async (req, res, next) => {
     const newConv = await (await GroupConv.create({
         participants: unique,
         recentActivity: Date.now(),
+        name: req.body.name
     })).populate({
         path: 'participants',
         select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
