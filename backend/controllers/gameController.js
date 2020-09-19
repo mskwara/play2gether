@@ -13,7 +13,7 @@ exports.updateGame = factory.update(Game);
 exports.getPlayers = catchAsync(async (req, res, next) => {
     filter = { games: req.params.id }
     const query = User.find(filter)
-        .select('-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -games -privateConversations -groupConversations');
+        .select('-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations');
     const features = new APIFeatures(query, req.query)
         .paginate(50)
         .sort('-recentActivity');

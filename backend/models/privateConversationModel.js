@@ -24,10 +24,10 @@ privateConversationSchema.post('save', function (err, doc, next) {
 privateConversationSchema.pre(/^find/,  function (next) {
     this.populate({
         path: 'user',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -privateConversations -groupConversations'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
     }).populate({
         path: 'correspondent',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -privateConversations -groupConversations'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
     }).select('-__v');
 
     next();

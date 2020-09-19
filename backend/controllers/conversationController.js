@@ -26,10 +26,14 @@ exports.createGroupConversation = catchAsync(async (req, res, next) => {
         );
     }
 
-    const newConv = await GroupConv.create({
-        participants: [...unique],
+    const newConv = await (await GroupConv.create({
+        participants: unique,
         recentActivity: Date.now(),
-    });
+    })).populate({
+        path: 'participants',
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
+    }).execPopulate();
+    newConv.__v = undefined;
 
     await User.updateMany(
         {
@@ -44,7 +48,7 @@ exports.createGroupConversation = catchAsync(async (req, res, next) => {
 
     res.status(201).json({
         status: "success",
-        data: newConv,
+        data: newConv
     });
 });
 

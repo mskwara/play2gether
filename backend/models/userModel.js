@@ -127,17 +127,17 @@ userSchema.pre(/^find/, function (next) {
     this.populate({
         path: "friends",
         select:
-            "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -privateConversations -groupConversations",
+            "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations",
     })
         .populate({
             path: "receivedFriendRequests",
             select:
-                "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -privateConversations -groupConversations",
+                "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations",
         })
         .populate({
             path: "pendingFriendRequests",
             select:
-                "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -privateConversations -groupConversations",
+                "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations",
         })
         .select("-__v");
 
