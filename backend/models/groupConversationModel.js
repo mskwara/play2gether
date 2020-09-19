@@ -11,6 +11,9 @@ const groupConversationSchema = new mongoose.Schema({
     recentActivity: {
         type: Date
     },
+    name: {
+        type: String
+    }
 });
 
 groupConversationSchema.post('save', function (err, doc, next) {
