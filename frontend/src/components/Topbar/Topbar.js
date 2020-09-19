@@ -5,16 +5,17 @@ import "./Topbar.scss";
 import request from "../../utils/request";
 import PopupContext from "../../utils/PopupContext";
 import UserContext from "../../utils/UserContext";
+import ConvContext from "../../utils/ConvContext";
 import ThemeContext from "../../utils/ThemeContext";
 
 const Topbar = (props) => {
     const popupContext = useContext(PopupContext);
+    const convContext = useContext(ConvContext);
     const userContext = useContext(UserContext);
     const theme = useContext(ThemeContext);
     const history = useHistory();
 
     const [state, setState] = useState({
-        reload: false,
         settingsOpened: false,
     });
 
@@ -32,7 +33,9 @@ const Topbar = (props) => {
                 privateConversations: [],
                 groupConversations: [],
             });
-            setState({ reload: !state.reload });
+            convContext.updateConvState({ openedConvs: [] });
+            popupContext.setFriendsOpened(false);
+            setState((state) => ({ ...state, settingsOpened: false }));
             popupContext.setAlertActive(true, "You have been logged out!");
         }
     };
