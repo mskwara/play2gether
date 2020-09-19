@@ -22,6 +22,7 @@ const Chat = (props) => {
     const [chatState, setChatState] = useState({
         messages: [],
         messageToSend: "",
+        loading: true,
     });
 
     const [infiniteScrollState, setInfiniteScrollState] = useState({
@@ -31,27 +32,38 @@ const Chat = (props) => {
     });
 
     const chatStateRef = useRef(chatState);
+    const infiniteScrollStateRef = useRef(infiniteScrollState);
     const setChatStateAndRef = (data) => {
         chatStateRef.current = { ...chatStateRef.current, ...data };
         setChatState((chatState) => ({ ...chatState, ...data }));
     };
 
-    const updateMessagesInState = (message) => {
-        // console.log("log3", chatStateRef.current.messages);
+    const setInfiniteScrollStateAndRef = (data) => {
+        infiniteScrollStateRef.current = {
+            ...infiniteScrollStateRef.current,
+            ...data,
+        };
         setInfiniteScrollState((infiniteScrollState) => ({
             ...infiniteScrollState,
+            ...data,
+        }));
+    };
+
+    const updateMessagesInState = (message) => {
+        const hasMoreOrNot = infiniteScrollStateRef.current.hasMoreMessages;
+        console.log(hasMoreOrNot);
+        setInfiniteScrollStateAndRef({
             hasMoreMessages: false,
             initialLoad: false,
-        }));
+        });
         const oldMessages = [...chatStateRef.current.messages, message];
         setChatStateAndRef({
             messages: oldMessages,
         });
-        setInfiniteScrollState((infiniteScrollState) => ({
-            ...infiniteScrollState,
-            hasMoreMessages: true,
+        setInfiniteScrollStateAndRef({
+            hasMoreMessages: hasMoreOrNot,
             // initialLoad: false,
-        }));
+        });
         scrollToBottom();
     };
 
@@ -75,10 +87,9 @@ const Chat = (props) => {
 
         return () => {
             socketContext.socketState.socket.off("chat");
-            setInfiniteScrollState((infiniteScrollState) => ({
-                ...infiniteScrollState,
+            setInfiniteScrollStateAndRef({
                 hasMoreMessages: true,
-            }));
+            });
         };
     }, []);
 
@@ -110,10 +121,9 @@ const Chat = (props) => {
         // console.log(chatState.messages);
 
         // const messagesReversed = res.data.data.reverse();
-        setInfiniteScrollState((infiniteScrollState) => ({
-            ...infiniteScrollState,
+        setInfiniteScrollStateAndRef({
             skip: infiniteScrollState.skip + 1,
-        }));
+        });
         setChatStateAndRef({
             messageToSend: "",
         });
@@ -145,10 +155,10 @@ const Chat = (props) => {
         );
         if (res.data.status === "success") {
             if (res.data.results < 20) {
-                setInfiniteScrollState((infiniteScrollState) => ({
-                    ...infiniteScrollState,
+                console.log("mniej niz 20");
+                setInfiniteScrollStateAndRef({
                     hasMoreMessages: false,
-                }));
+                });
             }
             const messagesReversed = res.data.data.reverse();
             console.log("messagesDownloadedReversed", messagesReversed);
@@ -156,6 +166,7 @@ const Chat = (props) => {
             // console.log(messagesReversed);
             setChatStateAndRef({
                 messages: messagesReversed,
+                loading: false,
             });
             // scrollToBottom();
         }
@@ -203,6 +214,7 @@ const Chat = (props) => {
                     <img
                         src={require(`../../../assets/group.png`)}
                         alt="avatar"
+                        style={{ filter: theme.pngInvert() }}
                     />
                     <div className="active-dot" />
                 </div>
@@ -250,7 +262,18 @@ const Chat = (props) => {
                     initialLoad={infiniteScrollState.initialLoad}
                     threshold={10}
                 >
-                    {messages}
+                    {!chatState.loading && chatState.messages.length === 0 ? (
+                        <p
+                            style={{
+                                color: theme.colors.primaryText,
+                                margin: "5px",
+                            }}
+                        >
+                            Przywitaj się!
+                        </p>
+                    ) : (
+                        messages
+                    )}
                 </InfiniteScroll>
             </div>
             <div
