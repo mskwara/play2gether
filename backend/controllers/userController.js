@@ -54,7 +54,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
             path: 'games',
             select: '-__v -screenshots'
         }).select(
-            '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email -privateConversations -groupConversations'
+            '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
         );
 
     if (!user) {
