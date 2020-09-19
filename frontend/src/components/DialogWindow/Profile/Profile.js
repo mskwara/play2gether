@@ -103,6 +103,8 @@ const Profile = (props) => {
             <Comment comment={com} key={com._id} />
         ));
 
+        console.log(state.user.aboutMe);
+
         content = (
             <div
                 className="content"
@@ -127,15 +129,11 @@ const Profile = (props) => {
                     />
                     <div className="description">
                         <p className="name">{state.user.name}</p>
-                        {/* <p>{state.user.description}</p> */}
                         <p>
-                            Jestem pajacem i mam pajacerski opis. Jestem pajacem
-                            i mam pajacerski opis. Jestem pajacem i mam
-                            pajacerski opis. Jestem pajacem i mam pajacerski
-                            opis. Jestem pajacem i mam pajacerski opis. Jestem
-                            pajacem i mam pajacerski opis. Jestem pajacem i mam
-                            pajacerski opis. Jestem pajacem i mam pajacerski
-                            opis.
+                            {state.user.aboutMe !== "" &&
+                            state.user.aboutMe !== undefined
+                                ? state.user.aboutMe
+                                : "Description is not provided."}
                         </p>
                     </div>
                 </div>

@@ -63,7 +63,7 @@ const App = (props) => {
         },
     };
 
-    const [themeState, setThemeState] = useState("dark");
+    const [themeState, setThemeState] = useState("light");
 
     if (themeState === "dark") {
         document.body.style = `background: ${themes.dark.body}`;
@@ -310,7 +310,10 @@ const App = (props) => {
                                                     filter: pngInvert(),
                                                 }}
                                                 onClick={() =>
-                                                    setFriendsOpened(true)
+                                                    setFriendsOpened(
+                                                        true,
+                                                        state.group
+                                                    )
                                                 }
                                             />
                                         ) : null}
