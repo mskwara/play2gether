@@ -3,12 +3,12 @@ import "./Conversations.scss";
 import Chat from "./Chat/Chat";
 import ConvContext from "../../utils/ConvContext";
 import UserContext from "../../utils/UserContext";
-import SocketContext from "../../utils/SocketContext";
+// import SocketContext from "../../utils/SocketContext";
 
 const Conversations = (props) => {
     const convContext = useContext(ConvContext);
     const userContext = useContext(UserContext);
-    const socketContext = useContext(SocketContext);
+    // const socketContext = useContext(SocketContext);
     let chats = null;
 
     if (convContext.convState.openedConvs.length > 0) {
