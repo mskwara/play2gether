@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const slugify = require('slugify');
 
 const gameSchema = new mongoose.Schema({
     title: {
@@ -10,10 +9,6 @@ const gameSchema = new mongoose.Schema({
         type: String,
         required: [true, 'What is that game about?'],
     },
-    // players: [{
-    //     type: mongoose.Schema.ObjectId,
-    //     ref: 'User',
-    // }],
     icon: {
         type: String,
         // Temporarily false
@@ -23,7 +18,7 @@ const gameSchema = new mongoose.Schema({
 });
 
 gameSchema.pre('save', function (next) {
-    this.icon = slugify(this.title, { lower: true });
+    this.icon = this.title.replace(/[\W\s_]+/g, '-');
     next();
 });
 
