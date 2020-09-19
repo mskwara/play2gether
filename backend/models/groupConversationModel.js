@@ -21,7 +21,7 @@ groupConversationSchema.post('save', function (err, doc, next) {
 groupConversationSchema.pre(/^find/, async function (next) {
     this.populate({
         path: 'participants',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -privateConversations -groupConversations'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
     }).select('-__v');
 
     next();
