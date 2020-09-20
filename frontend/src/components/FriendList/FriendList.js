@@ -78,6 +78,9 @@ const FriendList = (props) => {
             openedConvs.splice(index, 1);
         } else {
             openedConvs.push(conv);
+            if (openedConvs.length > 3) {
+                openedConvs.splice(0, 1);
+            }
         }
         convContext.updateConvState({ openedConvs });
     };
@@ -185,7 +188,7 @@ const FriendList = (props) => {
                             alt="avatar"
                             className="group-avatar"
                         />
-                        <p>Nazwa grupowej konfy</p>
+                        <p>{conv.name || "Brak nazwy :("}</p>
                         <div className="actions">
                             <img
                                 src={require("../../assets/message.png")}

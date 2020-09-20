@@ -22,12 +22,12 @@ const Chat = (props) => {
     const [chatState, setChatState] = useState({
         messages: [],
         messageToSend: "",
-        loading: true,
+        loading: true && !props.conv.foreign,
     });
 
     const [infiniteScrollState, setInfiniteScrollState] = useState({
-        hasMoreMessages: true,
-        initialLoad: true,
+        hasMoreMessages: true && !props.conv.foreign,
+        initialLoad: true && !props.conv.foreign,
         skip: 0,
     });
 
@@ -110,8 +110,25 @@ const Chat = (props) => {
         convContext.updateConvState({ openedConvs });
     };
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
         console.log("===========================");
+        if (props.conv.foreign) {
+            const res = await request(
+                "post",
+                `http://localhost:8000/conversations/private/user/${props.conv.correspondent._id}`,
+                null,
+                true
+            );
+            if (res.data.status === "success") {
+                props.conv = res.data.data;
+            } else {
+                popupContext.setAlertActive(
+                    true,
+                    "Sorry, there is a problem with the server..."
+                );
+                return;
+            }
+        }
         socketContext.socketState.socket.emit("send", {
             message: chatState.messageToSend,
             jwt: userContext.globalUserState.jwt,
@@ -142,6 +159,9 @@ const Chat = (props) => {
     };
 
     const loadMoreMessages = async (page) => {
+        if (props.conv.foreign) {
+            return;
+        }
         console.log("page", page);
         const res = await request(
             "get",
@@ -168,7 +188,7 @@ const Chat = (props) => {
                 messages: messagesReversed,
                 loading: false,
             });
-            // scrollToBottom();
+            scrollToBottom();
         }
     };
 
@@ -218,7 +238,7 @@ const Chat = (props) => {
                     />
                     <div className="active-dot" />
                 </div>
-                <p>Nazwa konfy</p>
+                <p>{props.conv.name || "Brak nazwy :("}</p>
             </div>
         );
     }
