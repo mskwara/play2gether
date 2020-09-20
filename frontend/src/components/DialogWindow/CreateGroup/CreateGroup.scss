@@ -3,7 +3,7 @@
 #CreateGroup {
     width: 400px;
     min-height: 180px;
-    max-height: 300px;
+    max-height: 360px;
     border-radius: 3px;
     display: flex;
     flex-direction: column;
@@ -125,6 +125,10 @@
                     }
                 }
             }
+        }
+
+        .input-name {
+            margin-top: 10px;
         }
     }
 }

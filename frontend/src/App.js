@@ -63,7 +63,7 @@ const App = (props) => {
         },
     };
 
-    const [themeState, setThemeState] = useState("light");
+    const [themeState, setThemeState] = useState("dark");
 
     if (themeState === "dark") {
         document.body.style = `background: ${themes.dark.body}`;
@@ -292,7 +292,14 @@ const App = (props) => {
                                 {loadingState.loading ? (
                                     <Loader className="loader" />
                                 ) : (
-                                    <div id="App">
+                                    <div
+                                        id="App"
+                                        className={
+                                            themeState === "dark"
+                                                ? "darkbg"
+                                                : "lightbg"
+                                        }
+                                    >
                                         {alert}
                                         <Topbar />
                                         {globalUserState.user ? (
