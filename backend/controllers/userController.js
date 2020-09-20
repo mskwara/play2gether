@@ -37,7 +37,7 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
     if (!req.file)
         return next();
 
-    req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+    req.file.filename = `user-${req.user._id.toString()}-${Date.now()}.jpeg`;
 
     await sharp(req.file.buffer)
         .resize(null, 480)
@@ -84,7 +84,7 @@ exports.update = catchAsync(async (req, res, next) => {
         }
     }
 
-    const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+    const updatedUser = await User.findByIdAndUpdate(req.user._id.toString(), filteredBody, {
         select: '-passwordChangedAt -privateConversations -groupConversations',
         new: true,
         runValidators: true
@@ -102,7 +102,7 @@ exports.deletePhoto = catchAsync(async (req, res, next) => {
             if (err) console.log(err);
         });
 
-        const user = await User.findByIdAndUpdate(req.user.id, { photo: 'defaultUser.jpeg' }, {
+        const user = await User.findByIdAndUpdate(req.user._id.toString(), { photo: 'defaultUser.jpeg' }, {
             select: '-passwordChangedAt -privateConversations -groupConversations',
         });
         res.status(200).json({
@@ -124,7 +124,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
 });
 
 exports.addFriend = catchAsync(async (req, res, next) => {
-    if (req.params.id === req.user.id)
+    if (req.params.id === req.user._id.toString())
         return next(new AppError('Sorry, you can\'t invite yourself to your friends', 400));
 
     if (req.user.pendingFriendRequests.some(el => el._id.toString() === req.params.id))
@@ -138,11 +138,11 @@ exports.addFriend = catchAsync(async (req, res, next) => {
 
     await User.findByIdAndUpdate(req.params.id, {
         $push: {
-            receivedFriendRequests: req.user.id
+            receivedFriendRequests: req.user._id.toString()
         }
     });
 
-    const user = await User.findByIdAndUpdate(req.user.id, {
+    const user = await User.findByIdAndUpdate(req.user._id.toString(), {
         $push: {
             pendingFriendRequests: req.params.id
         }
@@ -161,7 +161,7 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
     if (!req.user.receivedFriendRequests.some(el => el._id.toString() === req.params.id.toString()))
         return next(new AppError('You have no invitation with that user ID', 400));
 
-    req.user = await User.findByIdAndUpdate(req.user.id, {
+    req.user = await User.findByIdAndUpdate(req.user._id.toString(), {
         $pull: {
             receivedFriendRequests: req.params.id,
         },
@@ -175,10 +175,10 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
 
     await User.findByIdAndUpdate(req.params.id, {
         $pull: {
-            pendingFriendRequests: req.user.id,
+            pendingFriendRequests: req.user._id.toString(),
         },
         $push: {
-            friends: req.user.id
+            friends: req.user._id.toString()
         }
     });
 
@@ -190,7 +190,7 @@ exports.ignoreFriend = catchAsync(async (req, res, next) => {
     if (!req.user.receivedFriendRequests.some(el => el._id.toString() === req.params.id.toString()))
         return next(new AppError('You have no invitation with that user ID', 400));
 
-    const user = await User.findByIdAndUpdate(req.user.id, {
+    const user = await User.findByIdAndUpdate(req.user._id.toString(), {
         $pull: {
             receivedFriendRequests: req.params.id
         }
@@ -201,7 +201,7 @@ exports.ignoreFriend = catchAsync(async (req, res, next) => {
 
     await User.findByIdAndUpdate(req.params.id, {
         $pull: {
-            pendingFriendRequests: req.user.id
+            pendingFriendRequests: req.user._id.toString()
         }
     });
 
@@ -212,7 +212,7 @@ exports.ignoreFriend = catchAsync(async (req, res, next) => {
 });
 
 exports.removeFriend = catchAsync(async (req, res, next) => {
-    const user = await User.findByIdAndUpdate(req.user.id, {
+    const user = await User.findByIdAndUpdate(req.user._id.toString(), {
         $pull: {
             friends: req.params.id
         }
@@ -223,7 +223,7 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
 
     await User.findByIdAndUpdate(req.params.id, {
         $pull: {
-            friends: req.user.id
+            friends: req.user._id.toString()
         }
     });
 

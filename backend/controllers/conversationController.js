@@ -10,7 +10,7 @@ const AppError = require("../utils/appError");
 exports.createGroupConversation = catchAsync(async (req, res, next) => {
     // Remove duplicates
     let unique = req.body.users;
-    unique.push(req.user.id);
+    unique.push(req.user._id.toString());
     unique = [...new Set(unique)];
 
     // Filter out non existing users
@@ -54,7 +54,7 @@ exports.createGroupConversation = catchAsync(async (req, res, next) => {
 });
 
 exports.getPrivateConversationByUser = catchAsync(async (req, res, next) => {
-    let user = req.user.id;
+    let user = req.user._id.toString();
     let correspondent = req.params.userId;
 
     const corrUser = User.findById(correspondent);
@@ -81,7 +81,7 @@ exports.getPrivateConversationByUser = catchAsync(async (req, res, next) => {
 });
 
 exports.createPrivateConv = catchAsync(async (req, res, next) => {
-    let user = req.user.id;
+    let user = req.user._id.toString();
     let correspondent = req.params.userId;
 
     const corrUser = User.findById(correspondent);
@@ -133,7 +133,7 @@ exports.leaveGroupConversation = catchAsync(async (req, res, next) => {
         req.params.convId,
         {
             $pull: {
-                participants: req.user.id,
+                participants: req.user._id.toString(),
             },
         },
         {
@@ -147,7 +147,7 @@ exports.leaveGroupConversation = catchAsync(async (req, res, next) => {
     if (conv.participants.length === 0)
         await GroupConv.findByIdAndDelete(req.params.convId);
 
-    await User.findByIdAndUpdate(req.user.id, {
+    await User.findByIdAndUpdate(req.user._id.toString(), {
         $pull: {
             groupConversations: req.params.convId,
         },
@@ -195,7 +195,7 @@ exports.sendPrivateMessage = catchAsync(async (req, res, next) => {
 
     const message = await PrivateMessage.create({
         conversation: req.params.id,
-        from: req.user.id,
+        from: req.user._id.toString(),
         sentAt: Date.now(),
         message: req.body.message,
     });
@@ -212,7 +212,7 @@ exports.sendGroupMessage = catchAsync(async (req, res, next) => {
 
     const message = await GroupMessage.create({
         conversation: req.params.id,
-        from: req.user.id,
+        from: req.user._id.toString(),
         sentAt: Date.now(),
         message: req.body.message,
     });
