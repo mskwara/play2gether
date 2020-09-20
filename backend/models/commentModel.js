@@ -26,7 +26,7 @@ const commentSchema = new mongoose.Schema({
 commentSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'from',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email'
+        select: '-__v -passwordChangedAt -friends -games -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
     }).select('-__v');
 
     next();
