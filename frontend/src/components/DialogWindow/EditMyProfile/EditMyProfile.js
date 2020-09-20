@@ -6,6 +6,7 @@ import ThemeContext from "../../../utils/ThemeContext";
 import MyInput from "../../MyInput/MyInput";
 import MyButton from "../../MyButton/MyButton";
 import MyFileInput from "../../MyFileInput/MyFileInput";
+import Loader from "../../Loader/Loader";
 import request from "../../../utils/request";
 
 const EditMyProfile = (props) => {
@@ -17,13 +18,16 @@ const EditMyProfile = (props) => {
     const [state, setState] = useState({
         name: "",
         photo: null,
+        aboutMe: "",
         // description: "",
     });
+
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setState({
             name: activeUser.name,
-            // description: activeUser.description,
+            aboutMe: activeUser.aboutMe,
             photo: activeUser.photo,
         });
     }, []);
@@ -38,6 +42,7 @@ const EditMyProfile = (props) => {
     };
 
     const uploadFile = async (event) => {
+        setLoading(true);
         // console.log("upload");
         const fileUploaded = event.target.files[0];
         let formData = new FormData();
@@ -50,14 +55,18 @@ const EditMyProfile = (props) => {
         );
         if (res.data.status === "success") {
             setState((state) => ({ ...state, photo: fileUploaded }));
+            popupContext.setAlertActive(true, "Your avatar has been set!");
         } else {
             popupContext.setAlertActive(true, `${res.data.message}`);
         }
+        setLoading(false);
     };
 
     const updateUser = async () => {
+        setLoading(true);
         const body = {
             name: state.name,
+            aboutMe: state.aboutMe,
         };
 
         const res = await request(
@@ -68,9 +77,11 @@ const EditMyProfile = (props) => {
         );
         if (res.data.status === "success") {
             userContext.updateGlobalUserState({ user: res.data.data });
+            popupContext.setAlertActive(true, "Your profile has beed updated!");
         } else {
             popupContext.setAlertActive(true, `Something went wrong!`);
         }
+        setLoading(false);
     };
 
     let avatar;
@@ -116,7 +127,20 @@ const EditMyProfile = (props) => {
                         labelId="name"
                         handleInputChange={handleInputChange}
                     />
+                    <textarea
+                        placeholder="About me..."
+                        rows="3"
+                        id="aboutMe"
+                        name="aboutMe"
+                        value={state.aboutMe}
+                        onChange={handleInputChange}
+                        style={{
+                            backgroundColor: theme.colors.comment,
+                            color: theme.colors.primaryText,
+                        }}
+                    />
                     <MyButton onClick={updateUser}>Save</MyButton>
+                    {loading ? <Loader /> : null}
                 </div>
             </div>
         </div>
