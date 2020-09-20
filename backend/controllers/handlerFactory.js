@@ -5,8 +5,6 @@ const AppError = require('../utils/appError');
 exports.getAll = (Model, exclude, sortOpt) =>
     catchAsync(async (req, res, next) => {
         let filter = {};
-        if (req.params.convId)
-            filter = { conversation: req.params.convId };
         if (req.params.userId)
             filter = { user: req.params.userId }
 

@@ -33,11 +33,11 @@ exports.registerAsPlayer = catchAsync(async (req, res, next) => {
         return next(new AppError('This game does not exist', 404));
     }
 
-    if (req.user.games.some(el => el.toString() === req.params.id)) {
+    if (req.user.games.includes(req.params.id)) {
         return next(new AppError('You\'re already on the list', 400));
     }
 
-    user = await User.findByIdAndUpdate(req.user._id.toString(), {
+    user = await User.findByIdAndUpdate(req.user._id, {
         $push: {
             games: req.params.id
         }
@@ -53,7 +53,7 @@ exports.registerAsPlayer = catchAsync(async (req, res, next) => {
 });
 
 exports.optOut = catchAsync(async (req, res, next) => {
-    const user = await User.findByIdAndUpdate(req.user._id.toString(), {
+    const user = await User.findByIdAndUpdate(req.user._id, {
         $pull: { games: req.params.id }
     }, {
         select: '-passwordChangedAt -privateConversations -groupConversations',
