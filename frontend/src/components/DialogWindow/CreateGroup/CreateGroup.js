@@ -4,12 +4,12 @@ import UserContext from "../../../utils/UserContext";
 import PopupContext from "../../../utils/PopupContext";
 import ConvContext from "../../../utils/ConvContext";
 import ThemeContext from "../../../utils/ThemeContext";
-// import MyInput from "../../MyInput/MyInput";
 // import MyFileInput from "../../MyFileInput/MyFileInput";
 import Loader from "../../Loader/Loader";
 import request from "../../../utils/request";
 import MyButton from "../../MyButton/MyButton";
 import Radium from "radium";
+import MyInput from "../../MyInput/MyInput";
 
 const CreateGroup = (props) => {
     const userContext = useContext(UserContext);
@@ -22,6 +22,7 @@ const CreateGroup = (props) => {
     const [usersState, setUsersState] = useState({
         users: [],
     });
+    const [chatName, setChatName] = useState("");
 
     const userClick = (friendId) => {
         if (!usersState.users.includes(friendId)) {
@@ -38,13 +39,17 @@ const CreateGroup = (props) => {
         }
     };
 
+    const handleInputChange = (event) => {
+        setChatName(event.target.value);
+    };
+
     const create = async () => {
         setLoading(true);
 
         const res = await request(
             "post",
             "http://localhost:8000/conversations/group",
-            { users: usersState.users },
+            { users: usersState.users, name: chatName },
             true
         );
         if (res.data.status === "success") {
@@ -56,6 +61,9 @@ const CreateGroup = (props) => {
             });
             const openedConvs = [...convContext.convState.openedConvs];
             openedConvs.push(res.data.data);
+            if (openedConvs.length > 3) {
+                openedConvs.splice(0, 1);
+            }
             convContext.updateConvState({ openedConvs });
             popupContext.closeDialogWindow();
             popupContext.setAlertActive(true, `The group has been created!`);
@@ -129,6 +137,15 @@ const CreateGroup = (props) => {
             />
             <div className="content">
                 <div className="users-select">{friends}</div>
+                <MyInput
+                    className="input-name"
+                    type="text"
+                    name="name"
+                    placeholder="Chat name"
+                    value={chatName}
+                    labelId="name"
+                    handleInputChange={handleInputChange}
+                />
                 <MyButton onClick={create}>Create</MyButton>
                 {loading ? <Loader /> : null}
             </div>
