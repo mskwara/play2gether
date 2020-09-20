@@ -6,7 +6,17 @@
 
 #App {
     text-align: center;
-    margin-top: 70px;
+    padding-top: 70px;
+    background-repeat: repeat;
+    background-size: 960px 540px;
+    min-height: calc(100vh - 70px);
+
+    &.darkbg {
+        background-image: url("./assets/bg_dark.png");
+    }
+    &.lightbg {
+        background-image: url("./assets/bg_light.png");
+    }
 
     button {
         background-color: $primary;

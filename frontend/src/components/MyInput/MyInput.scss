@@ -14,7 +14,7 @@
 
     input {
         border: none;
-        // border-bottom: 1px solid $border;
+        border-bottom: 1px solid $border;
         // color: $label;
         width: 300px;
         font-size: 13pt;
@@ -28,10 +28,10 @@
             position: relative;
         }
 
-        // &:focus {
-        //     border-bottom: 1px solid $primary;
-        //     // color: $primary;
-        // }
+        &:focus {
+            border-bottom: 1px solid $primary;
+            // color: $primary;
+        }
     }
 
     label {
