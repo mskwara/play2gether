@@ -4,6 +4,7 @@ import UserContext from "../../utils/UserContext";
 import PopupContext from "../../utils/PopupContext";
 import ConvContext from "../../utils/ConvContext";
 import ThemeContext from "../../utils/ThemeContext";
+import MyButton from "../MyButton/MyButton";
 import request from "../../utils/request";
 
 const FriendList = (props) => {
@@ -199,6 +200,17 @@ const FriendList = (props) => {
             content = (
                 <div>
                     <h1 className="title">Groups</h1>
+                    <MyButton
+                        onClick={() => {
+                            popupContext.openDialogWindow("createGroup");
+                            popupContext.setFriendsOpened(
+                                !popupContext.friendsOpened,
+                                true
+                            );
+                        }}
+                    >
+                        Create
+                    </MyButton>
                     {groups}
                     {groupConversations.length === 0 && (
                         <p className="title small-title empty-title">
@@ -224,7 +236,10 @@ const FriendList = (props) => {
                 alt="close"
                 className="dialog-button close_arrow"
                 onClick={() =>
-                    popupContext.setFriendsOpened(!popupContext.friendsOpened)
+                    popupContext.setFriendsOpened(
+                        !popupContext.friendsOpened,
+                        popupContext.group
+                    )
                 }
             />
             <img
