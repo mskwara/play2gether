@@ -10,7 +10,7 @@ const AppError = require("../utils/appError");
 exports.createGroupConversation = catchAsync(async (req, res, next) => {
     // Remove duplicates
     let unique = req.body.users;
-    unique.push(req.user._id.toString());
+    unique.push(req.user._id);
     unique = [...new Set(unique)];
 
     // Filter out non existing users
@@ -133,7 +133,7 @@ exports.leaveGroupConversation = catchAsync(async (req, res, next) => {
         req.params.convId,
         {
             $pull: {
-                participants: req.user._id.toString(),
+                participants: req.user._id,
             },
         },
         {
