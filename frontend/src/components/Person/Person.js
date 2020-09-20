@@ -30,42 +30,71 @@ const Person = (props) => {
     };
 
     const openChat = () => {
+        const openedConvs = [...convContext.convState.openedConvs];
         if (
             !userContext.globalUserState.user.friends.some(
                 (f) => f._id === props.user._id
             )
         ) {
+            // they are not friends
             console.log("Not implemented!");
-            return null;
-        }
-        const conv = privateConversations.filter(
-            (conv) =>
-                conv.user._id === props.user._id ||
-                conv.correspondent._id === props.user._id
-        )[0];
-        const openedConvs = [...convContext.convState.openedConvs];
-        if (openedConvs.filter((c) => c._id === conv._id).length > 0) {
-            //this conv has been opened already
-            return;
+            const me = userContext.globalUserState.user;
+            const foreignConv = {
+                _id: me._id + props.user._id,
+                user: {
+                    _id: me._id,
+                    name: me.name,
+                    photo: me.photo,
+                    recentActivity: me.recentActivity,
+                },
+                correspondent: {
+                    _id: props.user._id,
+                    name: props.user.name,
+                    photo: props.user.photo,
+                    recentActivity: props.user.recentActivity,
+                },
+                foreign: true,
+            };
+            openedConvs.push(foreignConv);
+            if (openedConvs.length > 3) {
+                openedConvs.splice(0, 1);
+            }
+            convContext.updateConvState({ openedConvs });
+            return foreignConv;
         } else {
-            openedConvs.push(conv);
+            // friends
+            const conv = privateConversations.filter(
+                (conv) =>
+                    conv.user._id === props.user._id ||
+                    conv.correspondent._id === props.user._id
+            )[0];
+            if (openedConvs.filter((c) => c._id === conv._id).length > 0) {
+                //this conv has been opened already
+                return;
+            } else {
+                openedConvs.push(conv);
+                if (openedConvs.length > 3) {
+                    openedConvs.splice(0, 1);
+                }
+            }
+            convContext.updateConvState({ openedConvs });
+            return conv;
         }
-        convContext.updateConvState({ openedConvs });
-        return conv;
     };
 
     const inviteToGame = () => {
         const conv = openChat();
-        if (!conv) {
+        if (conv.foreign) {
             console.log("Not implemented!");
             return;
+        } else {
+            socketContext.socketState.socket.emit("send", {
+                message: `Hi! Would you like to play ${props.gameTitle} with me?`,
+                jwt: userContext.globalUserState.jwt,
+                room: conv._id,
+                private: true,
+            });
         }
-        socketContext.socketState.socket.emit("send", {
-            message: `Hi! Would you like to play ${props.gameTitle} with me?`,
-            jwt: userContext.globalUserState.jwt,
-            room: conv._id,
-            private: true,
-        });
     };
 
     let addFriendButton = null;

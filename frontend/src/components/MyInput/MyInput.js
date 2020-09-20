@@ -23,7 +23,7 @@ const MyInput = (props) => {
     }
 
     return (
-        <div id="MyInput">
+        <div id="MyInput" className={props.className}>
             <label
                 id={labelId}
                 className={labelClass}
@@ -38,11 +38,11 @@ const MyInput = (props) => {
                 value={props.value}
                 onChange={handleInputChange}
                 style={{
-                    borderBottom: `1px solid ${theme.colors.border}`,
+                    // borderBottom: `1px solid ${theme.colors.border}`,
                     color: theme.colors.label,
-                    ":focus": {
-                        borderBottom: `1px solid ${theme.colors.primary}`,
-                    },
+                    // ":focus": {
+                    //     borderBottom: `1px solid green`,
+                    // },
                 }}
             />
         </div>
