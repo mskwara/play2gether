@@ -37,7 +37,7 @@ exports.registerAsPlayer = catchAsync(async (req, res, next) => {
         return next(new AppError('You\'re already on the list', 400));
     }
 
-    user = await User.findByIdAndUpdate(req.user.id, {
+    user = await User.findByIdAndUpdate(req.user._id.toString(), {
         $push: {
             games: req.params.id
         }
@@ -53,7 +53,7 @@ exports.registerAsPlayer = catchAsync(async (req, res, next) => {
 });
 
 exports.optOut = catchAsync(async (req, res, next) => {
-    const user = await User.findByIdAndUpdate(req.user.id, {
+    const user = await User.findByIdAndUpdate(req.user._id.toString(), {
         $pull: { games: req.params.id }
     }, {
         select: '-passwordChangedAt -privateConversations -groupConversations',
