@@ -12,7 +12,7 @@ function authToken(id) {
 }
 
 function createAuthToken(user, statusCode, res) {
-    const token = authToken(user.id);
+    const token = authToken(user._id);
 
     const cookieOptions = {
         expires: new Date(
@@ -116,8 +116,10 @@ exports.protect = catchAsync(async (req, res, next) => {
         );
     }
 
+    console.log(token);
     // 2) Verification of the token
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    console.log(decoded);
 
     // 3) Check if user still exists
     const currentUser = await User.findByIdAndUpdate(decoded.id, {
