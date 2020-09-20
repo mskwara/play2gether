@@ -11,7 +11,7 @@ exports.postComment = catchAsync(async (req, res, next) => {
 
     await Comment.create({
         user: req.params.userId,
-        from: req.user._id.toString(),
+        from: req.user._id,
         sentAt: Date.now(),
         comment: req.body.comment
     });
@@ -25,7 +25,8 @@ exports.deleteComment = catchAsync(async (req, res, next) => {
     if (!comment)
         return next(new AppError('No comment found with that ID.', 404));
 
-    if (comment.user.toString() === req.user._id.toString() || comment.from.toString() === req.user._id.toString()) {
+    console.log(comment.user, req.user._id, comment.from)
+    if (comment.user.toString() === req.user._id.toString() || comment.from._id.toString() === req.user._id.toString()) {
         await Comment.findByIdAndDelete(comment._id);
     } else {
         return next(new AppError('You have no rights to delete that comment.', 403));

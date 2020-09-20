@@ -24,7 +24,6 @@ async function removeNotification(user, private, room) {
 function join(socket) {
     return async data => {
         const user = await checkToken(data.jwt);
-        console.log(user);
 
         let convs, suffix;
         if (data.private) {
@@ -39,7 +38,7 @@ function join(socket) {
             socket.join(data.room + suffix);
             await removeNotification(user, data.private, data.room);
             if (process.env.NODE_ENV === 'development')
-                console.log(`User ${user.id} succesfully connected to chat room no. ${data.room}.`);
+                console.log(`User ${user._id} succesfully connected to chat room no. ${data.room}.`);
         } else if (process.env.NODE_ENV === 'development') {
             console.log(`Connection failed`);
         }
@@ -63,7 +62,7 @@ function leave(socket) {
             socket.leave(data.room + suffix);
             await removeNotification(user, data.private, data.room);
             if (process.env.NODE_ENV === 'development')
-                console.log(`User ${user.id} succesfully disconnected from chat room no. ${data.room}.`);
+                console.log(`User ${user._id} succesfully disconnected from chat room no. ${data.room}.`);
         } else if (process.env.NODE_ENV === 'development') {
             console.log(`Disconnection failed`);
         }
@@ -88,7 +87,7 @@ function send(io) {
         if (user && convs.includes(data.room) && data.message !== '') {
             messageOBJ = {
                 conversation: data.room,
-                from: user.id,
+                from: user._id,
                 sentAt: Date.now(),
                 message: data.message
             };
@@ -120,7 +119,7 @@ function send(io) {
             }
 
             if (process.env.NODE_ENV === 'development') {
-                console.log(`User ${user.id} succesfully sent message to chat room no. ${data.room}.`);
+                console.log(`User ${user._id} succesfully sent message to chat room no. ${data.room}.`);
                 console.log(data);
             }
         } else if (process.env.NODE_ENV === 'development') {

@@ -25,7 +25,7 @@ gameSchema.pre('save', function (next) {
 gameSchema.pre(/^findOne/, function (next) {
     this.populate({
         path: 'players',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -privateConversations -groupConversations'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
     });
 
     next();

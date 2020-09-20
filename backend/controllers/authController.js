@@ -116,10 +116,8 @@ exports.protect = catchAsync(async (req, res, next) => {
         );
     }
 
-    console.log(token);
     // 2) Verification of the token
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-    console.log(decoded);
 
     // 3) Check if user still exists
     const currentUser = await User.findByIdAndUpdate(decoded.id, {
@@ -156,7 +154,7 @@ exports.restrictTo = (...privileges) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
     // 1) Get user from collection
-    const user = await User.findById(req.user._id.toString()).select('+password');
+    const user = await User.findById(req.user._id).select('+password');
 
     // 2) Check if POSTed password is correct
     if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
