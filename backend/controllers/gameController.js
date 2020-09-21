@@ -13,7 +13,7 @@ exports.updateGame = factory.update(Game);
 exports.getPlayers = catchAsync(async (req, res, next) => {
     filter = { games: req.params.id }
     const query = User.find(filter)
-        .select('-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations');
+        .select('-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers');
     const features = new APIFeatures(query, req.query)
         .paginate(50)
         .sort('-recentActivity');
@@ -42,7 +42,7 @@ exports.registerAsPlayer = catchAsync(async (req, res, next) => {
             games: req.params.id
         }
     }, {
-        select: '-passwordChangedAt -privateConversations -groupConversations',
+        select: '-passwordChangedAt -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers',
         new: true
     });
 
@@ -56,7 +56,7 @@ exports.optOut = catchAsync(async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user._id, {
         $pull: { games: req.params.id }
     }, {
-        select: '-passwordChangedAt -privateConversations -groupConversations',
+        select: '-passwordChangedAt -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers',
         new: true
     });
 
