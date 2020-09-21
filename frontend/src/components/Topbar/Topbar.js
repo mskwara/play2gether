@@ -179,7 +179,9 @@ const Topbar = (props) => {
                             : theme.setTheme("light")
                     }
                 >
-                    Dark mode
+                    {theme.selectedTheme === "light"
+                        ? "Dark mode"
+                        : "Light mode"}
                 </button>
                 <button
                     className="settings-button"
