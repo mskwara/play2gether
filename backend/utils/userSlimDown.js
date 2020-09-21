@@ -3,5 +3,6 @@ module.exports = user => {
     user.privateConversations = undefined;
     user.groupConversations = undefined;
     user.recentActivity = undefined;
+    user.games = undefined;
     return user;
 }

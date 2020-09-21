@@ -5,12 +5,6 @@ const groupConversationSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'User'
     }],
-    lastMessage: {
-        type: String
-    },
-    recentActivity: {
-        type: Date
-    },
     name: {
         type: String
     }
