@@ -13,9 +13,16 @@ const FriendList = (props) => {
     const convContext = useContext(ConvContext);
     const theme = useContext(ThemeContext);
     const activeUser = userContext.globalUserState.user;
-    const privateConversations =
-        userContext.globalUserState.privateConversations;
-    const groupConversations = userContext.globalUserState.groupConversations;
+    const privateConversations = userContext.globalUserState.privateConversations.sort(
+        (a, b) => {
+            return new Date(b.recentActivity) - new Date(a.recentActivity);
+        }
+    );
+    const groupConversations = userContext.globalUserState.groupConversations.sort(
+        (a, b) => {
+            return new Date(b.recentActivity) - new Date(a.recentActivity);
+        }
+    );
 
     const acceptFriend = async (received_friend) => {
         const res = await request(
