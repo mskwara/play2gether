@@ -29,7 +29,7 @@ const Person = (props) => {
         );
     };
 
-    const openChat = () => {
+    const openChat = (instantInvite = false) => {
         const openedConvs = [...convContext.convState.openedConvs];
         if (
             !userContext.globalUserState.user.friends.some(
@@ -37,7 +37,7 @@ const Person = (props) => {
             )
         ) {
             // they are not friends
-            console.log("Not implemented!");
+            // console.log("Not implemented!");
             const me = userContext.globalUserState.user;
             const foreignConv = {
                 _id: me._id + props.user._id,
@@ -55,11 +55,22 @@ const Person = (props) => {
                 },
                 foreign: true,
             };
+            if (
+                openedConvs.filter((c) => c._id === foreignConv._id).length > 0
+            ) {
+                //this conv has been opened already
+                return;
+            }
+            if (instantInvite) {
+                foreignConv.instantInvite = true;
+                foreignConv.instantMessage = `Hi! Would you like to play ${props.gameTitle} with me?`;
+            }
             openedConvs.push(foreignConv);
             if (openedConvs.length > 3) {
                 openedConvs.splice(0, 1);
             }
             convContext.updateConvState({ openedConvs });
+
             return foreignConv;
         } else {
             // friends
@@ -83,11 +94,17 @@ const Person = (props) => {
     };
 
     const inviteToGame = () => {
-        const conv = openChat();
-        if (conv.foreign) {
-            console.log("Not implemented!");
+        if (
+            !userContext.globalUserState.user.friends.some(
+                (f) => f._id === props.user._id
+            )
+        ) {
+            // not friends
+            // console.log("Not implemented!");
+            const conv = openChat(true);
             return;
         } else {
+            const conv = openChat();
             socketContext.socketState.socket.emit("send", {
                 message: `Hi! Would you like to play ${props.gameTitle} with me?`,
                 jwt: userContext.globalUserState.jwt,
