@@ -22,15 +22,6 @@ gameSchema.pre('save', function (next) {
     next();
 });
 
-gameSchema.pre(/^findOne/, function (next) {
-    this.populate({
-        path: 'players',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
-    });
-
-    next();
-});
-
 gameSchema.pre(/^find/, function (next) {
     this.select('-__v');
 
