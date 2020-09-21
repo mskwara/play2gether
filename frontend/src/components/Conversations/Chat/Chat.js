@@ -23,6 +23,7 @@ const Chat = (props) => {
         messages: [],
         messageToSend: "",
         loading: true && !props.conv.foreign,
+        firstSendingToForeign: false,
     });
 
     const [infiniteScrollState, setInfiniteScrollState] = useState({
@@ -73,17 +74,24 @@ const Chat = (props) => {
     };
 
     useEffect(() => {
-        socketContext.socketState.socket.emit("join", {
-            room: props.conv._id,
-            private: !props.group,
-            jwt: userContext.globalUserState.jwt,
-        });
-        socketContext.socketState.socket.on("chat", (message) => {
-            console.log("on chat");
-            if (message.conversation === props.conv._id) {
-                updateMessagesInState(message);
+        if (!props.conv.foreign) {
+            socketContext.socketState.socket.emit("join", {
+                room: props.conv._id,
+                private: !props.group,
+                jwt: userContext.globalUserState.jwt,
+            });
+            socketContext.socketState.socket.on("chat", (message) => {
+                console.log("on chat");
+                if (message.conversation === props.conv._id) {
+                    updateMessagesInState(message);
+                }
+            });
+        } else {
+            //foreign
+            if (props.conv.instantInvite) {
+                sendMessage(props.conv.instantMessage);
             }
-        });
+        }
 
         return () => {
             socketContext.socketState.socket.off("chat");
@@ -110,9 +118,10 @@ const Chat = (props) => {
         convContext.updateConvState({ openedConvs });
     };
 
-    const sendMessage = async () => {
+    const sendMessage = async (computedMessage = null) => {
         console.log("===========================");
         if (props.conv.foreign) {
+            setChatStateAndRef({ firstSendingToForeign: true });
             const res = await request(
                 "post",
                 `http://localhost:8000/conversations/private/user/${props.conv.correspondent._id}`,
@@ -120,12 +129,30 @@ const Chat = (props) => {
                 true
             );
             if (res.data.status === "success") {
-                props.conv = res.data.data;
+                console.log(res.data.conv);
+                // userContext.updateGlobalUserState({ user: res.data.user });
+                const index = convContext.convState.openedConvs.indexOf(
+                    props.conv
+                );
+                const openedConvs = [...convContext.convState.openedConvs];
+                openedConvs.splice(index, 1, res.data.conv);
+                convContext.updateConvState({ openedConvs });
+                socketContext.socketState.socket.emit("send", {
+                    message: computedMessage
+                        ? computedMessage
+                        : chatState.messageToSend,
+                    jwt: userContext.globalUserState.jwt,
+                    room: res.data.conv._id,
+                    private: !props.group,
+                });
+                setChatStateAndRef({ firstSendingToForeign: false });
+                return;
             } else {
                 popupContext.setAlertActive(
                     true,
                     "Sorry, there is a problem with the server..."
                 );
+                setChatStateAndRef({ firstSendingToForeign: false });
                 return;
             }
         }
@@ -268,6 +295,11 @@ const Chat = (props) => {
                 />
             </div>
             <div id="content">
+                {chatState.firstSendingToForeign ? (
+                    <div>
+                        <Loader className="loader" />
+                    </div>
+                ) : null}
                 <InfiniteScroll
                     pageStart={0}
                     loadMore={loadMoreMessages}
@@ -282,7 +314,9 @@ const Chat = (props) => {
                     initialLoad={infiniteScrollState.initialLoad}
                     threshold={10}
                 >
-                    {!chatState.loading && chatState.messages.length === 0 ? (
+                    {!chatState.loading &&
+                    !chatState.firstSendingToForeign &&
+                    chatState.messages.length === 0 ? (
                         <p
                             style={{
                                 color: theme.colors.primaryText,
