@@ -39,7 +39,9 @@ exports.checkToken = async (token) => {
     try {
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
         // 3) Check if user still exists
-        const currentUser = await User.findById(decoded.id);
+        const currentUser = await User.findByIdAndUpdate(decoded.id, {
+            recentActivity: Date.now()
+        });
         if (!currentUser) {
             throw new Error();
         }

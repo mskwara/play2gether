@@ -6,6 +6,7 @@ const PrivateMessage = require('./../models/privateMessageModel');
 const GroupMessage = require('./../models/groupMessageModel');
 const AppError = require('../utils/appError');
 const APIFeatures = require('./../utils/apiFeatures');
+const slimDownUser = require('./../utils/userSlimDown');
 
 exports.createGroupConversation = catchAsync(async (req, res, next) => {
     // Remove duplicates
@@ -96,6 +97,7 @@ exports.createPrivateConv = catchAsync(async (req, res, next) => {
         correspondent,
     });
 
+    req.user = slimDownUser(req.user);
     if (privateConv)
         return res.status(200).json({
             status: 'success',
