@@ -8,11 +8,8 @@ const privateConversationSchema = new mongoose.Schema({
     },
     correspondent: {
         type: mongoose.Schema.ObjectId,
-        ref: 'User', 
+        ref: 'User',
         required: true
-    },
-    recentActivity: {
-        type: Date
     }
 });
 
@@ -21,7 +18,7 @@ privateConversationSchema.post('save', function (err, doc, next) {
     next();
 });
 
-privateConversationSchema.pre(/^find/,  function (next) {
+privateConversationSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'user',
         select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
