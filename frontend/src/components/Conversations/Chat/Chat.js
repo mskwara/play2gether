@@ -24,6 +24,7 @@ const Chat = (props) => {
         messageToSend: "",
         loading: true && !props.conv.foreign,
         firstSendingToForeign: false,
+        recentActivitySec: 0,
     });
 
     const [infiniteScrollState, setInfiniteScrollState] = useState({
@@ -52,7 +53,7 @@ const Chat = (props) => {
 
     const updateMessagesInState = (message) => {
         const hasMoreOrNot = infiniteScrollStateRef.current.hasMoreMessages;
-        console.log(hasMoreOrNot);
+        // console.log(hasMoreOrNot);
         setInfiniteScrollStateAndRef({
             hasMoreMessages: false,
             initialLoad: false,
@@ -86,11 +87,10 @@ const Chat = (props) => {
                     updateMessagesInState(message);
                 }
             });
-        } else {
-            //foreign
-            if (props.conv.instantInvite) {
-                sendMessage(props.conv.instantMessage);
-            }
+        }
+        if (props.conv.instantInvite) {
+            console.log("INSTANT");
+            sendMessage(props.conv.instantMessage);
         }
 
         return () => {
@@ -99,6 +99,25 @@ const Chat = (props) => {
                 hasMoreMessages: true,
             });
         };
+    }, []);
+
+    useEffect(() => {
+        const now = new Date();
+        let hisRecentActivity;
+        console.log(props.conv);
+        if (props.conv.user._id === activeUser._id) {
+            //correspondent to ten drugi
+            hisRecentActivity = new Date(
+                props.conv.correspondent.recentActivity
+            );
+        } else {
+            //user to ten drugi
+            hisRecentActivity = new Date(props.conv.user.recentActivity);
+        }
+        const timeInSeconds =
+            (now.getTime() - hisRecentActivity.getTime()) / 1000;
+        setChatStateAndRef({ recentActivitySec: timeInSeconds });
+        // console.log(props.conv);
     }, []);
 
     // useEffect(() => {
@@ -130,21 +149,37 @@ const Chat = (props) => {
             );
             if (res.data.status === "success") {
                 console.log(res.data.conv);
-                // userContext.updateGlobalUserState({ user: res.data.user });
+                const newPrivateConvs = [
+                    ...userContext.globalUserState.privateConversations,
+                    res.data.conv,
+                ];
+                userContext.updateGlobalUserState({
+                    privateConversations: newPrivateConvs,
+                });
                 const index = convContext.convState.openedConvs.indexOf(
                     props.conv
                 );
                 const openedConvs = [...convContext.convState.openedConvs];
                 openedConvs.splice(index, 1, res.data.conv);
+                // socketContext.socketState.socket.emit("send", {
+                //     message: computedMessage
+                //         ? computedMessage
+                //         : chatState.messageToSend,
+                //     jwt: userContext.globalUserState.jwt,
+                //     room: res.data.conv._id,
+                //     private: !props.group,
+                // });
+                await request(
+                    "post",
+                    `http://localhost:8000/conversations/private/${res.data.conv._id}`,
+                    {
+                        message: computedMessage
+                            ? computedMessage
+                            : chatState.messageToSend,
+                    },
+                    true
+                );
                 convContext.updateConvState({ openedConvs });
-                socketContext.socketState.socket.emit("send", {
-                    message: computedMessage
-                        ? computedMessage
-                        : chatState.messageToSend,
-                    jwt: userContext.globalUserState.jwt,
-                    room: res.data.conv._id,
-                    private: !props.group,
-                });
                 setChatStateAndRef({ firstSendingToForeign: false });
                 return;
             } else {
@@ -157,7 +192,9 @@ const Chat = (props) => {
             }
         }
         socketContext.socketState.socket.emit("send", {
-            message: chatState.messageToSend,
+            message: computedMessage
+                ? computedMessage
+                : chatState.messageToSend,
             jwt: userContext.globalUserState.jwt,
             room: props.conv._id,
             private: !props.group,
@@ -209,12 +246,14 @@ const Chat = (props) => {
             }
             const messagesReversed = res.data.data.reverse();
             console.log("messagesDownloadedReversed", messagesReversed);
-            messagesReversed.push(...chatState.messages);
+            messagesReversed.push(...chatStateRef.current.messages);
             // console.log(messagesReversed);
             setChatStateAndRef({
                 messages: messagesReversed,
                 loading: false,
             });
+        }
+        if (page === 1) {
             scrollToBottom();
         }
     };
@@ -249,7 +288,15 @@ const Chat = (props) => {
                             })
                         }
                     />
-                    <div className="active-dot" />
+                    <div
+                        className="active-dot"
+                        style={{
+                            backgroundColor:
+                                chatState.recentActivitySec < 300
+                                    ? "green"
+                                    : "yellow",
+                        }}
+                    />
                 </div>
                 <p>{friend.name}</p>
             </div>
@@ -269,7 +316,6 @@ const Chat = (props) => {
             </div>
         );
     }
-
     return (
         <div
             id="Chat"
@@ -349,13 +395,13 @@ const Chat = (props) => {
                 <img
                     src={require(`../../../assets/send.png`)}
                     alt="avatar"
-                    onClick={sendMessage}
+                    onClick={() => sendMessage()}
                 />
             </div>
             <KeyboardEventHandler
                 handleKeys={["enter"]}
                 handleFocusableElements={true}
-                onKeyEvent={sendMessage}
+                onKeyEvent={() => sendMessage()}
             />
         </div>
     );
