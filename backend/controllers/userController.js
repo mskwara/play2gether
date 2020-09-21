@@ -54,7 +54,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
             path: 'games',
             select: '-__v -screenshots'
         }).select(
-            '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
+            '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations -praisedPlayers'
         );
 
     if (!user) {
@@ -103,7 +103,7 @@ exports.deletePhoto = catchAsync(async (req, res, next) => {
         });
 
         const user = await User.findByIdAndUpdate(req.user._id, { photo: 'defaultUser.jpeg' }, {
-            select: '-passwordChangedAt -privateConversations -groupConversations',
+            select: '-passwordChangedAt -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers',
         });
         res.status(200).json({
             status: "success",
@@ -147,7 +147,7 @@ exports.addFriend = catchAsync(async (req, res, next) => {
             pendingFriendRequests: req.params.id
         }
     }, {
-        select: '-passwordChangedAt -privateConversations -groupConversations',
+        select: '-passwordChangedAt -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers',
         new: true
     });
 
@@ -169,7 +169,7 @@ exports.acceptFriend = catchAsync(async (req, res, next) => {
             friends: req.params.id
         }
     }, {
-        select: '-passwordChangedAt -privateConversations -groupConversations',
+        select: '-passwordChangedAt -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers',
         new: true
     });
 
@@ -195,7 +195,7 @@ exports.ignoreFriend = catchAsync(async (req, res, next) => {
             receivedFriendRequests: req.params.id
         }
     }, {
-        select: '-passwordChangedAt -privateConversations -groupConversations',
+        select: '-passwordChangedAt -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers',
         new: true
     });
 
@@ -217,13 +217,51 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
             friends: req.params.id
         }
     }, {
-        select: '-passwordChangedAt -privateConversations -groupConversations',
+        select: '-passwordChangedAt -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers',
         new: true
     });
 
     await User.findByIdAndUpdate(req.params.id, {
         $pull: {
             friends: req.user._id
+        }
+    });
+
+    res.status(200).json({
+        status: 'success',
+        data: user
+    });
+});
+
+exports.praiseUser = catchAsync(async (req, res, next) => {
+    if (req.user.praisedPlayers.includes(req.params.id))
+        return next(new AppError('You\'ve already praised this user'));
+
+    if (req.user._id.toString() === req.params.id)
+        return next(new AppError('You can\'t praise yourself'));
+
+    let friendly, skilledPlayer, goodTeacher;
+    friendly = req.body.friendly ? 1 : 0;
+    skilledPlayer = req.body.skilledPlayer ? 1 : 0;
+    goodTeacher = req.body.skilledPlayer ? 1 : 0;
+
+    const user = await User.findByIdAndUpdate(req.params.id, {
+        $inc: {
+            friendly,
+            skilledPlayer,
+            goodTeacher
+        }
+    }, {
+        select: "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations -praisedPlayers",
+        new: true,
+    }).populate({
+        path: 'games',
+        select: '-__v -screenshots'
+    });
+
+    await User.findByIdAndUpdate(req.user._id, {
+        $addToSet: {
+            praisedPlayers: req.params.id
         }
     });
 

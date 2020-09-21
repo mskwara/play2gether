@@ -29,6 +29,6 @@ router.route('/group')
 
 router.get('/group/:convId/messages', convController.getAllGroupMessages)
 
-router.patch('/group/:convId/leave', convController.leaveGroupConversation);
+router.patch('/group/:convId/kick/:uid', convController.kickFromGroupConversation);
 
 module.exports = router;

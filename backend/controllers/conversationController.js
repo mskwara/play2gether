@@ -33,7 +33,7 @@ exports.createGroupConversation = catchAsync(async (req, res, next) => {
         name: req.body.name
     })).populate({
         path: 'participants',
-        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
+        select: '-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -conversations -deletedFriends -email -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers'
     }).execPopulate();
     newConv.__v = undefined;
 
@@ -110,10 +110,10 @@ exports.createPrivateConv = catchAsync(async (req, res, next) => {
         recentActivity: Date.now(),
     })).populate({
         path: 'user',
-        select: '-__v -passwordChangedAt -friends -games -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
+        select: '-__v -passwordChangedAt -friends -games -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers'
     }).populate({
         path: 'correspondent',
-        select: '-__v -passwordChangedAt -friends -games -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
+        select: '-__v -passwordChangedAt -friends -games -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers'
     }).execPopulate();
     privateConv.__v = undefined;
 
@@ -132,12 +132,16 @@ exports.createPrivateConv = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.leaveGroupConversation = catchAsync(async (req, res, next) => {
+exports.kickFromGroupConversation = catchAsync(async (req, res, next) => {
+    if (!req.user.groupConversations.includes(req.params.convId)) {
+        return next(new AppError('You\'re not in this conversation', 403));
+    }
+
     const conv = await GroupConv.findByIdAndUpdate(
         req.params.convId,
         {
             $pull: {
-                participants: req.user._id,
+                participants: req.params.uid,
             },
         },
         {
@@ -148,18 +152,20 @@ exports.leaveGroupConversation = catchAsync(async (req, res, next) => {
     if (!conv)
         return next(new AppError('There is no conversation with that Id', 404));
 
-    if (conv.participants.length === 0)
+    if (conv.participants.length === 0) {
         await GroupConv.findByIdAndDelete(req.params.convId);
+        await GroupMessage.deleteMany({ conversation: req.params.convId });
+    }
 
-    await User.findByIdAndUpdate(req.user._id, {
+    await User.findByIdAndUpdate(req.params.uid, {
         $pull: {
             groupConversations: req.params.convId,
-        },
+        }
     });
 
     res.status(200).json({
         status: 'success',
-        data: null,
+        data: conv
     });
 });
 
