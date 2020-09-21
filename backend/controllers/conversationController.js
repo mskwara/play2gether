@@ -102,11 +102,18 @@ exports.createPrivateConv = catchAsync(async (req, res, next) => {
             user: req.user
         });
 
-    privateConv = await PrivateConv.create({
+    privateConv = await (await PrivateConv.create({
         user,
         correspondent,
         recentActivity: Date.now(),
-    });
+    })).populate({
+        path: 'user',
+        select: '-__v -passwordChangedAt -friends -games -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
+    }).populate({
+        path: 'correspondent',
+        select: '-__v -passwordChangedAt -friends -games -pendingFriendRequests -receivedFriendRequests -deletedFriends -privileges -email -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations'
+    }).execPopulate();
+    privateConv.__v = undefined;
 
     await User.updateMany({
         _id: { $in: [user, correspondent] }
