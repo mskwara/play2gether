@@ -37,54 +37,38 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: "defaultUser.jpeg",
         },
-        games: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: "Game",
-            },
-        ],
-        friends: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: "User",
-            },
-        ],
-        receivedFriendRequests: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: "User",
-            },
-        ],
-        pendingFriendRequests: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: "User",
-            },
-        ],
-        privateConversations: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: "PrivateConversation",
-            },
-        ],
-        groupConversations: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: "Conversation",
-            },
-        ],
-        updatedPrivateConversations: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: "Conversation",
-            },
-        ],
-        updatedGroupConversations: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: "Conversation",
-            },
-        ],
+        games: [{
+            type: mongoose.Schema.ObjectId,
+            ref: "Game",
+        }],
+        friends: [{
+            type: mongoose.Schema.ObjectId,
+            ref: "User",
+        }],
+        receivedFriendRequests: [{
+            type: mongoose.Schema.ObjectId,
+            ref: "User",
+        }],
+        pendingFriendRequests: [{
+            type: mongoose.Schema.ObjectId,
+            ref: "User",
+        }],
+        privateConversations: [{
+            type: mongoose.Schema.ObjectId,
+            ref: "PrivateConversation",
+        }],
+        groupConversations: [{
+            type: mongoose.Schema.ObjectId,
+            ref: "Conversation",
+        }],
+        updatedPrivateConversations: [{
+            type: mongoose.Schema.ObjectId,
+            ref: "Conversation",
+        }],
+        updatedGroupConversations: [{
+            type: mongoose.Schema.ObjectId,
+            ref: "Conversation",
+        }],
         privileges: {
             type: String,
             enum: ["admin", "user"],
@@ -96,7 +80,23 @@ const userSchema = new mongoose.Schema(
         },
         recentActivity: {
             type: Date
-        }
+        },
+        friendly: {
+            type: Number,
+            default: 0,
+        },
+        goodTeacher: {
+            type: Number,
+            default: 0,
+        },
+        skilledPlayer: {
+            type: Number,
+            default: 0,
+        },
+        praisedPlayers: [{
+            type: mongoose.Schema.ObjectId,
+            ref: 'User'
+        }]
     },
     {
         toJSON: { virtuals: true },
@@ -127,23 +127,25 @@ userSchema.post("save", function (err, doc, next) {
 userSchema.pre(/^find/, function (next) {
     this.populate({
         path: "friends",
-        select:
-            "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations",
-    })
-        .populate({
-            path: "receivedFriendRequests",
-            select:
-                "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations",
-        })
-        .populate({
-            path: "pendingFriendRequests",
-            select:
-                "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations",
-        })
-        .select("-__v");
+        select: "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers",
+    }).populate({
+        path: "receivedFriendRequests",
+        select: "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers",
+    }).populate({
+        path: "pendingFriendRequests",
+        select: "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -games -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations -friendly -goodTeacher -skilledPlayer -praisedPlayers",
+    }).select("-__v");
 
     next();
 });
+
+// // Update schema (comment out all middleware above)
+// userSchema.post('find', async function (docs) {
+//     for (const doc of docs) {
+//         console.log(doc);
+//         await doc.save({ validateBeforeSave: false });
+//     }
+// });
 
 userSchema.methods.correctPassword = async function (
     providedPassword,

@@ -22,7 +22,9 @@ router
         userController.update
     );
 
-router.route("/:id").get(userController.getUser);
+router.route("/:id")
+    .get(userController.getUser)
+    .post(userController.praiseUser);
 
 router.patch("/:id/addFriend", userController.addFriend);
 router.patch(
