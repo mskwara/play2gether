@@ -30,13 +30,16 @@ const Person = (props) => {
     };
 
     const openChat = (instantInvite = false) => {
+        console.log(instantInvite);
         const openedConvs = [...convContext.convState.openedConvs];
         if (
-            !userContext.globalUserState.user.friends.some(
-                (f) => f._id === props.user._id
+            !privateConversations.some(
+                (conv) =>
+                    conv.user._id === props.user._id ||
+                    conv.correspondent._id === props.user._id
             )
         ) {
-            // they are not friends
+            // there is no conversation yet
             // console.log("Not implemented!");
             const me = userContext.globalUserState.user;
             const foreignConv = {
@@ -73,7 +76,7 @@ const Person = (props) => {
 
             return foreignConv;
         } else {
-            // friends
+            // there is a conversation already
             const conv = privateConversations.filter(
                 (conv) =>
                     conv.user._id === props.user._id ||
@@ -83,6 +86,10 @@ const Person = (props) => {
                 //this conv has been opened already
                 return;
             } else {
+                if (instantInvite) {
+                    conv.instantInvite = true;
+                    conv.instantMessage = `Hi! Would you like to play ${props.gameTitle} with me?`;
+                }
                 openedConvs.push(conv);
                 if (openedConvs.length > 3) {
                     openedConvs.splice(0, 1);
@@ -95,8 +102,10 @@ const Person = (props) => {
 
     const inviteToGame = () => {
         if (
-            !userContext.globalUserState.user.friends.some(
-                (f) => f._id === props.user._id
+            !privateConversations.some(
+                (conv) =>
+                    conv.user._id === props.user._id ||
+                    conv.correspondent._id === props.user._id
             )
         ) {
             // not friends
@@ -104,13 +113,14 @@ const Person = (props) => {
             const conv = openChat(true);
             return;
         } else {
-            const conv = openChat();
-            socketContext.socketState.socket.emit("send", {
-                message: `Hi! Would you like to play ${props.gameTitle} with me?`,
-                jwt: userContext.globalUserState.jwt,
-                room: conv._id,
-                private: true,
-            });
+            console.log("JEST TAKA KONFA");
+            const conv = openChat(true);
+            // socketContext.socketState.socket.emit("send", {
+            //     message: `Hi! Would you like to play ${props.gameTitle} with me?`,
+            //     jwt: userContext.globalUserState.jwt,
+            //     room: conv._id,
+            //     private: true,
+            // });
         }
     };
 
@@ -177,7 +187,7 @@ const Person = (props) => {
                     src={require("../../assets/message.png")}
                     alt="button"
                     className="btn"
-                    onClick={openChat}
+                    onClick={() => openChat(false)}
                     style={{ filter: theme.pngInvert() }}
                 />
                 {addFriendButton}
