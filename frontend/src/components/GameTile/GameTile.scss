@@ -22,6 +22,10 @@
             p {
                 opacity: 1;
                 height: 4.5em;
+
+                &.title {
+                    height: 1.5em;
+                }
             }
         }
     }
@@ -52,6 +56,14 @@
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             height: inherit;
+            font-size: 9pt;
+
+            &.title {
+                font-size: 10pt;
+                font-family: SuiGeneris;
+                text-transform: uppercase;
+                margin: 0;
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ const GameTile = (props) => {
     const theme = useContext(ThemeContext);
     const history = useHistory();
 
-    let bgImage = require("../../assets/valorant.jpg");
+    let bgImage = require(`../../assets/games/${props.game.icon}.jpg`);
     const tileStyle = {
         backgroundImage: `url(${bgImage})`,
         ":hover": {
@@ -59,12 +59,13 @@ const GameTile = (props) => {
             onClick={tileClickHandler}
             className={props.className}
         >
-            <h1>{props.game.title}</h1>
+            {/* <h1>{props.game.title}</h1> */}
             <div
                 id="description"
                 className="description"
                 style={{ color: theme.colors.primaryText }}
             >
+                <p className="title">{props.game.title}</p>
                 <p>{props.game.description}</p>
             </div>
         </StyledDescription>
