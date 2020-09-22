@@ -287,3 +287,33 @@ exports.sendGroupMessage = catchAsync(async (req, res, next) => {
         data: message,
     });
 });
+
+exports.updateGroupConversation = catchAsync(async (req, res, next) => {
+    if (!req.user.groupConversations.includes(req.params.id))
+        return next(new AppError('You don\'t belong to that conversation', 403));
+
+    // Remove duplicates
+    let unique = req.body.newUsers;
+    unique = [...new Set(unique)];
+
+    // Filter out non existing users
+    unique = unique.filter(async (value) => {
+        const user = await User.findById(value);
+        if (!user) return false;
+        return true;
+    });
+
+    const newConv = await GroupConv.findByIdAndUpdate(req.params.id, {
+        $addToSet: {
+            participants: unique
+        },
+        name: req.body.name
+    }, {
+        new: true
+    });
+
+    res.status(201).json({
+        status: 'success',
+        data: newConv
+    })
+});
