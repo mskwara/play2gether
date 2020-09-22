@@ -127,7 +127,7 @@ const Game = (props) => {
                 }}
             >
                 <img
-                    src={require("../../assets/valorant_banner.jpg")}
+                    src={require(`../../assets/games/${state.game.icon}_banner.jpg`)}
                     alt="banner"
                     className="banner"
                 />

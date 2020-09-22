@@ -111,7 +111,7 @@ const Chat = (props) => {
         if (!props.group) {
             const now = new Date();
             let hisRecentActivity;
-            console.log(props.conv);
+
             if (props.conv.user._id === activeUser._id) {
                 //correspondent to ten drugi
                 hisRecentActivity = new Date(
@@ -131,6 +131,31 @@ const Chat = (props) => {
             }
             setChatStateAndRef({ recentActivityColor: color });
             // console.log(props.conv);
+        } else {
+            // console.log(props.conv);
+            const now = new Date();
+            let min = 60 * 100;
+            for (let i = 0; i < props.conv.participants.length; i++) {
+                if (props.conv.participants[i]._id !== activeUser._id) {
+                    const currentRecentActivity = new Date(
+                        props.conv.participants[i].recentActivity
+                    );
+                    const timeInSeconds =
+                        (now.getTime() - currentRecentActivity.getTime()) /
+                        1000;
+                    if (timeInSeconds < min) {
+                        min = timeInSeconds;
+                    }
+                }
+            }
+
+            let color = "red";
+            if (min <= 60 * 5) {
+                color = "green";
+            } else if (min <= 60 * 15) {
+                color = "yellow";
+            }
+            setChatStateAndRef({ recentActivityColor: color });
         }
     }, [props.conv]);
 
