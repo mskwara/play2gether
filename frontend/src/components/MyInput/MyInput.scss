@@ -5,6 +5,7 @@
     width: fit-content;
     padding: 15px 10px 10px 10px;
     position: relative;
+    width: 300px;
 
     &:focus-within > label {
         top: 0;
@@ -16,7 +17,7 @@
         border: none;
         border-bottom: 1px solid $border;
         // color: $label;
-        width: 300px;
+        width: 100%;
         font-size: 13pt;
         transition: 0.5s;
         // margin: 10px;

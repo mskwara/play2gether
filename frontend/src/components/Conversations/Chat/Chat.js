@@ -7,6 +7,7 @@ import PopupContext from "../../../utils/PopupContext";
 import ThemeContext from "../../../utils/ThemeContext";
 import request from "../../../utils/request";
 import Message from "./Message/Message";
+import ChatSettings from "./ChatSettings/ChatSettings";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import InfiniteScroll from "react-infinite-scroller";
 import Loader from "../../Loader/Loader";
@@ -24,7 +25,8 @@ const Chat = (props) => {
         messageToSend: "",
         loading: true && !props.conv.foreign,
         firstSendingToForeign: false,
-        recentActivitySec: 0,
+        recentActivityColor: "red",
+        settingsOpened: false,
     });
 
     const [infiniteScrollState, setInfiniteScrollState] = useState({
@@ -69,6 +71,10 @@ const Chat = (props) => {
         scrollToBottom();
     };
 
+    const closeSettings = () => {
+        setChatStateAndRef({ settingsOpened: false });
+    };
+
     const scrollToBottom = () => {
         const scrollable_content = document.getElementById("content");
         scrollable_content.scrollTop = scrollable_content.scrollHeight;
@@ -102,23 +108,31 @@ const Chat = (props) => {
     }, []);
 
     useEffect(() => {
-        const now = new Date();
-        let hisRecentActivity;
-        console.log(props.conv);
-        if (props.conv.user._id === activeUser._id) {
-            //correspondent to ten drugi
-            hisRecentActivity = new Date(
-                props.conv.correspondent.recentActivity
-            );
-        } else {
-            //user to ten drugi
-            hisRecentActivity = new Date(props.conv.user.recentActivity);
+        if (!props.group) {
+            const now = new Date();
+            let hisRecentActivity;
+            console.log(props.conv);
+            if (props.conv.user._id === activeUser._id) {
+                //correspondent to ten drugi
+                hisRecentActivity = new Date(
+                    props.conv.correspondent.recentActivity
+                );
+            } else {
+                //user to ten drugi
+                hisRecentActivity = new Date(props.conv.user.recentActivity);
+            }
+            const timeInSeconds =
+                (now.getTime() - hisRecentActivity.getTime()) / 1000;
+            let color = "red";
+            if (timeInSeconds <= 60 * 5) {
+                color = "green";
+            } else if (timeInSeconds <= 60 * 15) {
+                color = "yellow";
+            }
+            setChatStateAndRef({ recentActivityColor: color });
+            // console.log(props.conv);
         }
-        const timeInSeconds =
-            (now.getTime() - hisRecentActivity.getTime()) / 1000;
-        setChatStateAndRef({ recentActivitySec: timeInSeconds });
-        // console.log(props.conv);
-    }, []);
+    }, [props.conv]);
 
     // useEffect(() => {
     //     const scrollable_content = document.getElementById("content");
@@ -291,10 +305,7 @@ const Chat = (props) => {
                     <div
                         className="active-dot"
                         style={{
-                            backgroundColor:
-                                chatState.recentActivitySec < 300
-                                    ? "green"
-                                    : "yellow",
+                            backgroundColor: chatState.recentActivityColor,
                         }}
                     />
                 </div>
@@ -308,9 +319,17 @@ const Chat = (props) => {
                     <img
                         src={require(`../../../assets/group.png`)}
                         alt="avatar"
+                        onClick={() =>
+                            setChatStateAndRef({ settingsOpened: true })
+                        }
                         style={{ filter: theme.pngInvert() }}
                     />
-                    <div className="active-dot" />
+                    <div
+                        className="active-dot"
+                        style={{
+                            backgroundColor: chatState.recentActivityColor,
+                        }}
+                    />
                 </div>
                 <p>{props.conv.name || "Brak nazwy :("}</p>
             </div>
@@ -331,6 +350,14 @@ const Chat = (props) => {
                     color: theme.colors.primaryText,
                 }}
             >
+                {props.group && chatState.settingsOpened ? (
+                    <ChatSettings
+                        name={props.conv.name}
+                        participants={props.conv.participants}
+                        convId={props.conv._id}
+                        close={closeSettings}
+                    />
+                ) : null}
                 {userBar}
                 <img
                     src={require(`../../../assets/close.png`)}
