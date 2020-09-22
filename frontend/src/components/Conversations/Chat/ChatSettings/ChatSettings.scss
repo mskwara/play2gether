@@ -1,0 +1,139 @@
+@import "../../../../variables.scss";
+
+#ChatSettings {
+    width: 250px;
+    height: 300px;
+    position: absolute;
+    transform: translate(-50%, 0);
+    left: 50%;
+    top: -20px;
+    border-radius: 3px;
+    z-index: 1;
+    overflow-y: auto;
+
+    h1 {
+        font-family: SuiGeneris;
+        font-size: 10pt;
+        font-weight: 100;
+        text-transform: uppercase;
+        margin-top: 5px;
+    }
+
+    .close-btn {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+        opacity: 0.5;
+        transition: 0.5s;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    span {
+        display: flex;
+        align-items: center;
+        .input {
+            flex-grow: 9;
+        }
+        .set-btn {
+            width: 40px;
+            height: 25px;
+            font-size: 7pt;
+            font-weight: 100;
+        }
+    }
+
+    .person {
+        width: auto;
+        height: 30px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 10px;
+        transition: 0.5s;
+        cursor: pointer;
+        position: relative;
+
+        &.received {
+            background-color: rgba(0, 132, 255, 0.3);
+            cursor: default;
+
+            &:hover {
+                background-color: rgba(0, 132, 255, 0.5);
+            }
+        }
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+
+            & > .actions {
+                width: 40px;
+                opacity: 0.8;
+            }
+            & > .received-actions {
+                width: 70px;
+            }
+        }
+
+        .group-avatar {
+            background-color: white;
+            padding: 2px;
+        }
+
+        img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        p {
+            margin: 0;
+            color: white;
+        }
+
+        .actions {
+            width: 0;
+            height: 100%;
+            z-index: 3;
+            background: rgb(255, 255, 255);
+            opacity: 0;
+            position: absolute;
+            right: 0;
+            transition: 0.5s;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            padding: 0 10px;
+
+            .btn {
+                border-radius: 0;
+                width: 20px;
+                height: 20px;
+                margin: 0;
+
+                &.received-btn {
+                    width: 15px;
+                    height: 15px;
+                    cursor: pointer;
+                    transition: 0.5s;
+
+                    &:hover {
+                        width: 13px;
+                        height: 13px;
+                    }
+                }
+            }
+        }
+    }
+}
