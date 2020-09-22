@@ -21,7 +21,8 @@ router.get('/private/:convId/messages', convController.getAllPrivateMessages)
 
 router.route('/group/:id')
     .get(convController.getGroupConversation)
-    .post(convController.sendGroupMessage);
+    .post(convController.sendGroupMessage)
+    .patch(convController.updateGroupConversation);
 
 router.route('/group')
     .get(convController.getAllGroupConversations)

@@ -4,5 +4,9 @@ module.exports = user => {
     user.groupConversations = undefined;
     user.recentActivity = undefined;
     user.games = undefined;
+    user.friendly = undefined;
+    user.goodTeacher = undefined;
+    user.skilledPlayer = undefined;
+    user.praisedPlayers = undefined;
     return user;
 }
