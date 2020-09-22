@@ -40,7 +40,7 @@ const FriendList = (props) => {
                 true
             );
             userContext.updateGlobalUserState({
-                user: res.data.data,
+                user: res.data.user,
                 privateConversations: convRes.data.data,
             });
             popupContext.setAlertActive(

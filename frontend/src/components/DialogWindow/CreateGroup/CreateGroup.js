@@ -136,7 +136,11 @@ const CreateGroup = (props) => {
                 style={{ filter: theme.pngInvert() }}
             />
             <div className="content">
-                <div className="users-select">{friends}</div>
+                <div className="users-select">
+                    {friends.length > 0
+                        ? friends
+                        : "You must have friends in order to create a group."}
+                </div>
                 <MyInput
                     className="input-name"
                     type="text"
