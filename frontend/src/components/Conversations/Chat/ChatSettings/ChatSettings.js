@@ -53,11 +53,20 @@ const ChatSettings = (props) => {
         updateConvsInApp(res.data.data);
     };
 
+    const friendStyle = {
+        backgroundColor: theme.colors.comment,
+        color: theme.colors.primaryText,
+        ":hover": {
+            backgroundColor: theme.colors.commentHover,
+        },
+    };
+
     const participants = props.participants.map((participant) => (
         <div
             className="person"
             key={participant._id}
             onClick={() => kick(participant._id)}
+            style={friendStyle}
         >
             <img
                 src={require(`../../../../../../backend/static/users/${participant.photo}`)}
