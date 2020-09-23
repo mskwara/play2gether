@@ -35,6 +35,7 @@ const Topbar = (props) => {
                 jwt: "logout",
             });
             convContext.updateConvState({ openedConvs: [] });
+            clearInterval(userContext.intervals.meInterval);
             popupContext.setFriendsOpened(false);
             setState((state) => ({ ...state, settingsOpened: false }));
             popupContext.setAlertActive(true, "You have been logged out!");

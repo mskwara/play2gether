@@ -71,6 +71,8 @@ const Signup = (props) => {
                 password: "",
                 passwordConfirm: "",
             });
+
+            userContext.setMeInterval();
         } else {
             popupContext.setAlertActive(true, "Something went wrong...");
             setUserState({
