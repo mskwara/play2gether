@@ -126,6 +126,9 @@ const Profile = (props) => {
                     <img
                         src={require(`../../../../../backend/static/users/${state.user.photo}`)}
                         alt="avatar"
+                        style={{
+                            border: `1px solid ${theme.colors.primaryText}`,
+                        }}
                     />
                     <div className="description">
                         <p className="name">{state.user.name}</p>
