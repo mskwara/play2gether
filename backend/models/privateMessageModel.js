@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const PrivateConv = require('./privateConversationModel');
+const User = require('./userModel');
 
 const privateMessageSchema = new mongoose.Schema({
     conversation: {
@@ -24,6 +26,17 @@ privateMessageSchema.pre(/^find/, function (next) {
     this.select('-__v');
 
     next();
+});
+
+privateMessageSchema.post('save', async function (Message) {
+    conv = await PrivateConv.findByIdAndUpdate(Message.conversation, {
+        recentActivity: Message.sentAt
+    });
+    await User.updateMany({
+        _id: { $in: [conv.user, conv.correspondent] }
+    }, {
+        $addToSet: { updatedPrivateConversations: conv._id }
+    });
 });
 
 const PrivateMessage = mongoose.model('PrivateMessage', privateMessageSchema);

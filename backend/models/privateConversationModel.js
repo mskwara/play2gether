@@ -10,7 +10,8 @@ const privateConversationSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'User',
         required: true
-    }
+    },
+    recentActivity: Date
 });
 
 privateConversationSchema.post('save', function (err, doc, next) {

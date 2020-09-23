@@ -7,7 +7,8 @@ const groupConversationSchema = new mongoose.Schema({
     }],
     name: {
         type: String
-    }
+    },
+    recentActivity: Date
 });
 
 groupConversationSchema.post('save', function (err, doc, next) {
