@@ -32,6 +32,7 @@ const Topbar = (props) => {
                 user: null,
                 privateConversations: [],
                 groupConversations: [],
+                jwt: "logout",
             });
             convContext.updateConvState({ openedConvs: [] });
             popupContext.setFriendsOpened(false);

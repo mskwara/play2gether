@@ -56,6 +56,7 @@ const Login = (props) => {
                 user: res.data.data,
                 privateConversations: privateConvRes.data.data,
                 groupConversations: groupConvRes.data.data,
+                jwt: res.data.token,
             });
             popupContext.closeDialogWindow();
             popupContext.setAlertActive(
