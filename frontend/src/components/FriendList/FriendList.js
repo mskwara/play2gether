@@ -67,7 +67,7 @@ const FriendList = (props) => {
                 true
             );
             userContext.updateGlobalUserState({
-                user: res.data.user,
+                user: res.data.data,
                 privateConversations: convRes.data.data,
             });
             popupContext.setAlertActive(
@@ -124,27 +124,39 @@ const FriendList = (props) => {
 
             received = activeUser.receivedFriendRequests.map((pf) => {
                 return (
-                    <div className="person received">
-                        <img
-                            src={require(`../../../../backend/static/users/${pf.photo}`)}
-                            alt="avatar"
-                        />
-                        <p>{pf.name}</p>
-                        <div className="actions received-actions">
-                            <img
-                                src={require("../../assets/accept.png")}
-                                alt="button"
-                                className="btn received-btn"
-                                onClick={() => acceptFriend(pf)}
-                            />
-                            <img
-                                src={require("../../assets/close.png")}
-                                alt="button"
-                                className="btn received-btn"
-                                onClick={() => ignoreFriend(pf)}
-                            />
-                        </div>
-                    </div>
+                    <UserRow
+                        user={pf}
+                        // conv={conv}
+                        isConv={false}
+                        btnName="message"
+                        key={pf._id}
+                        style={{ color: "white" }}
+                        className="received"
+                        receivedReq={true}
+                        acceptFriend={acceptFriend}
+                        ignoreFriend={ignoreFriend}
+                    />
+                    // <div className="person received">
+                    //     <img
+                    //         src={require(`../../../../backend/static/users/${pf.photo}`)}
+                    //         alt="avatar"
+                    //     />
+                    //     <p>{pf.name}</p>
+                    //     <div className="actions received-actions">
+                    //         <img
+                    //             src={require("../../assets/accept.png")}
+                    //             alt="button"
+                    //             className="btn received-btn"
+                    //             onClick={() => acceptFriend(pf)}
+                    //         />
+                    //         <img
+                    //             src={require("../../assets/close.png")}
+                    //             alt="button"
+                    //             className="btn received-btn"
+                    //             onClick={() => ignoreFriend(pf)}
+                    //         />
+                    //     </div>
+                    // </div>
                 );
             });
 
