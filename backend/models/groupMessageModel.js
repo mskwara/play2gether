@@ -28,7 +28,7 @@ groupMessageSchema.pre(/^find/, function (next) {
     next();
 });
 
-groupMessageSchema.methods.updateUsersAndConv = async function (Message) {
+groupMessageSchema.methods.updateUsersAndConv = async function () {
     const conv = await GroupConv.findByIdAndUpdate(this.conversation, {
         recentActivity: this.sentAt
     });
