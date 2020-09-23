@@ -31,7 +31,9 @@ const UserRow = (props) => {
             onClick={() =>
                 props.conv
                     ? props.onClick(props.conv)
-                    : props.onClick(props.user._id)
+                    : !props.receivedReq
+                    ? props.onClick(props.user._id)
+                    : null
             }
         >
             <span>
@@ -62,14 +64,31 @@ const UserRow = (props) => {
                     ? props.user.name
                     : props.conv.name || "Brak nazwy :("}
             </p>
-            <div className="actions" style={props.actionsStyle}>
-                <img
-                    src={require(`../../assets/${props.btnName}.png`)}
-                    alt="button"
-                    className="btn"
-                    style={props.btnStyle}
-                />
-            </div>
+            {!props.receivedReq ? (
+                <div className="actions" style={props.actionsStyle}>
+                    <img
+                        src={require(`../../assets/${props.btnName}.png`)}
+                        alt="button"
+                        className="btn"
+                        style={props.btnStyle}
+                    />
+                </div>
+            ) : (
+                <div className="actions received-actions">
+                    <img
+                        src={require("../../assets/accept.png")}
+                        alt="button"
+                        className="btn received-btn"
+                        onClick={() => props.acceptFriend(props.user)}
+                    />
+                    <img
+                        src={require("../../assets/close.png")}
+                        alt="button"
+                        className="btn received-btn"
+                        onClick={() => props.ignoreFriend(props.user)}
+                    />
+                </div>
+            )}
         </div>
     );
 };
