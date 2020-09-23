@@ -17,12 +17,15 @@ const Person = (props) => {
     const privateConversations =
         userContext.globalUserState.privateConversations;
     const addFriend = async () => {
-        await request(
+        const res = await request(
             "patch",
             `http://localhost:8000/users/${props.user._id}/addFriend`,
             null,
             true
         );
+        userContext.updateGlobalUserState({
+            user: res.data.data,
+        });
         popupContext.setAlertActive(
             true,
             `${props.user.name} has been invited to be your friend!`
@@ -127,12 +130,15 @@ const Person = (props) => {
     let addFriendButton = null;
     if (
         !userContext.globalUserState.user.friends.some(
+            // nie jest moim friendem
             (f) => f._id === props.user._id
         ) &&
         !userContext.globalUserState.user.pendingFriendRequests.some(
+            // nie wysłałem mu zaproszenia
             (f) => f._id === props.user._id
         ) &&
         !userContext.globalUserState.user.receivedFriendRequests.some(
+            // nie otrzymałem zaproszenia
             (f) => f._id === props.user._id
         )
     ) {
