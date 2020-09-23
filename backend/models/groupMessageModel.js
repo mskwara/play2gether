@@ -28,16 +28,16 @@ groupMessageSchema.pre(/^find/, function (next) {
     next();
 });
 
-groupMessageSchema.post('save', async function (Message) {
-    const conv = await GroupConv.findByIdAndUpdate(Message.conversation, {
-        recentActivity: Message.sentAt
+groupMessageSchema.methods.updateUsersAndConv = async function (Message) {
+    const conv = await GroupConv.findByIdAndUpdate(this.conversation, {
+        recentActivity: this.sentAt
     });
     await User.updateMany({
         _id: { $in: conv.participants }
     }, {
         $addToSet: { updatedGroupConversations: conv._id }
     });
-});
+};
 
 const GroupMessage = mongoose.model('GroupMessage', groupMessageSchema);
 
