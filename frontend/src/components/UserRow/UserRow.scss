@@ -49,7 +49,7 @@
 
     .group-avatar {
         background-color: white;
-        padding: 2px;
+        padding: 1px;
     }
 
     span {
@@ -114,5 +114,16 @@
                 }
             }
         }
+    }
+
+    .notification-dot {
+        width: 7px;
+        height: 7px;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 25px;
+        right: 15px;
+        background-color: red;
+        border-radius: 50%;
     }
 }
