@@ -28,16 +28,16 @@ privateMessageSchema.pre(/^find/, function (next) {
     next();
 });
 
-privateMessageSchema.post('save', async function (Message) {
-    conv = await PrivateConv.findByIdAndUpdate(Message.conversation, {
-        recentActivity: Message.sentAt
+privateMessageSchema.methods.updateUsersAndConv = async function () {
+    conv = await PrivateConv.findByIdAndUpdate(this.conversation, {
+        recentActivity: this.sentAt
     });
     await User.updateMany({
         _id: { $in: [conv.user, conv.correspondent] }
     }, {
         $addToSet: { updatedPrivateConversations: conv._id }
     });
-});
+};
 
 const PrivateMessage = mongoose.model('PrivateMessage', privateMessageSchema);
 
