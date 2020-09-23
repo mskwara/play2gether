@@ -56,7 +56,7 @@ const Chat = (props) => {
 
     const updateMessagesInState = (message) => {
         const hasMoreOrNot = infiniteScrollStateRef.current.hasMoreMessages;
-        // console.log(hasMoreOrNot);
+        // //console.log(hasMoreOrNot);
         setInfiniteScrollStateAndRef({
             hasMoreMessages: false,
             initialLoad: false,
@@ -89,14 +89,14 @@ const Chat = (props) => {
                 jwt: userContext.globalUserState.jwt,
             });
             socketContext.socketState.socket.on("chat", (message) => {
-                console.log("on chat");
+                // //console.log("on chat");
                 if (message.conversation === props.conv._id) {
                     updateMessagesInState(message);
                 }
             });
         }
         if (props.conv.instantInvite) {
-            console.log("INSTANT");
+            // //console.log("INSTANT");
             sendMessage(props.conv.instantMessage);
         }
 
@@ -135,7 +135,7 @@ const Chat = (props) => {
     };
 
     const sendMessage = async (computedMessage = null) => {
-        console.log("===========================");
+        //console.log("===========================");
         if (props.conv.foreign) {
             setChatStateAndRef({ firstSendingToForeign: true });
             const res = await request(
@@ -145,7 +145,7 @@ const Chat = (props) => {
                 true
             );
             if (res.data.status === "success") {
-                console.log(res.data.conv);
+                //console.log(res.data.conv);
                 const newPrivateConvs = [
                     ...userContext.globalUserState.privateConversations,
                     res.data.conv,
@@ -188,6 +188,8 @@ const Chat = (props) => {
                 return;
             }
         }
+        console.log(userContext.globalUserState.user.name);
+
         socketContext.socketState.socket.emit("send", {
             message: computedMessage
                 ? computedMessage
@@ -196,7 +198,7 @@ const Chat = (props) => {
             room: props.conv._id,
             private: !props.group,
         });
-        // console.log(chatState.messages);
+        // //console.log(chatState.messages);
 
         // const messagesReversed = res.data.data.reverse();
         setInfiniteScrollStateAndRef({
@@ -205,7 +207,7 @@ const Chat = (props) => {
         setChatStateAndRef({
             messageToSend: "",
         });
-        // console.log(chatState.messages);
+        // //console.log(chatState.messages);
     };
 
     const handleTextAreaChange = (event) => {
@@ -223,7 +225,7 @@ const Chat = (props) => {
         if (props.conv.foreign) {
             return;
         }
-        console.log("page", page);
+        //console.log("page", page);
         const res = await request(
             "get",
             `http://localhost:8000/conversations/${
@@ -236,15 +238,15 @@ const Chat = (props) => {
         );
         if (res.data.status === "success") {
             if (res.data.results < 20) {
-                console.log("mniej niz 20");
+                //console.log("mniej niz 20");
                 setInfiniteScrollStateAndRef({
                     hasMoreMessages: false,
                 });
             }
             const messagesReversed = res.data.data.reverse();
-            console.log("messagesDownloadedReversed", messagesReversed);
+            //console.log("messagesDownloadedReversed", messagesReversed);
             messagesReversed.push(...chatStateRef.current.messages);
-            // console.log(messagesReversed);
+            // //console.log(messagesReversed);
             setChatStateAndRef({
                 messages: messagesReversed,
                 loading: false,
