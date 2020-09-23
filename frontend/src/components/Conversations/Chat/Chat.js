@@ -6,6 +6,7 @@ import SocketContext from "../../../utils/SocketContext";
 import PopupContext from "../../../utils/PopupContext";
 import ThemeContext from "../../../utils/ThemeContext";
 import request from "../../../utils/request";
+import { getActiveDotColor } from "../../../utils/methods";
 import Message from "./Message/Message";
 import ChatSettings from "./ChatSettings/ChatSettings";
 import KeyboardEventHandler from "react-keyboard-event-handler";
@@ -108,55 +109,12 @@ const Chat = (props) => {
     }, []);
 
     useEffect(() => {
-        if (!props.group) {
-            const now = new Date();
-            let hisRecentActivity;
-
-            if (props.conv.user._id === activeUser._id) {
-                //correspondent to ten drugi
-                hisRecentActivity = new Date(
-                    props.conv.correspondent.recentActivity
-                );
-            } else {
-                //user to ten drugi
-                hisRecentActivity = new Date(props.conv.user.recentActivity);
-            }
-            const timeInSeconds =
-                (now.getTime() - hisRecentActivity.getTime()) / 1000;
-            let color = "red";
-            if (timeInSeconds <= 60 * 5) {
-                color = "green";
-            } else if (timeInSeconds <= 60 * 15) {
-                color = "yellow";
-            }
-            setChatStateAndRef({ recentActivityColor: color });
-            // console.log(props.conv);
-        } else {
-            // console.log(props.conv);
-            const now = new Date();
-            let min = 60 * 100;
-            for (let i = 0; i < props.conv.participants.length; i++) {
-                if (props.conv.participants[i]._id !== activeUser._id) {
-                    const currentRecentActivity = new Date(
-                        props.conv.participants[i].recentActivity
-                    );
-                    const timeInSeconds =
-                        (now.getTime() - currentRecentActivity.getTime()) /
-                        1000;
-                    if (timeInSeconds < min) {
-                        min = timeInSeconds;
-                    }
-                }
-            }
-
-            let color = "red";
-            if (min <= 60 * 5) {
-                color = "green";
-            } else if (min <= 60 * 15) {
-                color = "yellow";
-            }
-            setChatStateAndRef({ recentActivityColor: color });
-        }
+        const color = getActiveDotColor(
+            props.group,
+            props.conv,
+            activeUser._id
+        );
+        setChatStateAndRef({ recentActivityColor: color });
     }, [props.conv]);
 
     // useEffect(() => {

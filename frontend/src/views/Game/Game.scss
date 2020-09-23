@@ -72,16 +72,29 @@
             }
         }
 
-        .players {
+        .waiting-room {
             flex: 1;
             display: flex;
+            flex-direction: column;
             justify-content: flex-start;
             flex-wrap: wrap;
             border-radius: 10px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
 
-            .person {
-                margin: 10px;
+            h1 {
+                font-family: SuiGeneris;
+                font-size: 14pt;
+                text-transform: uppercase;
+            }
+
+            .players {
+                display: flex;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+
+                .person {
+                    margin: 10px;
+                }
             }
         }
     }
