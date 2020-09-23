@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "./views/Home/Home";
 import Game from "./views/Game/Game";
@@ -103,6 +103,8 @@ const App = (props) => {
         openedConvs: [],
     });
 
+    const convStateRef = useRef(convState);
+
     const [socketState, setSocketState] = useState({
         socket: null,
     });
@@ -115,6 +117,10 @@ const App = (props) => {
     };
 
     const updateConvState = (updatedFields) => {
+        convStateRef.current = {
+            ...convStateRef.current,
+            ...updatedFields,
+        };
         setConvState((convState) => ({
             ...convState,
             ...updatedFields,
@@ -122,6 +128,42 @@ const App = (props) => {
     };
 
     const [timeoutState, setTimeoutState] = useState();
+    const [intervals, setIntervals] = useState({});
+
+    const setMeInterval = () => {
+        const meInterval = setInterval(async () => {
+            const res = await request(
+                "get",
+                "http://localhost:8000/users/me",
+                null,
+                true
+            );
+            if (res.data.status === "success") {
+                const newUser = { ...res.data.data };
+                newUser.updatedPrivateConversations = newUser.updatedPrivateConversations.filter(
+                    (updPriv) =>
+                        !convStateRef.current.openedConvs.some(
+                            (opConv) => opConv._id === updPriv
+                        )
+                );
+
+                newUser.updatedGroupConversations = newUser.updatedGroupConversations.filter(
+                    (updGroup) =>
+                        !convStateRef.current.openedConvs.some(
+                            (opConv) => opConv._id === updGroup
+                        )
+                );
+                updateGlobalUserState({
+                    user: newUser,
+                });
+            } else {
+                updateGlobalUserState({
+                    user: null,
+                });
+            }
+        }, 10000);
+        setIntervals({ ...intervals, meInterval: meInterval });
+    };
     useEffect(() => {
         const checkLogin = async () => {
             const res = await request(
@@ -149,6 +191,7 @@ const App = (props) => {
                     groupConversations: groupConvRes.data.data,
                     jwt: res.data.token,
                 });
+                setMeInterval();
             } else {
                 updateGlobalUserState({
                     user: null,
@@ -162,6 +205,10 @@ const App = (props) => {
         const socket = io.connect("http://localhost:8000");
         setSocketState((socketState) => ({ ...socketState, socket }));
         checkLogin();
+
+        // return () => {
+        //     clearInterval(intervals.meInterval);
+        // };
     }, []);
 
     window.onscroll = () => {
@@ -281,7 +328,13 @@ const App = (props) => {
                     }}
                 >
                     <UserContext.Provider
-                        value={{ globalUserState, updateGlobalUserState }}
+                        value={{
+                            globalUserState,
+                            updateGlobalUserState,
+                            intervals,
+                            setIntervals,
+                            setMeInterval,
+                        }}
                     >
                         <ConvContext.Provider
                             value={{ convState, updateConvState }}
