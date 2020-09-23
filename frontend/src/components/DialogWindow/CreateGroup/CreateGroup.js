@@ -10,6 +10,7 @@ import request from "../../../utils/request";
 import MyButton from "../../MyButton/MyButton";
 import Radium from "radium";
 import MyInput from "../../MyInput/MyInput";
+import UserRow from "../../UserRow/UserRow";
 
 const CreateGroup = (props) => {
     const userContext = useContext(UserContext);
@@ -86,35 +87,23 @@ const CreateGroup = (props) => {
     if (activeUser) {
         friends = activeUser.friends.map((friend) => {
             return (
-                <div
-                    className="person"
+                <UserRow
+                    user={friend}
+                    btnName="add"
+                    onClick={userClick}
+                    isConv={false}
                     key={friend._id}
                     id={friend._id}
-                    onClick={() => userClick(friend._id)}
                     style={friendStyle}
-                >
-                    <img
-                        src={require(`../../../../../backend/static/users/${friend.photo}`)}
-                        alt="avatar"
-                    />
-                    <p>{friend.name}</p>
-                    <div
-                        className="actions"
-                        style={{ background: theme.colors.primaryText }}
-                    >
-                        <img
-                            src={require("../../../assets/add.png")}
-                            alt="button"
-                            className="btn"
-                            style={{
-                                filter:
-                                    theme.selectedTheme === "dark"
-                                        ? "none"
-                                        : "invert(1) hue-rotate(180deg)",
-                            }}
-                        />
-                    </div>
-                </div>
+                    className="person"
+                    actionsStyle={{ background: theme.colors.primaryText }}
+                    btnStyle={{
+                        filter:
+                            theme.selectedTheme === "dark"
+                                ? "none"
+                                : "invert(1) hue-rotate(180deg)",
+                    }}
+                />
             );
         });
     }

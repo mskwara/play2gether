@@ -139,6 +139,14 @@ const Game = (props) => {
         );
         const reversedPlayers = [...state.players];
         reversedPlayers.reverse();
+        const myIndex = reversedPlayers.findIndex(
+            (el) => el._id === userContext.globalUserState.user._id
+        );
+        let me;
+        if (myIndex !== -1) {
+            me = reversedPlayers[myIndex];
+            reversedPlayers.splice(myIndex, 1);
+        }
         players = reversedPlayers.map((p) => {
             return (
                 <Person
@@ -149,6 +157,16 @@ const Game = (props) => {
                 />
             );
         });
+        if (myIndex !== -1) {
+            players.unshift(
+                <Person
+                    className="person"
+                    user={me}
+                    gameTitle={state.game.title}
+                    key={me._id}
+                />
+            );
+        }
     }
 
     return (
@@ -159,10 +177,13 @@ const Game = (props) => {
                     {state.loading ? <Loader /> : null}
                 </div>
                 <div
-                    className="players"
+                    className="waiting-room"
                     style={{ backgroundColor: theme.colors.description }}
                 >
-                    {players}
+                    <h1 style={{ color: theme.colors.primaryText }}>
+                        Waiting room
+                    </h1>
+                    <div className="players">{players}</div>
                 </div>
             </div>
         </div>

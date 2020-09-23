@@ -6,6 +6,7 @@ import UserContext from "../../../../utils/UserContext";
 import request from "../../../../utils/request";
 import MyInput from "../../../MyInput/MyInput";
 import MyButton from "../../../MyButton/MyButton";
+import UserRow from "../../../UserRow/UserRow";
 
 const ChatSettings = (props) => {
     const theme = useContext(ThemeContext);
@@ -99,25 +100,21 @@ const ChatSettings = (props) => {
     };
 
     const participants = props.participants.map((participant) => (
-        <div
-            className="person"
+        <UserRow
+            user={participant}
+            btnName="remove"
+            onClick={kick}
+            isConv={false}
             key={participant._id}
-            onClick={() => kick(participant._id)}
             style={friendStyle}
-        >
-            <img
-                src={require(`../../../../../../backend/static/users/${participant.photo}`)}
-                alt="avatar"
-            />
-            <p>{participant.name}</p>
-            <div className="actions">
-                <img
-                    src={require("../../../../assets/remove.png")}
-                    alt="button"
-                    className="btn"
-                />
-            </div>
-        </div>
+            actionsStyle={{ background: theme.colors.primaryText }}
+            btnStyle={{
+                filter:
+                    theme.selectedTheme === "dark"
+                        ? "none"
+                        : "invert(1) hue-rotate(180deg)",
+            }}
+        />
     ));
 
     const filteredFriends = activeUser.friends.filter(
@@ -130,25 +127,21 @@ const ChatSettings = (props) => {
             )
     );
     const friendsToAdd = filteredFriends.map((participant) => (
-        <div
-            className="person"
+        <UserRow
+            user={participant}
+            btnName="add"
+            onClick={add}
+            isConv={false}
             key={participant._id}
-            onClick={() => add(participant._id)}
             style={friendStyle}
-        >
-            <img
-                src={require(`../../../../../../backend/static/users/${participant.photo}`)}
-                alt="avatar"
-            />
-            <p>{participant.name}</p>
-            <div className="actions">
-                <img
-                    src={require("../../../../assets/add.png")}
-                    alt="button"
-                    className="btn"
-                />
-            </div>
-        </div>
+            actionsStyle={{ background: theme.colors.primaryText }}
+            btnStyle={{
+                filter:
+                    theme.selectedTheme === "dark"
+                        ? "none"
+                        : "invert(1) hue-rotate(180deg)",
+            }}
+        />
     ));
 
     return (
