@@ -98,7 +98,9 @@ function send(io) {
             messageOBJ.photo = user.photo;
             messageOBJ._id = message._id;
             messageOBJ.sentAt = message.sentAt;
+
             io.sockets.in(data.room + suffix).emit('chat', messageOBJ);
+            await message.updateUsersAndConv;
 
             if (process.env.NODE_ENV === 'development') {
                 console.log(`User ${user._id} succesfully sent message to chat room no. ${data.room}.`);
