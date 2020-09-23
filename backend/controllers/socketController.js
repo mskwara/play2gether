@@ -74,6 +74,7 @@ function send(io) {
         const user = await checkToken(data.jwt);
 
         let convs, suffix, Model;
+        timestamp = Date.now();
         if (data.private) {
             convs = user.privateConversations;
             suffix = 'p';
@@ -88,7 +89,7 @@ function send(io) {
             messageOBJ = {
                 conversation: data.room,
                 from: user._id,
-                sentAt: Date.now(),
+                sentAt: timestamp,
                 message: data.message
             };
 
@@ -99,28 +100,8 @@ function send(io) {
             messageOBJ.sentAt = message.sentAt;
             io.sockets.in(data.room + suffix).emit('chat', messageOBJ);
 
-            if (data.private) {
-                conv = await PrivateConversation.findById(data.room);
-                await User.updateMany({
-                    _id: { $in: [conv.user, conv.correspondent] }
-                }, {
-                    $addToSet: { updatedPrivateConversations: data.room }
-                });
-            } else {
-                const conv = await GroupConversation.findByIdAndUpdate(data.room, {
-                    lastMessage: data.message,
-                    recentActivity: message.sentAt
-                });
-                await User.updateMany({
-                    _id: { $in: conv.participants }
-                }, {
-                    $addToSet: { updatedPrivateConversations: data.room }
-                });
-            }
-
             if (process.env.NODE_ENV === 'development') {
                 console.log(`User ${user._id} succesfully sent message to chat room no. ${data.room}.`);
-                console.log(data);
             }
         } else if (process.env.NODE_ENV === 'development') {
             console.log('Error while sending message');

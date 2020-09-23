@@ -194,10 +194,10 @@ exports.getAllGroupConversations = catchAsync(async (req, res, next) => {
 });;;
 
 exports.getPrivateConversation = catchAsync(async (req, res, next) => {
-    if (!req.user.privateConversations.includes(req.params.convId))
+    if (!req.user.privateConversations.includes(req.params.id))
         return next(new AppError('You don\'t have access to this conversation', 403));
 
-    const conv = PrivateConv.findById(req.params.id);
+    const conv = await PrivateConv.findById(req.params.id);
 
     res.status(200).json({
         status: 'success',
@@ -206,10 +206,10 @@ exports.getPrivateConversation = catchAsync(async (req, res, next) => {
 });
 
 exports.getGroupConversation = catchAsync(async (req, res, next) => {
-    if (!req.user.privateConversations.includes(req.params.convId))
+    if (!req.user.groupConversations.includes(req.params.id))
         return next(new AppError('You don\'t have access to this conversation', 403));
 
-    const conv = GroupConv.findById(req.params.id);
+    const conv = await GroupConv.findById(req.params.id);
 
     res.status(200).json({
         status: 'success',
