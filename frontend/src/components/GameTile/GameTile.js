@@ -21,10 +21,11 @@ const GameTile = (props) => {
         },
     };
     if (props.size === "small") {
-        tileStyle.width = "200px";
-        tileStyle.minWidth = "200px";
-        tileStyle.height = "240px";
-        tileStyle.minHeight = "240px";
+        tileStyle.width = "100px";
+        tileStyle.minWidth = "100px";
+        tileStyle.height = "120px";
+        tileStyle.minHeight = "120px";
+        tileStyle.backgroundSize = "100px 120px";
     }
 
     const tileClickHandler = () => {
@@ -66,7 +67,9 @@ const GameTile = (props) => {
                 style={{ color: theme.colors.primaryText }}
             >
                 <p className="title">{props.game.title}</p>
-                <p>{props.game.description}</p>
+                {props.size !== "small" ? (
+                    <p>{props.game.description}</p>
+                ) : null}
             </div>
         </StyledDescription>
     );

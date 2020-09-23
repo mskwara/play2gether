@@ -5,6 +5,7 @@ import PopupContext from "../../utils/PopupContext";
 import ConvContext from "../../utils/ConvContext";
 import ThemeContext from "../../utils/ThemeContext";
 import MyButton from "../MyButton/MyButton";
+import UserRow from "../UserRow/UserRow";
 import request from "../../utils/request";
 
 const FriendList = (props) => {
@@ -110,24 +111,14 @@ const FriendList = (props) => {
                     friend = conv.user;
                 }
                 return (
-                    <div
-                        className="person"
+                    <UserRow
+                        user={friend}
+                        conv={conv}
+                        btnName="message"
+                        onClick={openChat}
                         key={conv._id}
-                        onClick={() => openChat(conv)}
-                    >
-                        <img
-                            src={require(`../../../../backend/static/users/${friend.photo}`)}
-                            alt="avatar"
-                        />
-                        <p>{friend.name}</p>
-                        <div className="actions">
-                            <img
-                                src={require("../../assets/message.png")}
-                                alt="button"
-                                className="btn"
-                            />
-                        </div>
-                    </div>
+                        style={{ color: "white" }}
+                    />
                 );
             });
 
@@ -185,25 +176,16 @@ const FriendList = (props) => {
             // loading group conversations
             groups = groupConversations.map((conv) => {
                 return (
-                    <div
-                        className="person"
+                    <UserRow
+                        conv={conv}
+                        btnName="message"
+                        onClick={openChat}
                         key={conv._id}
-                        onClick={() => openChat(conv)}
-                    >
-                        <img
-                            src={require(`../../assets/group.png`)}
-                            alt="avatar"
-                            className="group-avatar"
-                        />
-                        <p>{conv.name || "Brak nazwy :("}</p>
-                        <div className="actions">
-                            <img
-                                src={require("../../assets/message.png")}
-                                alt="button"
-                                className="btn"
-                            />
-                        </div>
-                    </div>
+                        group={true}
+                        style={{ color: "white" }}
+                        activeUserId={activeUser._id}
+                        activeDotBorderColor="black"
+                    />
                 );
             });
 
