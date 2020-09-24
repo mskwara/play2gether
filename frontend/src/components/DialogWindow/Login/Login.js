@@ -58,6 +58,7 @@ const Login = (props) => {
                 groupConversations: groupConvRes.data.data,
                 jwt: res.data.token,
             });
+
             popupContext.closeDialogWindow();
             popupContext.setAlertActive(
                 true,
@@ -67,6 +68,8 @@ const Login = (props) => {
                 email: "",
                 password: "",
             });
+
+            userContext.setMeInterval();
         } else {
             popupContext.setAlertActive(true, res.data.message);
             setUserState({

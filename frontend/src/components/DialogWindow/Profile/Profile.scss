@@ -46,9 +46,64 @@
             margin-top: 20px;
             margin-bottom: 20px;
 
-            img {
+            span {
+                position: relative;
                 width: 200px;
                 height: 200px;
+
+                img {
+                    width: 200px;
+                    height: 200px;
+                }
+                .praises {
+                    width: 100%;
+                    height: 30px;
+                    position: absolute;
+                    bottom: 0;
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
+
+                    span {
+                        display: flex;
+                        align-items: center;
+                        width: fit-content;
+                        height: 30px;
+                        cursor: pointer;
+                        position: relative;
+
+                        &:hover > .tooltip {
+                            opacity: 1;
+                        }
+
+                        img {
+                            width: 20px;
+                            height: 20px;
+                        }
+                        .value {
+                            margin-left: 5px;
+                            font-family: SuiGeneris;
+                            font-size: 9pt;
+                        }
+                        .tooltip {
+                            width: max-content;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            height: 20px;
+                            border-radius: 5px;
+                            background-color: rgba(0, 0, 0, 0.8);
+                            position: absolute;
+                            padding: 0 10px;
+                            transform: translate(-50%, 0);
+                            bottom: -25px;
+                            left: 50%;
+                            font-size: 8pt;
+                            opacity: 0;
+                            transition: 0.5s;
+                        }
+                    }
+                }
             }
             .description {
                 flex: 1;
