@@ -234,16 +234,41 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
 });
 
 exports.praiseUser = catchAsync(async (req, res, next) => {
-    if (req.user.praisedPlayers.includes(req.params.id))
-        return next(new AppError('You\'ve already praised this user'));
-
     if (req.user._id.toString() === req.params.id)
         return next(new AppError('You can\'t praise yourself'));
 
     let friendly, skilledPlayer, goodTeacher;
-    friendly = req.body.friendly ? 1 : 0;
-    skilledPlayer = req.body.skilledPlayer ? 1 : 0;
-    goodTeacher = req.body.skilledPlayer ? 1 : 0;
+    praise = req.user.praisedPlayers.find(el => req.params.id === el.user.toString());
+    if (!praise) {
+        friendly = req.body.friendly ? 1 : 0;
+        goodTeacher = req.body.goodTeacher ? 1 : 0;
+        skilledPlayer = req.body.skilledPlayer ? 1 : 0;
+        await User.findByIdAndUpdate(req.user._id, {
+            $push: {
+                praisedPlayers: {
+                    user: req.params.id,
+                    friendly,
+                    goodTeacher,
+                    skilledPlayer
+                }
+            }
+        });
+    } else {
+        friendly = req.body.friendly && !praise.friendly ? 1 : 0;
+        friendly = req.body.friendly !== undefined && !req.body.friendly && praise.friendly ? -1 : friendly;
+        skilledPlayer = req.body.skilledPlayer && !praise.goodTeacher ? 1 : 0;
+        skilledPlayer = req.body.skilledPlayer !== undefined && !req.body.skilledPlayer && praise.skilledPlayer ? -1 : skilledPlayer;
+        goodTeacher = req.body.goodTeacher && !praise.goodTeacher ? 1 : 0;
+        goodTeacher = !req.body.goodTeacher !== undefined && req.body.goodTeacher && praise.goodTeacher ? -1 : goodTeacher;
+
+        await User.updateOne({ _id: req.user._id, 'praisedPlayers.user': req.params.id }, {
+            $set: {
+                'praisedPlayers.$.friendly': req.body.friendly,
+                'praisedPlayers.$.goodTeacher': req.body.goodTeacher,
+                'praisedPlayers.$.skilledPlayer': req.body.skilledPlayer
+            }
+        });
+    }
 
     const user = await User.findByIdAndUpdate(req.params.id, {
         $inc: {
@@ -257,12 +282,6 @@ exports.praiseUser = catchAsync(async (req, res, next) => {
     }).populate({
         path: 'games',
         select: '-__v -screenshots'
-    });
-
-    await User.findByIdAndUpdate(req.user._id, {
-        $addToSet: {
-            praisedPlayers: req.params.id
-        }
     });
 
     res.status(200).json({
