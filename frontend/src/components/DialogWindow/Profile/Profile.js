@@ -87,7 +87,7 @@ const Profile = (props) => {
         const data = {};
         data[type] = true;
         const res = await request(
-            "post",
+            "patch",
             `http://localhost:8000/users/${popupContext.profileUserId}`,
             data,
             true
