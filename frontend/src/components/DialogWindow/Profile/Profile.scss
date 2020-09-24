@@ -61,16 +61,17 @@
                     position: absolute;
                     bottom: 0;
                     display: flex;
-                    justify-content: space-around;
                     align-items: center;
 
                     span {
                         display: flex;
+                        // justify-content: center;
                         align-items: center;
                         width: fit-content;
                         height: 30px;
                         cursor: pointer;
                         position: relative;
+                        flex: 1;
 
                         &:hover > .tooltip {
                             opacity: 1;
@@ -79,11 +80,13 @@
                         img {
                             width: 20px;
                             height: 20px;
+                            margin-left: 15px;
                         }
                         .value {
                             margin-left: 5px;
                             font-family: SuiGeneris;
                             font-size: 9pt;
+                            // flex: 1;
                         }
                         .tooltip {
                             width: max-content;
