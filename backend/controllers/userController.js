@@ -347,9 +347,12 @@ exports.praiseUser = catchAsync(async (req, res, next) => {
             skilledPlayer,
             goodTeacher
         }
+    }, {
+        select: "-__v -passwordChangedAt -friends -pendingFriendRequests -receivedFriendRequests -deletedFriends -conversations -privileges -updatedPrivateConversations -updatedGroupConversations -privateConversations -groupConversations -praisedPlayers",
+        new: true,
     }).populate({
-        path: "games",
-        select: "-__v -screenshots",
+        path: 'games',
+        select: '-__v -screenshots'
     });
 
     res.status(200).json({
