@@ -304,12 +304,12 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.praiseUser = catchAsync(async (req, res, next) => {
+exports.changeUserPraise = catchAsync(async (req, res, next) => {
     if (req.user._id.toString() === req.params.id)
         return next(new AppError("You can't praise yourself"));
 
     let friendly, skilledPlayer, goodTeacher;
-    praise = req.user.praisedPlayers.find(el => req.params.id === el.user.toString());
+    const praise = req.user.praisedPlayers.find(el => req.params.id === el.user.toString());
     if (!praise) {
         friendly = req.body.friendly ? 1 : 0;
         goodTeacher = req.body.goodTeacher ? 1 : 0;
@@ -318,25 +318,25 @@ exports.praiseUser = catchAsync(async (req, res, next) => {
             $push: {
                 praisedPlayers: {
                     user: req.params.id,
-                    friendly,
-                    goodTeacher,
-                    skilledPlayer
+                    friendly: req.body.friendly || false,
+                    goodTeacher: req.body.goodTeacher || false,
+                    skilledPlayer: req.body.skilledPlayer || false
                 }
             }
         });
     } else {
-        friendly = req.body.friendly && !praise.friendly ? 1 : 0;
-        friendly = req.body.friendly !== undefined && !req.body.friendly && praise.friendly ? -1 : friendly;
-        skilledPlayer = req.body.skilledPlayer && !praise.goodTeacher ? 1 : 0;
-        skilledPlayer = req.body.skilledPlayer !== undefined && !req.body.skilledPlayer && praise.skilledPlayer ? -1 : skilledPlayer;
-        goodTeacher = req.body.goodTeacher && !praise.goodTeacher ? 1 : 0;
-        goodTeacher = !req.body.goodTeacher !== undefined && req.body.goodTeacher && praise.goodTeacher ? -1 : goodTeacher;
+        friendly = req.body.friendly && !praise.friendly ? 1 : -1;
+        friendly = req.body.friendly === undefined ? 0 : friendly;
+        skilledPlayer = req.body.skilledPlayer && !praise.skilledPlayer ? 1 : -1;
+        skilledPlayer = req.body.skilledPlayer === undefined ? 0 : skilledPlayer;
+        goodTeacher = req.body.goodTeacher && !praise.goodTeacher ? 1 : -1;
+        goodTeacher = req.body.goodTeacher === undefined ? 0 : goodTeacher;
 
         await User.updateOne({ _id: req.user._id, 'praisedPlayers.user': req.params.id }, {
             $set: {
-                'praisedPlayers.$.friendly': req.body.friendly,
-                'praisedPlayers.$.goodTeacher': req.body.goodTeacher,
-                'praisedPlayers.$.skilledPlayer': req.body.skilledPlayer
+                'praisedPlayers.$.friendly': req.body.friendly ^ praise.friendly,
+                'praisedPlayers.$.goodTeacher': req.body.goodTeacher ^ praise.goodTeacher,
+                'praisedPlayers.$.skilledPlayer': req.body.skilledPlayer ^ praise.skilledPlayer
             }
         });
     }
