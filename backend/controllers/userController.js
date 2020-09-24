@@ -306,7 +306,7 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
 
 exports.changeUserPraise = catchAsync(async (req, res, next) => {
     if (req.user._id.toString() === req.params.id)
-        return next(new AppError("You can't praise yourself"));
+        return next(new AppError("You can't praise yourself", 400));
 
     let friendly, skilledPlayer, goodTeacher;
     const praise = req.user.praisedPlayers.find(el => req.params.id === el.user.toString());
@@ -326,11 +326,11 @@ exports.changeUserPraise = catchAsync(async (req, res, next) => {
         });
     } else {
         friendly = req.body.friendly && !praise.friendly ? 1 : -1;
-        friendly = req.body.friendly === undefined ? 0 : friendly;
+        friendly = !req.body.friendly ? 0 : friendly;
         skilledPlayer = req.body.skilledPlayer && !praise.skilledPlayer ? 1 : -1;
-        skilledPlayer = req.body.skilledPlayer === undefined ? 0 : skilledPlayer;
+        skilledPlayer = !req.body.skilledPlayer ? 0 : skilledPlayer;
         goodTeacher = req.body.goodTeacher && !praise.goodTeacher ? 1 : -1;
-        goodTeacher = req.body.goodTeacher === undefined ? 0 : goodTeacher;
+        goodTeacher = !req.body.goodTeacher ? 0 : goodTeacher;
 
         await User.updateOne({ _id: req.user._id, 'praisedPlayers.user': req.params.id }, {
             $set: {
