@@ -94,8 +94,14 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
         praisedPlayers: [{
-            type: mongoose.Schema.ObjectId,
-            ref: 'User'
+            user: {
+                type: mongoose.Schema.ObjectId,
+                ref: 'User'
+            },
+            friendly: Boolean,
+            goodTeacher: Boolean,
+            skilledPlayer: Boolean,
+            _id: false
         }]
     },
     {
@@ -143,6 +149,10 @@ userSchema.pre(/^find/, function (next) {
 // userSchema.post('find', async function (docs) {
 //     for (const doc of docs) {
 //         console.log(doc);
+//         doc.praisedPlayers = [];
+//         doc.friendly = 0;
+//         doc.goodTeacher = 0;
+//         doc.skilledPlayer = 0;
 //         await doc.save({ validateBeforeSave: false });
 //     }
 // });
