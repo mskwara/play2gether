@@ -81,6 +81,20 @@ const Chat = (props) => {
         scrollable_content.scrollTop = scrollable_content.scrollHeight;
     };
 
+    const requestMe = async () => {
+        const res = await request(
+            "get",
+            "http://localhost:8000/users/me",
+            null,
+            true
+        );
+        if (res.data.status === "success") {
+            userContext.updateGlobalUserState({
+                user: res.data.data,
+            });
+        }
+    };
+
     useEffect(() => {
         if (!props.conv.foreign) {
             socketContext.socketState.socket.emit("join", {
@@ -98,6 +112,26 @@ const Chat = (props) => {
         if (props.conv.instantInvite) {
             // //console.log("INSTANT");
             sendMessage(props.conv.instantMessage);
+        }
+
+        if (!props.group) {
+            const updatedPrivate = [...activeUser.updatedPrivateConversations];
+            const index = updatedPrivate.indexOf(props.conv._id);
+            if (index !== -1) {
+                updatedPrivate.splice(index, 1);
+                const newUser = { ...activeUser };
+                newUser.updatedPrivateConversations = updatedPrivate;
+                userContext.updateGlobalUserState({ user: newUser });
+            }
+        } else {
+            const updatedGroup = [...activeUser.updatedGroupConversations];
+            const index = updatedGroup.indexOf(props.conv._id);
+            if (index !== -1) {
+                updatedGroup.splice(index, 1);
+                const newUser = { ...activeUser };
+                newUser.updatedGroupConversations = updatedGroup;
+                userContext.updateGlobalUserState({ user: newUser });
+            }
         }
 
         return () => {
