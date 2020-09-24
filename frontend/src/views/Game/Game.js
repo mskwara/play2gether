@@ -26,8 +26,8 @@ const Game = (props) => {
         }));
     };
 
-    const getPlayersPlayingGame = async () => {
-        setLoading(true);
+    const getPlayersPlayingGame = async (withLoading) => {
+        if (withLoading) setLoading(true);
         const playersRes = await request(
             "get",
             `http://localhost:8000/games/${props.match.params.gameId}/players`,
@@ -38,7 +38,7 @@ const Game = (props) => {
         setState((state) => ({
             ...state,
             players: playersRes.data.data,
-            loading: false,
+            loading: withLoading ? false : state.loading,
         }));
     };
 
@@ -56,9 +56,17 @@ const Game = (props) => {
                 game: res.data.data,
             }));
 
-            getPlayersPlayingGame();
+            getPlayersPlayingGame(true);
         };
         getData();
+
+        const playersInterval = setInterval(async () => {
+            getPlayersPlayingGame(false);
+        }, 10000);
+
+        return () => {
+            clearInterval(playersInterval);
+        };
     }, [props.match.params.gameId]);
 
     const participate = async () => {
