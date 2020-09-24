@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./UserRow.scss";
 import { getActiveDotColor } from "../../utils/methods";
+import UserContext from "../../utils/UserContext";
 
 const UserRow = (props) => {
+    const userContext = useContext(UserContext);
+    const activeUser = userContext.globalUserState.user;
+
     const [dotColor, setDotColor] = useState("");
+    // const [notification, setNotification] = useState(false);
     useEffect(() => {
         if (props.isConv === false) {
             const color = getActiveDotColor(
@@ -22,6 +27,16 @@ const UserRow = (props) => {
             setDotColor(color);
         }
     }, []);
+
+    let notification;
+    if (
+        (!props.group &&
+            activeUser.updatedPrivateConversations.includes(props.conv._id)) ||
+        (props.group &&
+            activeUser.updatedGroupConversations.includes(props.conv._id))
+    ) {
+        notification = <div className="notification-dot" />;
+    }
 
     return (
         <div
@@ -56,6 +71,7 @@ const UserRow = (props) => {
                         borderColor: props.activeDotBorderColor
                             ? props.activeDotBorderColor
                             : "white",
+                        display: dotColor === "red" ? "none" : "initial",
                     }}
                 />
             </span>
@@ -89,6 +105,8 @@ const UserRow = (props) => {
                     />
                 </div>
             )}
+
+            {notification}
         </div>
     );
 };

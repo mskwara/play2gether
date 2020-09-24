@@ -3,7 +3,7 @@ import "./Person.scss";
 import request from "../../utils/request";
 import UserContext from "../../utils/UserContext";
 import ConvContext from "../../utils/ConvContext";
-import SocketContext from "../../utils/SocketContext";
+// import SocketContext from "../../utils/SocketContext";
 import PopupContext from "../../utils/PopupContext";
 import ThemeContext from "../../utils/ThemeContext";
 import styled from "styled-components";
@@ -11,7 +11,7 @@ import styled from "styled-components";
 const Person = (props) => {
     const userContext = useContext(UserContext);
     const convContext = useContext(ConvContext);
-    const socketContext = useContext(SocketContext);
+    // const socketContext = useContext(SocketContext);
     const popupContext = useContext(PopupContext);
     const theme = useContext(ThemeContext);
     const privateConversations =

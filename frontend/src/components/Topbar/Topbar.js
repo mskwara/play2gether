@@ -35,6 +35,7 @@ const Topbar = (props) => {
                 jwt: "logout",
             });
             convContext.updateConvState({ openedConvs: [] });
+            clearInterval(userContext.intervals.meInterval);
             popupContext.setFriendsOpened(false);
             setState((state) => ({ ...state, settingsOpened: false }));
             popupContext.setAlertActive(true, "You have been logged out!");
@@ -90,10 +91,18 @@ const Topbar = (props) => {
                 <div className="underline" />
             </div>,
             <div className="link" key="2">
+                {userContext.globalUserState.user.updatedPrivateConversations
+                    .length > 0 ? (
+                    <div className="notification-dot" />
+                ) : null}
                 <p onClick={() => switchFriendsGroups(false)}>Friends</p>
                 <div className="underline" />
             </div>,
             <div className="link" key="3">
+                {userContext.globalUserState.user.updatedGroupConversations
+                    .length > 0 ? (
+                    <div className="notification-dot" />
+                ) : null}
                 <p onClick={() => switchFriendsGroups(true)}>Groups</p>
                 <div className="underline" />
             </div>,

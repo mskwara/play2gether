@@ -65,6 +65,7 @@
             justify-content: center;
             align-items: center;
             margin: 0 30px;
+            position: relative;
 
             &:hover {
                 > .underline {
@@ -97,6 +98,16 @@
                 width: 0;
                 border-bottom: 1px solid white;
                 transition: 0.3s;
+            }
+
+            .notification-dot {
+                width: 7px;
+                height: 7px;
+                position: absolute;
+                top: 0;
+                left: -5px;
+                background-color: red;
+                border-radius: 50%;
             }
         }
     }

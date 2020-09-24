@@ -10,7 +10,6 @@ const Message = (props) => {
     let messageClass = "content";
     let timeClass = "time";
     if (props.message.from === props.activeUserId) {
-        console.log("czyja", props.message.message, props.message.from);
         // it is my message
         messageClass += " my-message";
         timeClass += " my-message";

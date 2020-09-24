@@ -83,6 +83,23 @@ const Profile = (props) => {
         setLoading(false);
     };
 
+    const praise = async (type) => {
+        const data = {};
+        data[type] = true;
+        const res = await request(
+            "post",
+            `http://localhost:8000/users/${popupContext.profileUserId}`,
+            data,
+            true
+        );
+        if (res.data.status === "success") {
+            setState((state) => ({
+                ...state,
+                user: res.data.data,
+            }));
+        }
+    };
+
     let content = null;
     let comments = null;
     let playerGames = null;
@@ -103,8 +120,6 @@ const Profile = (props) => {
             <Comment comment={com} key={com._id} />
         ));
 
-        console.log(state.user.aboutMe);
-
         content = (
             <div
                 className="content"
@@ -123,10 +138,91 @@ const Profile = (props) => {
                     style={{ filter: theme.pngInvert() }}
                 />
                 <div className="information">
-                    <img
-                        src={require(`../../../../../backend/static/users/${state.user.photo}`)}
-                        alt="avatar"
-                    />
+                    <span
+                        style={{
+                            border: `1px solid ${theme.colors.primaryText}`,
+                        }}
+                    >
+                        <img
+                            src={require(`../../../../../backend/static/users/${state.user.photo}`)}
+                            alt="avatar"
+                        />
+                        <div
+                            className="praises"
+                            style={{
+                                backgroundColor: `${
+                                    theme.selectedTheme === "light"
+                                        ? "rgb(255,255,255,0.9)"
+                                        : "rgb(0,0,0,0.9)"
+                                }`,
+                            }}
+                        >
+                            <span onClick={() => praise("friendly")}>
+                                <img
+                                    src={require("../../../assets/friendly.png")}
+                                    alt="avatar"
+                                    style={{ filter: theme.pngInvert() }}
+                                />
+                                <p className="value">{state.user.friendly}</p>
+                                <div
+                                    className="tooltip"
+                                    style={{
+                                        backgroundColor: `${
+                                            theme.selectedTheme === "light"
+                                                ? "rgb(255,255,255,0.9)"
+                                                : "rgb(0,0,0,0.9)"
+                                        }`,
+                                    }}
+                                >
+                                    Friendly
+                                </div>
+                            </span>
+                            <span onClick={() => praise("goodTeacher")}>
+                                <img
+                                    src={require("../../../assets/good_teacher.png")}
+                                    alt="avatar"
+                                    style={{ filter: theme.pngInvert() }}
+                                />
+                                <p className="value">
+                                    {state.user.goodTeacher}
+                                </p>
+                                <div
+                                    className="tooltip"
+                                    style={{
+                                        backgroundColor: `${
+                                            theme.selectedTheme === "light"
+                                                ? "rgb(255,255,255,0.9)"
+                                                : "rgb(0,0,0,0.9)"
+                                        }`,
+                                    }}
+                                >
+                                    Good teacher
+                                </div>
+                            </span>
+                            <span onClick={() => praise("skilledPlayer")}>
+                                <img
+                                    src={require("../../../assets/skilled_player.png")}
+                                    alt="avatar"
+                                    style={{ filter: theme.pngInvert() }}
+                                />
+                                <p className="value">
+                                    {state.user.skilledPlayer}
+                                </p>
+                                <div
+                                    className="tooltip"
+                                    style={{
+                                        backgroundColor: `${
+                                            theme.selectedTheme === "light"
+                                                ? "rgb(255,255,255,0.9)"
+                                                : "rgb(0,0,0,0.9)"
+                                        }`,
+                                    }}
+                                >
+                                    Skilled player
+                                </div>
+                            </span>
+                        </div>
+                    </span>
                     <div className="description">
                         <p className="name">{state.user.name}</p>
                         <p>
