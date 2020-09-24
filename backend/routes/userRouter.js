@@ -24,7 +24,7 @@ router
 
 router.route("/:id")
     .get(userController.getUser)
-    .post(userController.praiseUser);
+    .patch(userController.changeUserPraise);
 
 router.patch("/:id/addFriend", userController.addFriend);
 router.patch(
