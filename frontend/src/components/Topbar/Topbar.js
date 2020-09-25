@@ -22,7 +22,7 @@ const Topbar = (props) => {
     const logout = async () => {
         const res = await request(
             "post",
-            "http://localhost:8000/users/logout",
+            `${process.env.REACT_APP_HOST}users/logout`,
             null,
             true
         );

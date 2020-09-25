@@ -84,7 +84,7 @@ const Chat = (props) => {
     const requestMe = async () => {
         const res = await request(
             "get",
-            "http://localhost:8000/users/me",
+            `${process.env.REACT_APP_HOST}users/me`,
             null,
             true
         );
@@ -174,7 +174,7 @@ const Chat = (props) => {
             setChatStateAndRef({ firstSendingToForeign: true });
             const res = await request(
                 "post",
-                `http://localhost:8000/conversations/private/user/${props.conv.correspondent._id}`,
+                `${process.env.REACT_APP_HOST}conversations/private/user/${props.conv.correspondent._id}`,
                 null,
                 true
             );
@@ -202,7 +202,7 @@ const Chat = (props) => {
                 // });
                 await request(
                     "post",
-                    `http://localhost:8000/conversations/private/${res.data.conv._id}`,
+                    `${process.env.REACT_APP_HOST}conversations/private/${res.data.conv._id}`,
                     {
                         message: computedMessage
                             ? computedMessage
@@ -262,7 +262,7 @@ const Chat = (props) => {
         //console.log("page", page);
         const res = await request(
             "get",
-            `http://localhost:8000/conversations/${
+            `${process.env.REACT_APP_HOST}conversations/${
                 props.group ? "group" : "private"
             }/${props.conv._id}/messages?page=${page}&skip=${
                 infiniteScrollState.skip
