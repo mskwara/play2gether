@@ -49,7 +49,7 @@ const EditMyProfile = (props) => {
         formData.append("photo", fileUploaded);
         const res = await request(
             "patch",
-            "http://localhost:8000/users/me",
+            `${process.env.REACT_APP_HOST}users/me`,
             formData,
             true
         );
@@ -71,7 +71,7 @@ const EditMyProfile = (props) => {
 
         const res = await request(
             "patch",
-            "http://localhost:8000/users/me",
+            `${process.env.REACT_APP_HOST}users/me`,
             body,
             true
         );

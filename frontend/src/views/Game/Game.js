@@ -30,7 +30,7 @@ const Game = (props) => {
         if (withLoading) setLoading(true);
         const playersRes = await request(
             "get",
-            `http://localhost:8000/games/${props.match.params.gameId}/players`,
+            `${process.env.REACT_APP_HOST}games/${props.match.params.gameId}/players`,
             null,
             true
         );
@@ -46,7 +46,7 @@ const Game = (props) => {
         const getData = async () => {
             const res = await request(
                 "get",
-                `http://localhost:8000/games/${props.match.params.gameId}`,
+                `${process.env.REACT_APP_HOST}games/${props.match.params.gameId}`,
                 null,
                 true
             );
@@ -73,7 +73,7 @@ const Game = (props) => {
         setLoading(true);
         const res = await request(
             "patch",
-            `http://localhost:8000/games/${props.match.params.gameId}/registerAsPlayer`,
+            `${process.env.REACT_APP_HOST}games/${props.match.params.gameId}/registerAsPlayer`,
             null,
             true
         );
@@ -91,7 +91,7 @@ const Game = (props) => {
         setLoading(true);
         const res = await request(
             "patch",
-            `http://localhost:8000/games/${props.match.params.gameId}/optOut`,
+            `${process.env.REACT_APP_HOST}games/${props.match.params.gameId}/optOut`,
             null,
             true
         );

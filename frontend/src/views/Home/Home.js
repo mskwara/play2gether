@@ -13,7 +13,7 @@ const Home = (props) => {
         const getData = async () => {
             const res = await request(
                 "get",
-                "http://localhost:8000/games",
+                `${process.env.REACT_APP_HOST}games`,
                 null,
                 false
             );

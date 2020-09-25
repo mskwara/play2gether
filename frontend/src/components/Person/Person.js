@@ -19,7 +19,7 @@ const Person = (props) => {
     const addFriend = async () => {
         const res = await request(
             "patch",
-            `http://localhost:8000/users/${props.user._id}/addFriend`,
+            `${process.env.REACT_APP_HOST}users/${props.user._id}/addFriend`,
             null,
             true
         );

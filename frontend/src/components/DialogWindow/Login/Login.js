@@ -34,7 +34,7 @@ const Login = (props) => {
         setLoading(true);
         const res = await request(
             "post",
-            "http://localhost:8000/users/login",
+            `${process.env.REACT_APP_HOST}users/login`,
             userState,
             true
         );
@@ -42,13 +42,13 @@ const Login = (props) => {
         if (res.data.status === "success") {
             const privateConvRes = await request(
                 "get",
-                "http://localhost:8000/conversations/private",
+                `${process.env.REACT_APP_HOST}conversations/private`,
                 null,
                 true
             );
             const groupConvRes = await request(
                 "get",
-                "http://localhost:8000/conversations/group",
+                `${process.env.REACT_APP_HOST}conversations/group`,
                 null,
                 true
             );
