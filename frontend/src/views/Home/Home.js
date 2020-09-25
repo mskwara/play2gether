@@ -13,7 +13,7 @@ const Home = (props) => {
         const getData = async () => {
             const res = await request(
                 "get",
-                `${process.env.REACT_APP_HOST}games`,
+                `${process.env.REACT_APP_HOST}api/games`,
                 null,
                 false
             );

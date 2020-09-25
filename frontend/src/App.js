@@ -135,7 +135,7 @@ const App = (props) => {
         const meInterval = setInterval(async () => {
             const res = await request(
                 "get",
-                `${process.env.REACT_APP_HOST}users/me`,
+                `${process.env.REACT_APP_HOST}api/users/me`,
                 null,
                 true
             );
@@ -169,20 +169,20 @@ const App = (props) => {
         const checkLogin = async () => {
             const res = await request(
                 "get",
-                `${process.env.REACT_APP_HOST}users/me`,
+                `${process.env.REACT_APP_HOST}api/users/me`,
                 null,
                 true
             );
             if (res.data.status === "success") {
                 const privateConvRes = await request(
                     "get",
-                    `${process.env.REACT_APP_HOST}conversations/private`,
+                    `${process.env.REACT_APP_HOST}api/conversations/private`,
                     null,
                     true
                 );
                 const groupConvRes = await request(
                     "get",
-                    `${process.env.REACT_APP_HOST}conversations/group`,
+                    `${process.env.REACT_APP_HOST}api/conversations/group`,
                     null,
                     true
                 );
@@ -203,7 +203,7 @@ const App = (props) => {
             setLoadingState({ loading: false });
         };
 
-        const socket = io.connect(`${process.env.REACT_APP_HOST}`);
+        const socket = io.connect(`${process.env.REACT_APP_HOST}api/`);
         setSocketState((socketState) => ({ ...socketState, socket }));
         checkLogin();
 
