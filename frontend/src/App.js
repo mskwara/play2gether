@@ -203,7 +203,7 @@ const App = (props) => {
             setLoadingState({ loading: false });
         };
 
-        const socket = io.connect(`${process.env.REACT_APP_HOST}api/`);
+        const socket = io.connect(`${process.env.REACT_APP_HOST}`);
         setSocketState((socketState) => ({ ...socketState, socket }));
         checkLogin();
 
