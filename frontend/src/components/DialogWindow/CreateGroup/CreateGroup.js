@@ -49,7 +49,7 @@ const CreateGroup = (props) => {
 
         const res = await request(
             "post",
-            `${process.env.REACT_APP_HOST}conversations/group`,
+            `${process.env.REACT_APP_HOST}api/conversations/group`,
             { users: usersState.users, name: chatName },
             true
         );

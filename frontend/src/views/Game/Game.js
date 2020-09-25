@@ -30,7 +30,7 @@ const Game = (props) => {
         if (withLoading) setLoading(true);
         const playersRes = await request(
             "get",
-            `${process.env.REACT_APP_HOST}games/${props.match.params.gameId}/players`,
+            `${process.env.REACT_APP_HOST}api/games/${props.match.params.gameId}/players`,
             null,
             true
         );
@@ -46,7 +46,7 @@ const Game = (props) => {
         const getData = async () => {
             const res = await request(
                 "get",
-                `${process.env.REACT_APP_HOST}games/${props.match.params.gameId}`,
+                `${process.env.REACT_APP_HOST}api/games/${props.match.params.gameId}`,
                 null,
                 true
             );
@@ -73,14 +73,14 @@ const Game = (props) => {
         setLoading(true);
         const res = await request(
             "patch",
-            `${process.env.REACT_APP_HOST}games/${props.match.params.gameId}/registerAsPlayer`,
+            `${process.env.REACT_APP_HOST}api/games/${props.match.params.gameId}/registerAsPlayer`,
             null,
             true
         );
 
         userContext.updateGlobalUserState({ user: res.data.data });
 
-        getPlayersPlayingGame();
+        getPlayersPlayingGame(true);
         popupContext.setAlertActive(
             true,
             "You have been added to the player's list!"
@@ -91,14 +91,14 @@ const Game = (props) => {
         setLoading(true);
         const res = await request(
             "patch",
-            `${process.env.REACT_APP_HOST}games/${props.match.params.gameId}/optOut`,
+            `${process.env.REACT_APP_HOST}api/games/${props.match.params.gameId}/optOut`,
             null,
             true
         );
 
         userContext.updateGlobalUserState({ user: res.data.data });
 
-        getPlayersPlayingGame();
+        getPlayersPlayingGame(true);
         popupContext.setAlertActive(
             true,
             "You have been removed from the player's list!"
