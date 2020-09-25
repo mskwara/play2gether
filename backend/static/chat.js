@@ -1,4 +1,4 @@
-var socket = io.connect('/');
+var socket = io.connect('https://play2gether-project.herokuapp.com/');
 // Query DOM
 const jwtOBJ = document.getElementById('jwt'),
     conversation = document.getElementById('conversation'),
