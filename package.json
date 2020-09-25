@@ -4,7 +4,7 @@
   "description": "play2gether",
   "main": "app.js",
   "scripts": {
-    "start": "cd backend && node server.js",
+    "start": "cd backend && node server.js & cd ../frontend && npm start",
     "build": "cd frontend && npm build"
   },
   "author": "",
