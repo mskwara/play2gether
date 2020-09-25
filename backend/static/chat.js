@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:8000');
+var socket = io.connect('/');
 // Query DOM
 const jwtOBJ = document.getElementById('jwt'),
     conversation = document.getElementById('conversation'),
