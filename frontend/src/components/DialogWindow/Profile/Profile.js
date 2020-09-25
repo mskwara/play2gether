@@ -31,13 +31,13 @@ const Profile = (props) => {
             }));
             const res = await request(
                 "get",
-                `http://localhost:8000/users/${popupContext.profileUserId}`,
+                `${process.env.REACT_APP_HOST}users/${popupContext.profileUserId}`,
                 null,
                 true
             );
             const comRes = await request(
                 "get",
-                `http://localhost:8000/comments/${popupContext.profileUserId}`, //TODO
+                `${process.env.REACT_APP_HOST}comments/${popupContext.profileUserId}`, //TODO
                 null,
                 true
             );
@@ -71,7 +71,7 @@ const Profile = (props) => {
         const com = state.newComment;
         const res = await request(
             "post",
-            `http://localhost:8000/comments/${popupContext.profileUserId}`,
+            `${process.env.REACT_APP_HOST}comments/${popupContext.profileUserId}`,
             { comment: com },
             true
         );
@@ -88,7 +88,7 @@ const Profile = (props) => {
         data[type] = true;
         const res = await request(
             "patch",
-            `http://localhost:8000/users/${popupContext.profileUserId}`,
+            `${process.env.REACT_APP_HOST}users/${popupContext.profileUserId}`,
             data,
             true
         );

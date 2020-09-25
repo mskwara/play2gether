@@ -20,6 +20,7 @@ import io from "socket.io-client";
 import Radium from "radium";
 
 const App = (props) => {
+    console.log(process.env);
     const themes = {
         light: {
             primary: "rgb(66, 44, 92)",
@@ -134,7 +135,7 @@ const App = (props) => {
         const meInterval = setInterval(async () => {
             const res = await request(
                 "get",
-                "http://localhost:8000/users/me",
+                `${process.env.REACT_APP_HOST}users/me`,
                 null,
                 true
             );
@@ -168,20 +169,20 @@ const App = (props) => {
         const checkLogin = async () => {
             const res = await request(
                 "get",
-                "http://localhost:8000/users/me",
+                `${process.env.REACT_APP_HOST}users/me`,
                 null,
                 true
             );
             if (res.data.status === "success") {
                 const privateConvRes = await request(
                     "get",
-                    "http://localhost:8000/conversations/private",
+                    `${process.env.REACT_APP_HOST}conversations/private`,
                     null,
                     true
                 );
                 const groupConvRes = await request(
                     "get",
-                    "http://localhost:8000/conversations/group",
+                    `${process.env.REACT_APP_HOST}conversations/group`,
                     null,
                     true
                 );
@@ -202,7 +203,7 @@ const App = (props) => {
             setLoadingState({ loading: false });
         };
 
-        const socket = io.connect("http://localhost:8000");
+        const socket = io.connect(`${process.env.REACT_APP_HOST}`);
         setSocketState((socketState) => ({ ...socketState, socket }));
         checkLogin();
 

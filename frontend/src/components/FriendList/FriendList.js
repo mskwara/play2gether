@@ -28,7 +28,7 @@ const FriendList = (props) => {
     const acceptFriend = async (received_friend) => {
         const res = await request(
             "patch",
-            `http://localhost:8000/users/${received_friend._id}/acceptFriend`,
+            `${process.env.REACT_APP_HOST}users/${received_friend._id}/acceptFriend`,
             null,
             true
         );
@@ -36,7 +36,7 @@ const FriendList = (props) => {
         if (res.data.status === "success") {
             const convRes = await request(
                 "get",
-                "http://localhost:8000/conversations/private",
+                `${process.env.REACT_APP_HOST}conversations/private`,
                 null,
                 true
             );
@@ -54,7 +54,7 @@ const FriendList = (props) => {
     const ignoreFriend = async (received_friend) => {
         const res = await request(
             "patch",
-            `http://localhost:8000/users/${received_friend._id}/ignoreFriend`,
+            `${process.env.REACT_APP_HOST}users/${received_friend._id}/ignoreFriend`,
             null,
             true
         );
@@ -62,7 +62,7 @@ const FriendList = (props) => {
         if (res.data.status === "success") {
             const convRes = await request(
                 "get",
-                "http://localhost:8000/conversations/private",
+                `${process.env.REACT_APP_HOST}conversations/private`,
                 null,
                 true
             );

@@ -59,7 +59,7 @@ const ChatSettings = (props) => {
     const setName = async () => {
         const res = await request(
             "patch",
-            `http://localhost:8000/conversations/group/${props.convId}`,
+            `${process.env.REACT_APP_HOST}conversations/group/${props.convId}`,
             { name: state.name },
             true
         );
@@ -69,7 +69,7 @@ const ChatSettings = (props) => {
     const kick = async (userId) => {
         const res = await request(
             "patch",
-            `http://localhost:8000/conversations/group/${props.convId}/kick/${userId}`,
+            `${process.env.REACT_APP_HOST}conversations/group/${props.convId}/kick/${userId}`,
             null,
             true
         );
@@ -84,7 +84,7 @@ const ChatSettings = (props) => {
         console.log("add");
         const res = await request(
             "patch",
-            `http://localhost:8000/conversations/group/${props.convId}`,
+            `${process.env.REACT_APP_HOST}conversations/group/${props.convId}`,
             { name: props.name, newUsers: [userId] },
             true
         );
