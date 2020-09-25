@@ -24,6 +24,7 @@ app.use(cookieParser());
 
 // Serve static files
 // app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
