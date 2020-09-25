@@ -30,7 +30,8 @@ const UserRow = (props) => {
 
     let notification;
     if (
-        (!props.group &&
+        (props.conv &&
+            !props.group &&
             activeUser.updatedPrivateConversations.includes(props.conv._id)) ||
         (props.group &&
             activeUser.updatedGroupConversations.includes(props.conv._id))
