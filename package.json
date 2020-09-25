@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "cd backend && START /B node server.js & cd .. && cd frontend && npm start",
-    "build": "react-scripts build"
+    "build": "cd frontend && npm build"
   },
   "author": "",
   "license": "ISC",
