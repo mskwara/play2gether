@@ -44,6 +44,7 @@ exports.createGroupConversation = catchAsync(async (req, res, next) => {
         {
             $push: {
                 groupConversations: newConv._id,
+                updatedGroupConversations: newConv._id
             },
         }
     );
@@ -122,6 +123,7 @@ exports.createPrivateConv = catchAsync(async (req, res, next) => {
     }, {
         $push: {
             privateConversations: privateConv._id,
+            updatedPrivateConversations: privateConv._id
         }
     });
 

@@ -20,10 +20,10 @@ const app = express();
 //         credentials: true,
 //     })
 // );
+
 app.use(cookieParser());
 
 // Serve static files
-// app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.use(express.json({ limit: '10kb' }));
@@ -44,10 +44,10 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 //     });
 // });
 
-app.use('/users', userRouter);
-app.use('/games', gameRouter);
-app.use('/conversations', conversationRouter);
-app.use('/comments', commentRouter);
+app.use('/api/users', userRouter);
+app.use('/api/games', gameRouter);
+app.use('/api/conversations', conversationRouter);
+app.use('/api/comments', commentRouter);
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl}`, 404));
