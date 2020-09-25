@@ -20,7 +20,7 @@ import io from "socket.io-client";
 import Radium from "radium";
 
 const App = (props) => {
-    console.log(process.env);
+    // console.log(process.env);
     const themes = {
         light: {
             primary: "rgb(66, 44, 92)",
