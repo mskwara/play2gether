@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Radium from "radium";
 import "./Topbar.scss";
 import request from "../../utils/request";
+import { getPhotoFromAWS } from "../../utils/methods";
 import PopupContext from "../../utils/PopupContext";
 import UserContext from "../../utils/UserContext";
 import ConvContext from "../../utils/ConvContext";
@@ -17,7 +18,24 @@ const Topbar = (props) => {
 
     const [state, setState] = useState({
         settingsOpened: false,
+        photo: require(`../../assets/defaultUser.jpeg`),
     });
+
+    useEffect(() => {
+        if (
+            userContext.globalUserState.user &&
+            userContext.globalUserState.user.photo !== "defaultUser.jpeg"
+        ) {
+            getPhotoFromAWS(userContext.globalUserState.user.photo, (photo) => {
+                setState((state) => ({ ...state, photo }));
+            });
+        } else {
+            setState((state) => ({
+                ...state,
+                photo: require(`../../assets/defaultUser.jpeg`),
+            }));
+        }
+    }, [userContext.globalUserState.user]);
 
     const logout = async () => {
         const res = await request(
@@ -122,10 +140,7 @@ const Topbar = (props) => {
                     }))
                 }
             >
-                <img
-                    src={require(`../../../../backend/static/users/${userContext.globalUserState.user.photo}`)}
-                    alt="avatar"
-                />
+                <img src={state.photo} alt="avatar" />
                 <p>{userContext.globalUserState.user.name}</p>
             </div>
         );
@@ -152,10 +167,7 @@ const Topbar = (props) => {
                         }));
                     }}
                 >
-                    <img
-                        src={require(`../../../../backend/static/users/${userContext.globalUserState.user.photo}`)}
-                        alt="avatar"
-                    />
+                    <img src={state.photo} alt="avatar" />
                     <span>
                         <p>{userContext.globalUserState.user.name}</p>
                         <p className="hint">View your profile</p>

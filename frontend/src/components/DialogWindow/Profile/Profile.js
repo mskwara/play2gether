@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import MyButton from "../../MyButton/MyButton";
 import "./Profile.scss";
 import request from "../../../utils/request";
+import { getPhotoFromAWS } from "../../../utils/methods";
 import PopupContext from "../../../utils/PopupContext";
 import UserContext from "../../../utils/UserContext";
 import ThemeContext from "../../../utils/ThemeContext";
@@ -19,6 +20,7 @@ const Profile = (props) => {
         comments: [],
         newComment: "",
         loadingComment: false,
+        photo: require(`../../../assets/defaultUser.jpeg`),
     });
 
     useEffect(() => {
@@ -41,15 +43,24 @@ const Profile = (props) => {
                 null,
                 true
             );
+            const user = res.data.data;
+            if (user.photo !== "defaultUser.jpeg") {
+                getPhotoFromAWS(user.photo, (photo) => {
+                    setState((state) => ({ ...state, photo }));
+                });
+            } else {
+                setState((state) => ({
+                    ...state,
+                    photo: require(`../../../assets/defaultUser.jpeg`),
+                }));
+            }
             setState((state) => ({
                 ...state,
-                user: res.data.data,
+                user,
                 comments: comRes.data.data,
             }));
         };
-        // if (props.visible) {
         getData();
-        // }
     }, [popupContext.profileUserId]);
 
     const handleTextAreaChange = (event) => {
@@ -143,10 +154,7 @@ const Profile = (props) => {
                             border: `1px solid ${theme.colors.primaryText}`,
                         }}
                     >
-                        <img
-                            src={require(`../../../../../backend/static/users/${state.user.photo}`)}
-                            alt="avatar"
-                        />
+                        <img src={state.photo} alt="avatar" />
                         <div
                             className="praises"
                             style={{

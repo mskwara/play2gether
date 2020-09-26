@@ -6,7 +6,7 @@ import SocketContext from "../../../utils/SocketContext";
 import PopupContext from "../../../utils/PopupContext";
 import ThemeContext from "../../../utils/ThemeContext";
 import request from "../../../utils/request";
-import { getActiveDotColor } from "../../../utils/methods";
+import { getActiveDotColor, getPhotoFromAWS } from "../../../utils/methods";
 import Message from "./Message/Message";
 import ChatSettings from "./ChatSettings/ChatSettings";
 import KeyboardEventHandler from "react-keyboard-event-handler";
@@ -28,6 +28,7 @@ const Chat = (props) => {
         firstSendingToForeign: false,
         recentActivityColor: "red",
         settingsOpened: false,
+        photo: require(`../../../assets/defaultUser.jpeg`),
     });
 
     const [infiniteScrollState, setInfiniteScrollState] = useState({
@@ -108,6 +109,25 @@ const Chat = (props) => {
                 const newUser = { ...activeUser };
                 newUser.updatedPrivateConversations = updatedPrivate;
                 userContext.updateGlobalUserState({ user: newUser });
+            }
+
+            // AWS S3
+            let friend;
+            if (props.conv.user._id === activeUser._id) {
+                //correspondent to ten drugi
+                friend = props.conv.correspondent;
+            } else {
+                //user to ten drugi
+                friend = props.conv.user;
+            }
+            if (friend.photo !== "defaultUser.jpeg") {
+                getPhotoFromAWS(friend.photo, (photo) => {
+                    setChatStateAndRef({ photo });
+                });
+            } else {
+                setChatStateAndRef({
+                    photo: require(`../../../assets/defaultUser.jpeg`),
+                });
             }
         } else {
             const updatedGroup = [...activeUser.updatedGroupConversations];
@@ -299,7 +319,7 @@ const Chat = (props) => {
             <div className="user">
                 <div className="image">
                     <img
-                        src={require(`../../../../../backend/static/users/${friend.photo}`)}
+                        src={chatState.photo}
                         alt="avatar"
                         onClick={() =>
                             popupContext.openDialogWindow("profile", {

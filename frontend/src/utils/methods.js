@@ -78,3 +78,33 @@ exports.getActiveDotColor = (group, conv, activeUserId, user = null) => {
         // setChatStateAndRef({ recentActivityColor: color });
     }
 };
+
+exports.getPhotoFromAWS = async (key, func) => {
+    const encode = (data) => {
+        const buf = Buffer.from(data);
+        const base64 = buf.toString("base64");
+        return base64;
+    };
+
+    const aws = require("aws-sdk");
+    const AWS_ACCESS_KEY_ID = "AKIAILBXUYC2FGWD52JA";
+    const AWS_SECRET_ACCESS_KEY = "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";
+
+    const REACT_APP_S3_BUCEKT = process.env.REACT_APP_S3_BUCKET;
+    aws.config.region = "eu-central-1";
+    const s3 = new aws.S3({
+        apiVersion: "2006-03-01",
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+    });
+
+    const params = {
+        Bucket: REACT_APP_S3_BUCEKT,
+        Key: key,
+    };
+    const data = await s3.getObject(params).promise();
+    const encoded = encode(data.Body);
+    const photo = `data:image/jpeg;base64,${encoded}`;
+    func(photo);
+    return photo;
+};

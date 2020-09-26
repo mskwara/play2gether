@@ -8,6 +8,7 @@ import MyButton from "../../MyButton/MyButton";
 import MyFileInput from "../../MyFileInput/MyFileInput";
 import Loader from "../../Loader/Loader";
 import request from "../../../utils/request";
+import { getPhotoFromAWS } from "../../../utils/methods";
 
 const EditMyProfile = (props) => {
     const userContext = useContext(UserContext);
@@ -16,20 +17,24 @@ const EditMyProfile = (props) => {
     const activeUser = userContext.globalUserState.user;
 
     const [state, setState] = useState({
-        name: "",
-        photo: null,
-        aboutMe: "",
-        // description: "",
+        name: activeUser.name,
+        photo: require(`../../../assets/defaultUser.jpeg`),
+        aboutMe: activeUser.aboutMe,
     });
 
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setState({
-            name: activeUser.name,
-            aboutMe: activeUser.aboutMe,
-            photo: activeUser.photo,
-        });
+        if (activeUser.photo !== "defaultUser.jpeg") {
+            getPhotoFromAWS(activeUser.photo, (photo) => {
+                setState((state) => ({ ...state, photo }));
+            });
+        } else {
+            setState((state) => ({
+                ...state,
+                photo: require(`../../../assets/defaultUser.jpeg`),
+            }));
+        }
     }, []);
 
     const handleInputChange = (event) => {
@@ -85,10 +90,9 @@ const EditMyProfile = (props) => {
     };
 
     let avatar;
-    console.log(typeof state.photo);
     if (state.photo) {
         if (typeof state.photo === "string") {
-            avatar = require(`../../../../../backend/static/users/${state.photo}`);
+            avatar = state.photo;
         } else {
             avatar = URL.createObjectURL(state.photo);
         }

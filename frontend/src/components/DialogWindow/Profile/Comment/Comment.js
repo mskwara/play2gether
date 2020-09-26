@@ -1,11 +1,25 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Comment.scss";
-import { formatDate } from "../../../../utils/methods";
+import { formatDate, getPhotoFromAWS } from "../../../../utils/methods";
 import ThemeContext from "../../../../utils/ThemeContext";
 import Radium from "radium";
 
 const Comment = (props) => {
     const theme = useContext(ThemeContext);
+
+    const [photo, setPhoto] = useState(
+        require(`../../../../assets/defaultUser.jpeg`)
+    );
+
+    useEffect(() => {
+        if (props.comment.from.photo !== "defaultUser.jpeg") {
+            getPhotoFromAWS(props.comment.from.photo, (photo) => {
+                setPhoto(photo);
+            });
+        } else {
+            setPhoto(require(`../../../../assets/defaultUser.jpeg`));
+        }
+    }, []);
 
     return (
         <div
@@ -17,10 +31,7 @@ const Comment = (props) => {
                 },
             }}
         >
-            <img
-                src={require(`../../../../../../backend/static/users/${props.comment.from.photo}`)}
-                alt="avatar"
-            />
+            <img src={photo} alt="avatar" />
             <div className="comment-content">
                 <p className="name">{props.comment.from.name}</p>
                 <p>{props.comment.comment}</p>

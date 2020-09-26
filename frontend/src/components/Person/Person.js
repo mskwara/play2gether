@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./Person.scss";
 import request from "../../utils/request";
+import { getPhotoFromAWS } from "../../utils/methods";
 import UserContext from "../../utils/UserContext";
 import ConvContext from "../../utils/ConvContext";
 // import SocketContext from "../../utils/SocketContext";
@@ -16,6 +17,21 @@ const Person = (props) => {
     const theme = useContext(ThemeContext);
     const privateConversations =
         userContext.globalUserState.privateConversations;
+
+    const [photo, setPhoto] = useState(
+        require(`../../assets/defaultUser.jpeg`)
+    );
+
+    useEffect(() => {
+        if (props.user.photo !== "defaultUser.jpeg") {
+            getPhotoFromAWS(props.user.photo, (photo) => {
+                setPhoto(photo);
+            });
+        } else {
+            setPhoto(require(`../../assets/defaultUser.jpeg`));
+        }
+    }, []);
+
     const addFriend = async () => {
         const res = await request(
             "patch",
@@ -216,7 +232,7 @@ const Person = (props) => {
                     <p>{props.user.name}</p>
                 </div>
                 <img
-                    src={require(`../../../../backend/static/users/${props.user.photo}`)}
+                    src={photo}
                     alt="avatar"
                     onClick={() =>
                         popupContext.openDialogWindow("profile", {

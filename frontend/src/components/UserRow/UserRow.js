@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./UserRow.scss";
-import { getActiveDotColor } from "../../utils/methods";
+import { getActiveDotColor, getPhotoFromAWS } from "../../utils/methods";
 import UserContext from "../../utils/UserContext";
 
 const UserRow = (props) => {
@@ -8,6 +8,9 @@ const UserRow = (props) => {
     const activeUser = userContext.globalUserState.user;
 
     const [dotColor, setDotColor] = useState("");
+    const [photo, setPhoto] = useState(
+        require(`../../assets/defaultUser.jpeg`)
+    );
     // const [notification, setNotification] = useState(false);
     useEffect(() => {
         if (props.isConv === false) {
@@ -25,6 +28,14 @@ const UserRow = (props) => {
                 props.activeUserId
             );
             setDotColor(color);
+        }
+
+        if (props.user && props.user.photo !== "defaultUser.jpeg") {
+            getPhotoFromAWS(props.user.photo, (photo) => {
+                setPhoto(photo);
+            });
+        } else {
+            setPhoto(require(`../../assets/defaultUser.jpeg`));
         }
     }, []);
 
@@ -54,10 +65,7 @@ const UserRow = (props) => {
         >
             <span>
                 {!props.group ? (
-                    <img
-                        src={require(`../../../../backend/static/users/${props.user.photo}`)}
-                        alt="avatar"
-                    />
+                    <img src={photo} alt="avatar" />
                 ) : (
                     <img
                         src={require(`../../assets/group.png`)}
