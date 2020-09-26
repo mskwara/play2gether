@@ -131,8 +131,8 @@ const App = (props) => {
     const [timeoutState, setTimeoutState] = useState();
     const [intervals, setIntervals] = useState({});
 
-    const setMeInterval = () => {
-        const meInterval = setInterval(async () => {
+    const setGlobalIntervals = () => {
+        const meAndConvsInterval = setInterval(async () => {
             const res = await request(
                 "get",
                 `${process.env.REACT_APP_HOST}api/users/me`,
@@ -140,6 +140,19 @@ const App = (props) => {
                 true
             );
             if (res.data.status === "success") {
+                const privateConvRes = await request(
+                    "get",
+                    `${process.env.REACT_APP_HOST}api/conversations/private`,
+                    null,
+                    true
+                );
+                const groupConvRes = await request(
+                    "get",
+                    `${process.env.REACT_APP_HOST}api/conversations/group`,
+                    null,
+                    true
+                );
+
                 const newUser = { ...res.data.data };
                 newUser.updatedPrivateConversations = newUser.updatedPrivateConversations.filter(
                     (updPriv) =>
@@ -156,14 +169,19 @@ const App = (props) => {
                 );
                 updateGlobalUserState({
                     user: newUser,
+                    privateConversations: privateConvRes.data.data,
+                    groupConversations: groupConvRes.data.data,
                 });
             } else {
                 updateGlobalUserState({
                     user: null,
+                    privateConversations: [],
+                    groupConversations: [],
                 });
             }
         }, 10000);
-        setIntervals({ ...intervals, meInterval: meInterval });
+
+        setIntervals({ ...intervals, meAndConvsInterval: meAndConvsInterval });
     };
     useEffect(() => {
         const checkLogin = async () => {
@@ -192,7 +210,7 @@ const App = (props) => {
                     groupConversations: groupConvRes.data.data,
                     jwt: res.data.token,
                 });
-                setMeInterval();
+                setGlobalIntervals();
             } else {
                 updateGlobalUserState({
                     user: null,
@@ -208,7 +226,7 @@ const App = (props) => {
         checkLogin();
 
         // return () => {
-        //     clearInterval(intervals.meInterval);
+        //     clearInterval(intervals.meAndConvsInterval);
         // };
     }, []);
 
@@ -334,7 +352,7 @@ const App = (props) => {
                             updateGlobalUserState,
                             intervals,
                             setIntervals,
-                            setMeInterval,
+                            setGlobalIntervals,
                         }}
                     >
                         <ConvContext.Provider
