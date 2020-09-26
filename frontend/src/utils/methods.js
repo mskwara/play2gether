@@ -5,6 +5,9 @@ exports.formatDate = (date, type) => {
         case "short":
             result = localDate.substr(12, 5);
             break;
+        default:
+            result = localDate;
+            break;
     }
     return result;
 };
