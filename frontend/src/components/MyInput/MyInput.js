@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import "./MyInput.scss";
 import Radium from "radium";
 import ThemeContext from "../../utils/ThemeContext";
