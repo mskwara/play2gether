@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Radium from "radium";
 import "./Topbar.scss";
 import request from "../../utils/request";
@@ -35,7 +35,7 @@ const Topbar = (props) => {
                 jwt: "logout",
             });
             convContext.updateConvState({ openedConvs: [] });
-            clearInterval(userContext.intervals.meInterval);
+            clearInterval(userContext.intervals.meAndConvsInterval);
             popupContext.setFriendsOpened(false);
             setState((state) => ({ ...state, settingsOpened: false }));
             popupContext.setAlertActive(true, "You have been logged out!");
