@@ -69,7 +69,7 @@ const Login = (props) => {
                 password: "",
             });
 
-            userContext.setMeInterval();
+            userContext.setGlobalIntervals();
         } else {
             popupContext.setAlertActive(true, res.data.message);
             setUserState({

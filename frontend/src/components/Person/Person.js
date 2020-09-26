@@ -113,11 +113,11 @@ const Person = (props) => {
         ) {
             // not friends
             // console.log("Not implemented!");
-            const conv = openChat(true);
+            openChat(true);
             return;
         } else {
             console.log("JEST TAKA KONFA");
-            const conv = openChat(true);
+            openChat(true);
             // socketContext.socketState.socket.emit("send", {
             //     message: `Hi! Would you like to play ${props.gameTitle} with me?`,
             //     jwt: userContext.globalUserState.jwt,

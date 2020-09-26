@@ -81,20 +81,6 @@ const Chat = (props) => {
         scrollable_content.scrollTop = scrollable_content.scrollHeight;
     };
 
-    const requestMe = async () => {
-        const res = await request(
-            "get",
-            `${process.env.REACT_APP_HOST}api/users/me`,
-            null,
-            true
-        );
-        if (res.data.status === "success") {
-            userContext.updateGlobalUserState({
-                user: res.data.data,
-            });
-        }
-    };
-
     useEffect(() => {
         if (!props.conv.foreign) {
             socketContext.socketState.socket.emit("join", {
@@ -440,7 +426,7 @@ const Chat = (props) => {
                 />
                 <img
                     src={require(`../../../assets/send.png`)}
-                    alt="avatar"
+                    alt="send"
                     onClick={() => sendMessage()}
                 />
             </div>
