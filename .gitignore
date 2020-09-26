@@ -9,3 +9,5 @@ backend/test.js
 
 # ignore git copy
 .git2
+
+.env

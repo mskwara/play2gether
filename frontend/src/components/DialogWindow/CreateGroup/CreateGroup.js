@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import "./CreateGroup.scss";
 import UserContext from "../../../utils/UserContext";
 import PopupContext from "../../../utils/PopupContext";
