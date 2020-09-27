@@ -1,4 +1,4 @@
-exports.formatDate = (date, type) => {
+export function formatDate(date, type) {
     const localDate = new Date(date).toLocaleString();
     let result;
     switch (type) {
@@ -10,9 +10,9 @@ exports.formatDate = (date, type) => {
             break;
     }
     return result;
-};
+}
 
-exports.getActiveDotColor = (group, conv, activeUserId, user = null) => {
+export function getActiveDotColor(group, conv, activeUserId, user = null) {
     if (user !== null) {
         const now = new Date();
         const hisRecentActivity = new Date(user.recentActivity);
@@ -77,9 +77,9 @@ exports.getActiveDotColor = (group, conv, activeUserId, user = null) => {
         return color;
         // setChatStateAndRef({ recentActivityColor: color });
     }
-};
+}
 
-const getPhotoFromAWS = async (key, func) => {
+export async function getPhotoFromAWS(key, func) {
     const encode = (data) => {
         const buf = Buffer.from(data);
         const base64 = buf.toString("base64");
@@ -105,6 +105,4 @@ const getPhotoFromAWS = async (key, func) => {
     const photo = `data:image/jpeg;base64,${encoded}`;
     func(photo);
     return photo;
-};
-
-exports.getPhotoFromAWS = getPhotoFromAWS;
+}
