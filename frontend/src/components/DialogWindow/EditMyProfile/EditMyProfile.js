@@ -8,7 +8,7 @@ import MyButton from "../../MyButton/MyButton";
 import MyFileInput from "../../MyFileInput/MyFileInput";
 import Loader from "../../Loader/Loader";
 import request from "../../../utils/request";
-import { getPhotoFromAWS } from "../../../utils/methods";
+const { getPhotoFromAWS } = require("../../../utils/methods");
 
 const EditMyProfile = (props) => {
     const userContext = useContext(UserContext);

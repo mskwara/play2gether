@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
 import "./Person.scss";
 import request from "../../utils/request";
-import { getPhotoFromAWS } from "../../utils/methods";
 import UserContext from "../../utils/UserContext";
 import ConvContext from "../../utils/ConvContext";
 // import SocketContext from "../../utils/SocketContext";
 import PopupContext from "../../utils/PopupContext";
 import ThemeContext from "../../utils/ThemeContext";
 import styled from "styled-components";
+const { getPhotoFromAWS } = require("../../utils/methods");
 
 const Person = (props) => {
     const userContext = useContext(UserContext);

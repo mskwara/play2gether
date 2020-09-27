@@ -6,12 +6,14 @@ import SocketContext from "../../../utils/SocketContext";
 import PopupContext from "../../../utils/PopupContext";
 import ThemeContext from "../../../utils/ThemeContext";
 import request from "../../../utils/request";
-import { getActiveDotColor, getPhotoFromAWS } from "../../../utils/methods";
 import Message from "./Message/Message";
 import ChatSettings from "./ChatSettings/ChatSettings";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import InfiniteScroll from "react-infinite-scroller";
 import Loader from "../../Loader/Loader";
+const { getPhotoFromAWS } = require("../../../utils/methods");
+// import { getActiveDotColor } from "../../../utils/methods";
+const { getActiveDotColor } = require("../../../utils/methods");
 
 const Chat = (props) => {
     const userContext = useContext(UserContext);

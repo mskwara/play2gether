@@ -3,11 +3,11 @@ import { useHistory } from "react-router-dom";
 import Radium from "radium";
 import "./Topbar.scss";
 import request from "../../utils/request";
-import { getPhotoFromAWS } from "../../utils/methods";
 import PopupContext from "../../utils/PopupContext";
 import UserContext from "../../utils/UserContext";
 import ConvContext from "../../utils/ConvContext";
 import ThemeContext from "../../utils/ThemeContext";
+const { getPhotoFromAWS } = require("../../utils/methods");
 
 const Topbar = (props) => {
     const popupContext = useContext(PopupContext);
