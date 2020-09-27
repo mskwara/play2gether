@@ -107,4 +107,4 @@ const getPhotoFromAWS = async (key, func) => {
     return photo;
 };
 
-module.exports.getPhotoFromAWS = getPhotoFromAWS;
+exports.getPhotoFromAWS = getPhotoFromAWS;
