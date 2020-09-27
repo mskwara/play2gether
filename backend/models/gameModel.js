@@ -18,7 +18,7 @@ const gameSchema = new mongoose.Schema({
 });
 
 gameSchema.pre('save', function (next) {
-    this.icon = this.title.replace(/[\W\s_]+/g, '-');
+    this.icon = this.title.replace(/[\W\s_]+/g, '-').toLowerCase();
     next();
 });
 
