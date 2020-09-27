@@ -41,12 +41,19 @@ exports.resizePhoto = catchAsync(async (req, res, next) => {
     if (!req.file) return next();
 
     req.file.filename = `user-${req.user._id.toString()}-${Date.now()}.jpeg`;
+    req.file.filename2 = `user-${req.user._id.toString()}-${Date.now()}-small.jpeg`
 
     req.file.buffer = await sharp(req.file.buffer)
-        .resize(null, 480)
-        .toFormat('jpeg')
+        .resize(480, 480, {
+            fit: 'cover'
+        }).toFormat('jpeg')
         .jpeg({ quality: 90 })
         .toBuffer();
+
+    req.file.buffer2 = await sharp(req.file.buffer)
+        .resize(80, 80, {
+            fit: 'cover'
+        }).toBuffer();
 
     next();
 });
@@ -87,28 +94,40 @@ exports.update = catchAsync(async (req, res, next) => {
             Body: req.file.buffer
         };
 
-        if (req.user.photo !== 'defaultUser.jpeg') {
-            await s3.deleteObject({
-                Bucket: S3_BUCEKT,
-                Key: req.user.photo
-            }).promise().then(data => {
-                console.log(data);
+        try {
+            if (req.user.photo !== 'defaultUser.jpeg') {
+                await s3.deleteObjects({
+                    Bucket: S3_BUCEKT,
+                    Delete: {
+                        Objects: [{
+                            Key: req.user.photo
+                        }, {
+                            Key: req.user.photo.slice(0, -5) + '-small.jpeg'
+                        }]
+                    }
+                }).promise();
                 if (process.env.NODE_ENV === 'development')
-                    console.log(`User ${req.user._id} successfully deleted previous photo named ${req.user.photo}`);
-            }).catch(err => {
-                return next(new AppError('Error while deleting previous photo', 500));
-            });
-        }
+                    console.log(`User ${req.user._id} successfully deleted previous photos named ${req.user.photo}`,
+                        `and ${req.user.photo.slice(0, -5) + '-small.jpeg'}`);
+            }
 
-        await s3.upload(params).promise().then(data => {
+
+            await s3.upload(params).promise()
             if (process.env.NODE_ENV === 'development')
                 console.log(`User ${req.user._id} successfully uploaded a file named ${params.Key}`);
-        }).catch(err => {
+
+            params.Key = req.file.filename2;
+            params.Body = req.file.buffer2;
+
+            await s3.upload(params).promise()
+            if (process.env.NODE_ENV === 'development')
+                console.log(`User ${req.user._id} successfully uploaded a file named ${params.Key}`);
+        } catch (err) {
+            if (process.env.NODE_ENV === 'development')
+                console.log(err);
             return next(new AppError('Error while uploading photo', 500));
-        });
-
+        }
     }
-
     const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
         select: '-passwordChangedAt -privateConversations -groupConversations -games -friendly -goodTeacher -skilledPlayer -praisedPlayers -recentActivity',
         new: true,
@@ -117,7 +136,7 @@ exports.update = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
-        data: updatedUser,
+        data: updatedUser
     });
 });
 
