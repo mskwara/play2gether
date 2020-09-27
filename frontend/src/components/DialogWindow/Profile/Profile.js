@@ -8,7 +8,8 @@ import ThemeContext from "../../../utils/ThemeContext";
 import Loader from "../../Loader/Loader";
 import Comment from "./Comment/Comment";
 import GameTile from "../../GameTile/GameTile";
-const { getPhotoFromAWS } = require("../../../utils/methods");
+import { getPhotoFromAWS } from "../../../utils/methods";
+// const { getPhotoFromAWS } = require("../../../utils/methods");
 
 const Profile = (props) => {
     const userContext = useContext(UserContext);

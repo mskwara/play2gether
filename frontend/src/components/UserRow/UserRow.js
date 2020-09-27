@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./UserRow.scss";
-// import { getActiveDotColor } from "../../utils/methods";
 import UserContext from "../../utils/UserContext";
-const { getActiveDotColor } = require("../../utils/methods");
-const { getPhotoFromAWS } = require("../../utils/methods");
+import { getActiveDotColor, getPhotoFromAWS } from "../../utils/methods";
+// const { getActiveDotColor } = require("../../utils/methods");
+// const { getPhotoFromAWS } = require("../../utils/methods");
 
 const UserRow = (props) => {
     const userContext = useContext(UserContext);

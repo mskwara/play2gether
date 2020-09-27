@@ -7,7 +7,8 @@ import ConvContext from "../../utils/ConvContext";
 import PopupContext from "../../utils/PopupContext";
 import ThemeContext from "../../utils/ThemeContext";
 import styled from "styled-components";
-const { getPhotoFromAWS } = require("../../utils/methods");
+import { getPhotoFromAWS } from "../../utils/methods";
+// const { getPhotoFromAWS } = require("../../utils/methods");
 
 const Person = (props) => {
     const userContext = useContext(UserContext);

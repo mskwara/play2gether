@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import "./Comment.scss";
 import ThemeContext from "../../../../utils/ThemeContext";
 import Radium from "radium";
-const { getPhotoFromAWS } = require("../../../../utils/methods");
-// import { formatDate } from "../../../../utils/methods";
-const { formatDate } = require("../../../../utils/methods");
+import { formatDate, getPhotoFromAWS } from "../../../../utils/methods";
+// const { getPhotoFromAWS } = require("../../../../utils/methods");
+// const { formatDate } = require("../../../../utils/methods");
 
 const Comment = (props) => {
     const theme = useContext(ThemeContext);

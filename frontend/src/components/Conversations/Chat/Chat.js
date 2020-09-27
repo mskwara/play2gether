@@ -11,9 +11,9 @@ import ChatSettings from "./ChatSettings/ChatSettings";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import InfiniteScroll from "react-infinite-scroller";
 import Loader from "../../Loader/Loader";
-const { getPhotoFromAWS } = require("../../../utils/methods");
-// import { getActiveDotColor } from "../../../utils/methods";
-const { getActiveDotColor } = require("../../../utils/methods");
+import { getActiveDotColor, getPhotoFromAWS } from "../../../utils/methods";
+// const { getPhotoFromAWS } = require("../../../utils/methods");
+// const { getActiveDotColor } = require("../../../utils/methods");
 
 const Chat = (props) => {
     const userContext = useContext(UserContext);

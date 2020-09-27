@@ -7,7 +7,8 @@ import PopupContext from "../../utils/PopupContext";
 import UserContext from "../../utils/UserContext";
 import ConvContext from "../../utils/ConvContext";
 import ThemeContext from "../../utils/ThemeContext";
-const { getPhotoFromAWS } = require("../../utils/methods");
+import { getPhotoFromAWS } from "../../utils/methods";
+// const { getPhotoFromAWS } = require("../../utils/methods");
 
 const Topbar = (props) => {
     const popupContext = useContext(PopupContext);
