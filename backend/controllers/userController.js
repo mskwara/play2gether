@@ -112,14 +112,14 @@ exports.update = catchAsync(async (req, res, next) => {
             }
 
 
-            await s3.upload(params).promise()
+            await s3.upload(params).promise();
             if (process.env.NODE_ENV === 'development')
                 console.log(`User ${req.user._id} successfully uploaded a file named ${params.Key}`);
 
             params.Key = req.file.filename2;
             params.Body = req.file.buffer2;
 
-            await s3.upload(params).promise()
+            await s3.upload(params).promise();
             if (process.env.NODE_ENV === 'development')
                 console.log(`User ${req.user._id} successfully uploaded a file named ${params.Key}`);
         } catch (err) {
