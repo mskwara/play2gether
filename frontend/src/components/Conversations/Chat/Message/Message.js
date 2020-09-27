@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import "./Message.scss";
-import { formatDate } from "../../../../utils/methods";
+// import { formatDate } from "../../../../utils/methods";
 import ThemeContext from "../../../../utils/ThemeContext";
+const { formatDate } = require("../../../../utils/methods");
 
 const Message = (props) => {
     const theme = useContext(ThemeContext);

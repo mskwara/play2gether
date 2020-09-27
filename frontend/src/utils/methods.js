@@ -87,15 +87,13 @@ exports.getPhotoFromAWS = async (key, func) => {
     };
 
     const aws = require("aws-sdk");
-    const AWS_ACCESS_KEY_ID = "AKIAILBXUYC2FGWD52JA";
-    const AWS_SECRET_ACCESS_KEY = "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";
 
     const REACT_APP_S3_BUCEKT = process.env.REACT_APP_S3_BUCKET;
     aws.config.region = "eu-central-1";
     const s3 = new aws.S3({
         apiVersion: "2006-03-01",
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+        accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
     });
 
     const params = {
