@@ -79,7 +79,7 @@ exports.getActiveDotColor = (group, conv, activeUserId, user = null) => {
     }
 };
 
-exports.getPhotoFromAWS = async (key, func) => {
+const getPhotoFromAWS = async (key, func) => {
     const encode = (data) => {
         const buf = Buffer.from(data);
         const base64 = buf.toString("base64");
@@ -106,3 +106,5 @@ exports.getPhotoFromAWS = async (key, func) => {
     func(photo);
     return photo;
 };
+
+module.exports.getPhotoFromAWS = getPhotoFromAWS;
