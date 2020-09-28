@@ -180,19 +180,26 @@ const Game = (props) => {
     return (
         <div id="Game">
             <div className="content">
-                <div className="left-panel">
+                <div
+                    className="left-panel"
+                    style={{
+                        width: players && players.length > 0 ? "45%" : "100%",
+                    }}
+                >
                     {gameBigTile}
                     {state.loading ? <Loader /> : null}
                 </div>
-                <div
-                    className="waiting-room"
-                    style={{ backgroundColor: theme.colors.description }}
-                >
-                    <h1 style={{ color: theme.colors.primaryText }}>
-                        Waiting room
-                    </h1>
-                    <div className="players">{players}</div>
-                </div>
+                {players && players.length > 0 ? (
+                    <div
+                        className="waiting-room"
+                        style={{ backgroundColor: theme.colors.description }}
+                    >
+                        <h1 style={{ color: theme.colors.primaryText }}>
+                            Waiting room
+                        </h1>
+                        <div className="players">{players}</div>
+                    </div>
+                ) : null}
             </div>
         </div>
     );

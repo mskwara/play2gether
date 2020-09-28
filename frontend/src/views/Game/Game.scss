@@ -10,6 +10,8 @@
         display: flex;
         justify-content: space-around;
         padding: 20px;
+        width: 90%;
+        background-color: red;
 
         .left-panel {
             display: flex;
@@ -112,12 +114,24 @@
 }
 
 @media only screen and (max-width: 650px) {
-    #Game .content .gameBigTile {
-        .title {
-            font-size: 14pt;
+    #Game .content {
+        flex-direction: column;
+        align-items: center;
+
+        .left-panel {
+            width: 100% !important;
+            margin: 0;
         }
-        .description {
-            font-size: 10pt;
+
+        .gameBigTile {
+            margin: 0 0 20px 0;
+
+            .title {
+                font-size: 18pt;
+            }
+            .description {
+                font-size: 10pt;
+            }
         }
     }
 }
@@ -125,7 +139,7 @@
 @media only screen and (max-width: 490px) {
     #Game .content .gameBigTile {
         .title {
-            font-size: 10pt;
+            font-size: 16pt;
         }
         .description {
             font-size: 8pt;
