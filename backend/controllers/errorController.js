@@ -75,8 +75,8 @@ function handleErrors(err, req, res, next) {
             error = handleJWTError();
 
         // Token expired
-        if (err.name === 'TokenExpiredError');
-        error = handleJWTExpiredError();
+        if (err.name === 'TokenExpiredError')
+            error = handleJWTExpiredError();
 
         if (error)
             sendErrorProduction(error, res);
