@@ -4,7 +4,7 @@
   "description": "play2gether",
   "main": "app.js",
   "scripts": {
-    "start": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
     "comment_heroku-postbuild": "cd backend && node server.js"
   },
   "author": "",
