@@ -2,7 +2,7 @@
   "name": "play2gether",
   "version": "1.0.0",
   "description": "play2gether",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "start": "cd backend && node server.js",
     "heroku-postbuild": "cd frontend && npm run build"

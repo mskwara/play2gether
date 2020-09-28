@@ -12,10 +12,8 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-}));
+app.use(cors());
+app.options('*', cors());
 
 app.use(cookieParser());
 
@@ -23,7 +21,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+// app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 // Testowy pajac
 // app.get('/', (req, res, next) => {
@@ -45,10 +43,10 @@ app.use('/api/games', gameRouter);
 app.use('/api/conversations', conversationRouter);
 app.use('/api/comments', commentRouter);
 
-app.all('*', (req, res, next) => {
-    // next(new AppError(`Can't find ${req.originalUrl}`, 404));
-    res.sendFile(path.join(__dirname, '/../fronend/build/index.html'));
-});
+// app.all('*', (req, res, next) => {
+//     // next(new AppError(`Can't find ${req.originalUrl}`, 404));
+//     res.sendFile(path.join(__dirname, '/../fronend/build/index.html'));
+// });
 
 app.use(globalErrorhandler);
 
