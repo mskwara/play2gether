@@ -12,14 +12,10 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 
-if (process.env.HEROKU !== 'true') {
-    app.use(
-        cors({
-            origin: 'http://localhost:3000',
-            credentials: true,
-        })
-    );
-}
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}));
 
 app.use(cookieParser());
 
