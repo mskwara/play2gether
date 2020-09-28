@@ -12,10 +12,8 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 
-app.use(cors({
-    origin: '*',
-    credentials: true,
-}));
+app.use(cors());
+app.options('*', cors());
 
 app.use(cookieParser());
 
@@ -45,10 +43,10 @@ app.use('/api/games', gameRouter);
 app.use('/api/conversations', conversationRouter);
 app.use('/api/comments', commentRouter);
 
-app.all('*', (req, res, next) => {
-    // next(new AppError(`Can't find ${req.originalUrl}`, 404));
-    res.sendFile(path.join(__dirname, '/../fronend/build/index.html'));
-});
+// app.all('*', (req, res, next) => {
+//     // next(new AppError(`Can't find ${req.originalUrl}`, 404));
+//     res.sendFile(path.join(__dirname, '/../fronend/build/index.html'));
+// });
 
 app.use(globalErrorhandler);
 
