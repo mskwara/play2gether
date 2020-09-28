@@ -406,7 +406,7 @@ const App = (props) => {
                                                 component={Home}
                                             />
                                             <PrivateRoute
-                                                path="/games/:gameId"
+                                                path="/#/games/:gameId"
                                                 exact
                                                 component={Game}
                                             />
