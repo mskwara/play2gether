@@ -5,7 +5,8 @@
     width: fit-content;
     padding: 15px 10px 10px 10px;
     position: relative;
-    width: 300px;
+    width: 90%;
+    min-width: 50px;
 
     &:focus-within > label {
         top: 0;

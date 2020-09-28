@@ -126,9 +126,11 @@ const CreateGroup = (props) => {
             />
             <div className="content">
                 <div className="users-select">
-                    {friends.length > 0
-                        ? friends
-                        : "You must have friends in order to create a group."}
+                    {friends.length > 0 ? (
+                        friends
+                    ) : (
+                        <p>You must have friends in order to create a group.</p>
+                    )}
                 </div>
                 <MyInput
                     className="input-name"
@@ -139,7 +141,9 @@ const CreateGroup = (props) => {
                     labelId="name"
                     handleInputChange={handleInputChange}
                 />
-                <MyButton onClick={create}>Create</MyButton>
+                <MyButton onClick={create} className="create-btn">
+                    Create
+                </MyButton>
                 {loading ? <Loader /> : null}
             </div>
         </div>

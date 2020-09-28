@@ -128,3 +128,39 @@
         border-radius: 50%;
     }
 }
+
+@media only screen and (max-width: 250px) {
+    .UserRow {
+        width: 30px !important;
+        height: 30px;
+
+        p {
+            display: none;
+        }
+        &:hover > .actions {
+            width: 40px;
+            border-radius: 5px;
+        }
+        &:hover > .received-actions {
+            width: 40px;
+            border-radius: 5px;
+        }
+
+        .actions {
+            padding: 0 5px;
+            .btn {
+                &.received-btn {
+                    width: 10px;
+                    height: 10px;
+                    cursor: pointer;
+                    transition: 0.5s;
+
+                    &:hover {
+                        width: 8px;
+                        height: 8px;
+                    }
+                }
+            }
+        }
+    }
+}

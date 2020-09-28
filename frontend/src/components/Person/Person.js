@@ -89,7 +89,15 @@ const Person = (props) => {
                 foreignConv.instantMessage = `Hi! Would you like to play ${props.gameTitle} with me?`;
             }
             openedConvs.push(foreignConv);
-            if (openedConvs.length > 3) {
+            if (window.screen.width >= 1050 && openedConvs.length > 3) {
+                openedConvs.splice(0, 1);
+            } else if (
+                window.screen.width >= 730 &&
+                window.screen.width < 1050 &&
+                openedConvs.length > 2
+            ) {
+                openedConvs.splice(0, 1);
+            } else if (window.screen.width < 730 && openedConvs.length > 1) {
                 openedConvs.splice(0, 1);
             }
             convContext.updateConvState({ openedConvs });

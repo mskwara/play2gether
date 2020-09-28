@@ -86,7 +86,15 @@ const FriendList = (props) => {
             openedConvs.splice(index, 1);
         } else {
             openedConvs.push(conv);
-            if (openedConvs.length > 3) {
+            if (window.screen.width >= 1050 && openedConvs.length > 3) {
+                openedConvs.splice(0, 1);
+            } else if (
+                window.screen.width >= 730 &&
+                window.screen.width < 1050 &&
+                openedConvs.length > 2
+            ) {
+                openedConvs.splice(0, 1);
+            } else if (window.screen.width < 730 && openedConvs.length > 1) {
                 openedConvs.splice(0, 1);
             }
         }
@@ -191,6 +199,7 @@ const FriendList = (props) => {
                                 true
                             );
                         }}
+                        className="create-btn"
                     >
                         Create
                     </MyButton>

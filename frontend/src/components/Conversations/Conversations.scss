@@ -14,3 +14,10 @@
         height: 90%;
     }
 }
+
+@media only screen and (max-width: 500px) {
+    #Conversations {
+        right: 20px;
+        z-index: 3;
+    }
+}

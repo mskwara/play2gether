@@ -38,7 +38,7 @@
 
             .title {
                 color: white;
-                font-size: 40pt;
+                font-size: 30pt;
                 position: absolute;
                 top: 0;
                 left: 50%;
@@ -96,6 +96,55 @@
                     margin: 10px;
                 }
             }
+        }
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    #Game .content .gameBigTile {
+        .title {
+            font-size: 20pt;
+        }
+        .description {
+            font-size: 12pt;
+        }
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    #Game .content .gameBigTile {
+        .title {
+            font-size: 14pt;
+        }
+        .description {
+            font-size: 10pt;
+        }
+    }
+}
+
+@media only screen and (max-width: 490px) {
+    #Game .content .gameBigTile {
+        .title {
+            font-size: 10pt;
+        }
+        .description {
+            font-size: 8pt;
+        }
+        h1 {
+            font-size: 10pt;
+        }
+    }
+}
+@media only screen and (max-width: 350px) {
+    #Game .content .gameBigTile {
+        .title {
+            display: none;
+        }
+        .description {
+            font-size: 6pt;
+        }
+        h1 {
+            font-size: 8pt;
         }
     }
 }
