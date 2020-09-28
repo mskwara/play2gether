@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+// app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 // Testowy pajac
 // app.get('/', (req, res, next) => {
