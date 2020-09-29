@@ -311,7 +311,8 @@ exports.updateGroupConversation = catchAsync(async (req, res, next) => {
         },
         name: req.body.name
     }, {
-        new: true
+        new: true,
+        runValidators: true
     });
 
     res.status(201).json({
