@@ -29,8 +29,12 @@ app.use('/api', rateLimit({
     message: 'Too many requests from this IP, please try again later!'
 }));
 
-app.use(cors());
-app.options('*', cors());
+if (process.env.HEROKU !== 'true') {
+    app.use(cors({
+        origin: '*',
+        credentials: true
+    }));
+}
 
 app.use(cookieParser());
 
