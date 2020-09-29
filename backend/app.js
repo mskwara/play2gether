@@ -17,14 +17,17 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 // Set security HTTP headers
-// app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: false,
+    permittedCrossDomainPolicies: false
+}));
 
 // Limit requests per IP
-// app.use('/api', rateLimit({
-//     max: 100,
-//     windowMS: 60 * 1000,
-//     message: 'Too many requests from this IP, please try again later!'
-// }));
+app.use('/api', rateLimit({
+    max: 100,
+    windowMS: 60 * 1000,
+    message: 'Too many requests from this IP, please try again later!'
+}));
 
 app.use(cors());
 app.options('*', cors());
