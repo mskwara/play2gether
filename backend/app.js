@@ -19,14 +19,12 @@ const app = express();
 // Set security HTTP headers
 app.use(helmet());
 
-const limiter = rateLimit({
+// Limit requests per IP
+app.use('/api', rateLimit({
     max: 100,
     windowMS: 60 * 1000,
     message: 'Too many requests from this IP, please try again later!'
-});
-
-// Limit requests per IP
-app.use('/api', limiter);
+}));
 
 app.use(cors({
     origin: '*',
@@ -73,6 +71,7 @@ app.use('/api/comments', commentRouter);
 // Serve static files
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
+// Redirect other requests to frontend
 app.all('*', (req, res, next) => {
     res.sendFile(path.join(__dirname, '/../frontend/build/index.html'));
 });
