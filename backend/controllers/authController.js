@@ -18,10 +18,11 @@ function createAuthToken(user, statusCode, res) {
         expires: new Date(
             Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 1000 * 60 * 60 * 24
         ),
-        httpOnly: true,
+        httpOnly: true
     };
 
-    if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+    if (process.env.NODE_ENV === "production")
+        cookieOptions.secure = true;
 
     user.password = undefined;
     user = slimDownUser(user);
