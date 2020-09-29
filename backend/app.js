@@ -17,7 +17,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 // Set security HTTP headers
-app.use(helmet());
+// app.use(helmet());
 
 // Limit requests per IP
 app.use('/api', rateLimit({
