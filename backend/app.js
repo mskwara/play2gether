@@ -20,11 +20,11 @@ const app = express();
 // app.use(helmet());
 
 // Limit requests per IP
-app.use('/api', rateLimit({
-    max: 100,
-    windowMS: 60 * 1000,
-    message: 'Too many requests from this IP, please try again later!'
-}));
+// app.use('/api', rateLimit({
+//     max: 100,
+//     windowMS: 60 * 1000,
+//     message: 'Too many requests from this IP, please try again later!'
+// }));
 
 app.use(cors());
 app.options('*', cors());
