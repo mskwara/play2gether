@@ -32,10 +32,10 @@ export function getActiveDotColor(group, conv, activeUserId, user = null) {
         let hisRecentActivity;
 
         if (conv.user._id === activeUserId) {
-            //correspondent to ten drugi
+            // correspondent to ten drugi
             hisRecentActivity = new Date(conv.correspondent.recentActivity);
         } else {
-            //user to ten drugi
+            // user to ten drugi
             hisRecentActivity = new Date(conv.user.recentActivity);
         }
         const timeInSeconds =
