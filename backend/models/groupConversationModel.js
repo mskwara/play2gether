@@ -6,7 +6,8 @@ const groupConversationSchema = new mongoose.Schema({
         ref: 'User'
     }],
     name: {
-        type: String
+        type: String,
+        maxlength: 40
     },
     recentActivity: Date
 });

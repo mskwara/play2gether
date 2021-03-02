@@ -6,19 +6,29 @@ const userSchema = new mongoose.Schema(
     {
         name: {
             type: String,
+            maxlength: 40,
             required: [true, "Please tell us your name!"],
+            validate: {
+                validator: function (name) {
+                    for (substr of name.split(' ')) {
+                        if (substr.length > 14)
+                            return false;
+                    }
+                },
+                message: 'Max word length is 14 characters'
+            }
         },
         email: {
             type: String,
             required: [true, "You need to specify your email!"],
             unique: true,
             lowercase: true,
-            // validate: [validator.isEmail, 'Please provide a valid email!']
+            validate: [validator.isEmail, 'Please provide a valid email!']
         },
         password: {
             type: String,
             required: [true, "Please specify your password"],
-            // minlength: 8,
+            minlength: 8,
             maxlength: 32,
             select: false,
         },
